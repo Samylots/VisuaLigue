@@ -8,6 +8,10 @@ dist/
 nbdist/
 .nb-gradle/
 
+### LeagueBoard Project ###
+/LeagueBoard/nbproject/private/
+/LeagueBoard/dist/
+/LeagueBoard/build/
 
 ### Java ###
 *.class
