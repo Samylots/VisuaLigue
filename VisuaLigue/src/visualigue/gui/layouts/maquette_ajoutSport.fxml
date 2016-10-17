@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.web.*?>
+<?import javafx.scene.media.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<?import javafx.scene.chart.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="609.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox layoutX="128.0" layoutY="14.0" prefHeight="367.0" prefWidth="281.0">
+         <children>
+            <VBox prefHeight="367.0" prefWidth="135.0" spacing="10.0">
+               <children>
+                  <Label prefHeight="23.0" prefWidth="84.0" text="Nom du sport" />
+                  <Label prefHeight="28.0" prefWidth="125.0" text="Nb joueurs par équipe" />
+                  <Label prefHeight="24.0" prefWidth="92.0" text="Taille du terrain " />
+                  <Label prefHeight="26.0" prefWidth="121.0" text="Dimension du terrain" />
+                  <Label prefHeight="26.0" prefWidth="121.0" text="Définir les catégories" />
+               </children>
+            </VBox>
+            <VBox prefHeight="367.0" prefWidth="169.0" spacing="10.0">
+               <children>
+                  <TextField prefHeight="25.0" prefWidth="122.0" />
+                  <TextField prefHeight="5.0" prefWidth="264.0" />
+                  <TextField />
+                  <TextField />
+                  <TextArea prefHeight="189.0" prefWidth="57.0" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="172.0" text="Importer accessoire" />
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="171.0" text="Importer l'image terrain" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <Button layoutX="251.0" layoutY="442.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="158.0" text="Valider " />
+   </children>
+</Pane>

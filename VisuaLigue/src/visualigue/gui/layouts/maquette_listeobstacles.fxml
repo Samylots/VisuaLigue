@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="318.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ToolBar>
+         <items>
+            <BorderPane prefWidth="302.0">
+               <right>
+                  <Button mnemonicParsing="false" text="+" BorderPane.alignment="CENTER" />
+               </right>
+               <left>
+                  <Label text="Obstacles" BorderPane.alignment="CENTER" />
+               </left>
+            </BorderPane>
+         </items>
+      </ToolBar>
+      <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+         <content>
+            <VBox>
+               <children>
+                  <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="310.0">
+                     <left>
+                        <ImageView fitHeight="61.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                           <image>
+                              <Image url="@../../images/3497.png" />
+                           </image>
+                        </ImageView>
+                     </left>
+                     <center>
+                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" BorderPane.alignment="CENTER" />
+                     </center>
+                     <right>
+                        <Button mnemonicParsing="false" text="Button" BorderPane.alignment="CENTER" />
+                     </right>
+                     <padding>
+                        <Insets bottom="5.0" left="8.0" right="8.0" top="5.0" />
+                     </padding>
+                  </BorderPane>
+                  <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="310.0">
+                     <center>
+                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" BorderPane.alignment="CENTER" />
+                     </center>
+                     <left>
+                        <ImageView fitHeight="61.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                           <image>
+                              <Image url="@../../images/3497.png" />
+                           </image>
+                        </ImageView>
+                     </left>
+                     <padding>
+                        <Insets bottom="5.0" left="8.0" right="8.0" top="5.0" />
+                     </padding>
+                     <right>
+                        <Button mnemonicParsing="false" text="Button" BorderPane.alignment="CENTER" />
+                     </right>
+                  </BorderPane>
+                  <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="310.0">
+                     <center>
+                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" BorderPane.alignment="CENTER" />
+                     </center>
+                     <left>
+                        <ImageView fitHeight="61.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                           <image>
+                              <Image url="@../../images/3497.png" />
+                           </image>
+                        </ImageView>
+                     </left>
+                     <padding>
+                        <Insets bottom="5.0" left="8.0" right="8.0" top="5.0" />
+                     </padding>
+                     <right>
+                        <Button mnemonicParsing="false" text="Button" BorderPane.alignment="CENTER" />
+                     </right>
+                  </BorderPane>
+                  <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="310.0">
+                     <center>
+                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" BorderPane.alignment="CENTER" />
+                     </center>
+                     <left>
+                        <ImageView fitHeight="61.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                           <image>
+                              <Image url="@../../images/3497.png" />
+                           </image>
+                        </ImageView>
+                     </left>
+                     <padding>
+                        <Insets bottom="5.0" left="8.0" right="8.0" top="5.0" />
+                     </padding>
+                     <right>
+                        <Button mnemonicParsing="false" text="Button" BorderPane.alignment="CENTER" />
+                     </right>
+                  </BorderPane>
+                  <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="310.0">
+                     <center>
+                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" BorderPane.alignment="CENTER" />
+                     </center>
+                     <left>
+                        <ImageView fitHeight="61.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                           <image>
+                              <Image url="@../../images/3497.png" />
+                           </image>
+                        </ImageView>
+                     </left>
+                     <padding>
+                        <Insets bottom="5.0" left="8.0" right="8.0" top="5.0" />
+                     </padding>
+                     <right>
+                        <Button mnemonicParsing="false" text="Button" BorderPane.alignment="CENTER" />
+                     </right>
+                  </BorderPane>
+                  <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="310.0">
+                     <center>
+                        <Label alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Label" BorderPane.alignment="CENTER" />
+                     </center>
+                     <left>
+                        <ImageView fitHeight="61.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                           <image>
+                              <Image url="@../../images/3497.png" />
+                           </image>
+                        </ImageView>
+                     </left>
+                     <padding>
+                        <Insets bottom="5.0" left="8.0" right="8.0" top="5.0" />
+                     </padding>
+                     <right>
+                        <Button mnemonicParsing="false" text="Button" BorderPane.alignment="CENTER" />
+                     </right>
+                  </BorderPane>
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </children>
+</VBox>

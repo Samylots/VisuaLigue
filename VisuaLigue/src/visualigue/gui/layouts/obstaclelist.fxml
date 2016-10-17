@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.canvas.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="255.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ToolBar>
+        <items>
+            <BorderPane prefWidth="241.0">
+               <left>
+                  <Label text="Obstacles" BorderPane.alignment="CENTER" />
+               </left>
+               <right>
+                <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" text="+" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Button>
+               </right>
+            </BorderPane>
+        </items>
+      </ToolBar>
+      <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+         <content>
+            <VBox spacing="20.0">
+               <children>
+                  <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="238.0">
+                     <right>
+                        <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="51.0" text="Edit" BorderPane.alignment="CENTER" />
+                     </right>
+                     <center>
+                        <HBox alignment="CENTER_LEFT" spacing="5.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <ImageView fitHeight="60.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../../AppData/Roaming/Skype/My%20Skype%20Received%20Files/cone.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Cone" />
+                           </children>
+                           <BorderPane.margin>
+                              <Insets left="10.0" />
+                           </BorderPane.margin>
+                        </HBox>
+                     </center>
+                     <left>
+                        <Button mnemonicParsing="false" BorderPane.alignment="CENTER">
+                           <effect>
+                              <ImageInput>
+                                 <source>
+                                    <Image url="file:/C:/Users/Michaël/Desktop/x.png" />
+                                 </source>
+                              </ImageInput>
+                           </effect>
+                        </Button>
+                     </left>
+                  </BorderPane>
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </children>
+</VBox>
