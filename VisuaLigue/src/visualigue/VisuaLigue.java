@@ -9,13 +9,9 @@ import visualigue.gui.layouts.FXLoader;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import visualigue.domain.dumies.Sport;
 import visualigue.gui.SportListController;
@@ -26,15 +22,16 @@ import visualigue.gui.SportListController;
  */
 public class VisuaLigue extends Application {
 
-    FXLoader loader = new FXLoader();
     List<Sport> sports = new ArrayList<>();
 
     @Override
     public void start(Stage primaryStage) {
         sports.add(new Sport("/", "Soccer", "1"));
+        sports.add(new Sport("/", "Football", "2"));
+        sports.add(new Sport("/", "Hockey", "3"));
 
-        Node node = loader.load("sportList.fxml");
-        SportListController controller = loader.getLastController();
+        Node node = FXLoader.getInstance().load("sportList.fxml");
+        SportListController controller = FXLoader.getInstance().getLastController();
         controller.init(sports);
         /*Button btn = new Button();
          btn.setText("Say 'Hello World'");
@@ -48,7 +45,7 @@ public class VisuaLigue extends Application {
 
          StackPane root = new StackPane();
          root.getChildren().add(btn);*/
-        Scene scene = new Scene((Parent) node, 200, 250);
+        Scene scene = new Scene((Parent) node, 300, 400);
 
         primaryStage.setTitle("Hello World!");
         primaryStage.setScene(scene);

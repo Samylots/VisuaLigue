@@ -11,14 +11,14 @@ package visualigue.domain.dumies;
  */
 public class Sport {
 
-    String name;
     String picUrl;
+    String name;
     String id;
 
     public Sport() {
     }
 
-    public Sport(String name, String picUrl, String id) {
+    public Sport(String picUrl, String name, String id) {
         this.name = name;
         this.picUrl = picUrl;
         this.id = id;

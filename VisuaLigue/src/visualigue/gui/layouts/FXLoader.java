@@ -16,14 +16,29 @@ import javafx.scene.Parent;
  *
  * @author Samuel
  */
+//Singleton Class...
 public class FXLoader {
 
-    FXMLLoader fxmlLoader = new FXMLLoader();
+    private FXLoader() {
+
+    }
+
+    private static FXLoader instance = null;
+
+    public static FXLoader getInstance() {
+        if (instance == null) {
+            instance = new FXLoader();
+        }
+        return instance;
+    }
+
+    FXMLLoader fxmlLoader;
 
     public Parent load(String name) {
         try {
             //C'est ici que le lien dans "getResource(#####)" ne marche pas....
-            return fxmlLoader.load(getClass().getResource(name));
+            fxmlLoader = new FXMLLoader(getClass().getResource(name));
+            return fxmlLoader.load();
         } catch (IOException ex) {
             Logger.getLogger(FXLoader.class.getName()).log(Level.SEVERE, null, ex.getMessage());
         }

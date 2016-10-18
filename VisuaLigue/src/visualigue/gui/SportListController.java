@@ -27,7 +27,6 @@ import visualigue.gui.layouts.FXLoader;
  */
 public class SportListController implements Initializable {
 
-    FXLoader loader = new FXLoader();
     @FXML
     private Button addSport;
     @FXML
@@ -56,10 +55,19 @@ public class SportListController implements Initializable {
     }
 
     private void addSportListItem(Sport sport) {
-        Node node = loader.load("sportListItem.fxml");
-        SportListItemController itemController = loader.getLastController();
-        itemController.init(sport.getPicUrl(), sport.getName(), sport.getId());
+        Node node = FXLoader.getInstance().load("sportListItem.fxml");
+        SportListItemController itemController = FXLoader.getInstance().getLastController();
+        try {
+            itemController.init(sport.getPicUrl(), sport.getName(), sport.getId());
+        } catch (Exception e) {
+            //no pic then...
+        }
         sportList.getChildren().add(node);
+    }
+
+    @FXML
+    public void addNewSport() {
+        System.out.println("Opening new sport window!");
     }
 
 }
