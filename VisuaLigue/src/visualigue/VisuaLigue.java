@@ -29,6 +29,10 @@ public class VisuaLigue extends Application {
         sports.add(new Sport("/", "Soccer", "1"));
         sports.add(new Sport("/", "Football", "2"));
         sports.add(new Sport("/", "Hockey", "3"));
+        sports.add(new Sport("/", "Hockey", "3"));
+        sports.add(new Sport("/", "Hockey", "3"));
+        sports.add(new Sport("/", "Hockey", "3"));
+        sports.add(new Sport("/", "Hockey", "3"));
 
         Node node = FXLoader.getInstance().load("sportList.fxml");
         SportListController controller = FXLoader.getInstance().getLastController();

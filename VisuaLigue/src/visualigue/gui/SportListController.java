@@ -15,9 +15,11 @@ import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import visualigue.domain.dumies.Sport;
+import visualigue.gui.layouts.CustomWindow;
 import visualigue.gui.layouts.FXLoader;
 
 /**
@@ -27,6 +29,8 @@ import visualigue.gui.layouts.FXLoader;
  */
 public class SportListController implements Initializable {
 
+    @FXML
+    private VBox root;
     @FXML
     private Button addSport;
     @FXML
@@ -68,6 +72,9 @@ public class SportListController implements Initializable {
     @FXML
     public void addNewSport() {
         System.out.println("Opening new sport window!");
+        Node node = FXLoader.getInstance().load("maquette_ajoutSport.fxml");
+        CustomWindow window = new CustomWindow(root,(Parent)node);
+        window.showAndWait();
     }
 
 }

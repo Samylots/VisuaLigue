@@ -65,9 +65,9 @@ public class SportListItemController implements Initializable {
         });
         //But it need to be different action. Exemple: this handler will overide the "selectSport()" function declared in the FXML file
         //Comment this to see the "selectSport()" in action!
-        selectButton.setOnAction((ActionEvent e) -> {
+        /*selectButton.setOnAction((ActionEvent e) -> {
             System.out.println("This is third way to add handler on controls");
-        });
+        });*/
 
         //need to be last, because it stop the method if there is no picture...
         sportPicture.setImage(new Image(picUrl));
