@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<BorderPane fx:id="sportItem" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualigue.gui.items.ObstacleListItemController">
+   <padding>
+      <Insets bottom="5.0" left="8.0" right="8.0" top="5.0" />
+   </padding>
+   <right>
+      <Button fx:id="selectButton" mnemonicParsing="false" onAction="#selectObstacle" text="Select" BorderPane.alignment="CENTER" />
+   </right>
+   <center>
+      <HBox alignment="CENTER_LEFT" spacing="5.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="picture" fitHeight="61.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+            </ImageView>
+            <Label fx:id="name" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Cone" />
+         </children>
+      </HBox>
+   </center>
+   <left>
+      <Button contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#deleteObstacle" text="Button" BorderPane.alignment="CENTER">
+         <graphic>
+            <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@icons/delete2.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
+   </left>
+</BorderPane>
