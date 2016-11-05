@@ -5,11 +5,13 @@
  */
 package visualigue.domain.dumies;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Samuel
  */
-public class Sport {
+public class Sport implements Serializable {
 
     String picUrl;
     String name;

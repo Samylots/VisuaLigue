@@ -7,6 +7,7 @@ package visualigue.gui;
 
 import visualigue.gui.items.SportListItemController;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -18,7 +19,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import visualigue.domain.dumies.Sport;
+import visualigue.domain.dumies.domainController;
 import visualigue.gui.layouts.CustomWindow;
 import visualigue.gui.layouts.FXLoader;
 
@@ -27,7 +30,7 @@ import visualigue.gui.layouts.FXLoader;
  *
  * @author Samuel
  */
-public class SportListController implements Initializable {
+public class SportListController implements Initializable, Serializable {
 
     @FXML
     private VBox root;
@@ -44,12 +47,11 @@ public class SportListController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        //call domaine to get sports
     }
 
-    public void init(List<Sport> sports) {
-        addSportListItems(sports);
+    public void refreshSports() {
+        sportList.getChildren().clear();
+        addSportListItems(domainController.getInstance().getSports());
     }
 
     private void addSportListItems(List<Sport> sports) {
@@ -72,9 +74,15 @@ public class SportListController implements Initializable {
     @FXML
     public void addNewSport() {
         System.out.println("Opening new sport window!");
-        Node node = FXLoader.getInstance().load("maquette_ajoutSport.fxml");
-        CustomWindow window = new CustomWindow(root,(Parent)node);
+        Node node = FXLoader.getInstance().load("addSport.fxml");
+        AddSportController controller = FXLoader.getInstance().getLastController();
+        CustomWindow window = new CustomWindow(root, (Parent) node);
+        controller.init((Stage) window);
         window.showAndWait();
+        if (controller.isConfirmed()) {
+            domainController.getInstance().addSport(controller.getFieldPath(), controller.getName());
+            refreshSports();
+        }
     }
 
 }

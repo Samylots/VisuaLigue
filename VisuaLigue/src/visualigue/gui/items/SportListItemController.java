@@ -6,6 +6,7 @@
 package visualigue.gui.items;
 
 import java.io.File;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -24,7 +25,7 @@ import javafx.scene.layout.BorderPane;
  *
  * @author Samuel
  */
-public class SportListItemController implements Initializable {
+public class SportListItemController implements Initializable, Serializable {
 
     @FXML
     private BorderPane sportItem;
@@ -66,10 +67,11 @@ public class SportListItemController implements Initializable {
         //But it need to be different action. Exemple: this handler will overide the "selectSport()" function declared in the FXML file
         //Comment this to see the "selectSport()" in action!
         /*selectButton.setOnAction((ActionEvent e) -> {
-            System.out.println("This is third way to add handler on controls");
-        });*/
+         System.out.println("This is third way to add handler on controls");
+         });*/
 
         //need to be last, because it stop the method if there is no picture...
+        System.out.println("TRYING " + picUrl);
         sportPicture.setImage(new Image(picUrl));
     }
 

@@ -5,6 +5,7 @@
  */
 package visualigue.gui;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
@@ -14,7 +15,7 @@ import javafx.fxml.Initializable;
  *
  * @author samap
  */
-public class BoardController implements Initializable {
+public class BoardController implements Initializable, Serializable {
 
     /**
      * Initializes the controller class.
