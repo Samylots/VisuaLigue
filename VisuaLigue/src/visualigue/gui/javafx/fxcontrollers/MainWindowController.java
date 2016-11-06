@@ -11,11 +11,18 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.FileChooser;
 import visualigue.domain.utils.Mode;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
+import visualigue.gui.javafx.fxlayouts.Dialog;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 
 /**
@@ -37,11 +44,21 @@ public class MainWindowController implements Initializable, Serializable {
     }
 
     public void init() {
+        StackPane node = new StackPane();
+        node.getChildren().add(new Label("No Game To Show\nClick on File -> New Game To Start!"));
+        root.setCenter(node);
         changeViewTo(Mode.FRAME_BY_FRAME);
     }
 
     @FXML
     private void newGame(ActionEvent event) {
+        System.out.println("NEW GAME?" + getClass().getResource("/visualigue/gui/javafx/fxlayouts/icons/field.jpg").toString());
+        ImageView field = new ImageView(getClass().getResource("/visualigue/gui/javafx/fxlayouts/icons/field.jpg").toString());
+        root.setCenter(field);
+
+        Node node = FXLoader.getInstance().load("mainToolbar.fxml");
+        MainToolbarController controller = FXLoader.getInstance().getLastController();
+        root.setLeft(node);
     }
 
     @FXML
@@ -50,6 +67,9 @@ public class MainWindowController implements Initializable, Serializable {
 
     @FXML
     private void ExportGame(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.showSaveDialog(root.getScene().getWindow());
+        Dialog popup = new Dialog("Game Exportation", "This game has been successfully exported!", root);
     }
 
     @FXML

@@ -17,7 +17,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import visualigue.domain.dumies.DomainController;
 import visualigue.gui.javafx.fxcontrollers.ObstacleListController;
 
 /**
@@ -79,7 +78,7 @@ public class ObstacleListItemController implements Initializable {
 
     @FXML
     private void deleteObstacle(ActionEvent event) {
-        DomainController.getInstance().deleteObstacles(id);
+        //DomainController.getInstance().deleteObstacles(id);
         parentController.refreshObstacles();
     }
 

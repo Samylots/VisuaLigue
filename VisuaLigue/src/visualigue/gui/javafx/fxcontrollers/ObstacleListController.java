@@ -18,7 +18,6 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import visualigue.domain.game.Obstacle;
-import visualigue.domain.dumies.DomainController;
 import visualigue.gui.javafx.fxcontrollers.items.ObstacleListItemController;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
@@ -47,26 +46,25 @@ public class ObstacleListController implements Initializable {
 
     public void refreshObstacles() {
         obstacleList.getChildren().clear();
-        addObstacleListItems(DomainController.getInstance().getObstacles());
+        //addObstacleListItems(DomainController.getInstance().getObstacles());
     }
 
-    private void addObstacleListItems(List<Obstacle> obstacles) {
-        for (Obstacle obstacle : obstacles) {
-            addObstacleListItem(obstacle);
-        }
-    }
+    /*private void addObstacleListItems(List<Obstacle> obstacles) {
+     for (Obstacle obstacle : obstacles) {
+     addObstacleListItem(obstacle);
+     }
+     }
 
-    private void addObstacleListItem(Obstacle obstacle) {
-        Node node = FXLoader.getInstance().load("obstacleListItem.fxml");
-        ObstacleListItemController itemController = FXLoader.getInstance().getLastController();
-        try {
-            itemController.init(obstacle.getPicUrl(), obstacle.getName(), obstacle.getId(), this);
-        } catch (Exception e) {
-            //no pic then...
-        }
-        obstacleList.getChildren().add(node);
-    }
-
+     private void addObstacleListItem(Obstacle obstacle) {
+     Node node = FXLoader.getInstance().load("obstacleListItem.fxml");
+     ObstacleListItemController itemController = FXLoader.getInstance().getLastController();
+     try {
+     itemController.init(obstacle.getPicUrl(), obstacle.getName(), obstacle.getId(), this);
+     } catch (Exception e) {
+     //no pic then...
+     }
+     obstacleList.getChildren().add(node);
+     }*/
     @FXML
     private void addNewObstacle(ActionEvent event) {
         Node node = FXLoader.getInstance().load("addObstacle.fxml");
@@ -75,7 +73,7 @@ public class ObstacleListController implements Initializable {
         controller.init((Stage) window);
         window.showAndWait();
         if (controller.isConfirmed()) {
-            DomainController.getInstance().addObstacle(controller.getPath(), controller.getName());
+            //DomainController.getInstance().addObstacle(controller.getPath(), controller.getName());
             refreshObstacles();
         }
     }

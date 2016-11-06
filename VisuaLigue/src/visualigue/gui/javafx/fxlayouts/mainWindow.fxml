@@ -16,10 +16,14 @@
                   <MenuItem mnemonicParsing="false" onAction="#newGame" text="New Game" />
                   <MenuItem mnemonicParsing="false" onAction="#openGame" text="Open Game" />
                   <MenuItem mnemonicParsing="false" onAction="#ExportGame" text="Export Game" />
-                  <MenuItem mnemonicParsing="false" onAction="#openSportList" text="Sports" />
-                  <MenuItem mnemonicParsing="false" onAction="#openObstacleList" text="Obstacles" />
                </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Items">
+              <items>
+                  <MenuItem mnemonicParsing="false" onAction="#openSportList" text="Sports" />
+                  <MenuItem mnemonicParsing="false" onAction="#openObstacleList" text="Obstacles" />
+              </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="View">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#setToMode1" text="Creation mode 1" />
@@ -28,7 +32,6 @@
                   <RadioMenuItem mnemonicParsing="false" onAction="#toggleRoles" text="Hide/Show Roles" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" onAction="#openOptions" text="Options" />
         </menus>
       </MenuBar>
    </top>

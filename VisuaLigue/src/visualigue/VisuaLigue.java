@@ -26,18 +26,7 @@ public class VisuaLigue extends Application implements Serializable {
         Node node = FXLoader.getInstance().load("mainWindow.fxml");
         MainWindowController controller = FXLoader.getInstance().getLastController();
         controller.init();
-        /*Button btn = new Button();
-         btn.setText("Say 'Hello World'");
-         btn.setOnAction(new EventHandler<ActionEvent>() {
 
-         @Override
-         public void handle(ActionEvent event) {
-         System.out.println("Hello World!");
-         }
-         });
-
-         StackPane root = new StackPane();
-         root.getChildren().add(btn);*/
         Scene scene = new Scene((Parent) node, 800, 600);
 
         primaryStage.setTitle("VisuaLigue - SSM");

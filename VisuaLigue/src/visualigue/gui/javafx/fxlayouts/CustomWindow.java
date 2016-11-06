@@ -16,7 +16,7 @@ import javafx.stage.Stage;
  *
  * @author samap
  */
-public class CustomWindow extends Stage implements Serializable {
+public class CustomWindow extends Stage {
 
     public CustomWindow(Node parent, Parent node) {
         super();
