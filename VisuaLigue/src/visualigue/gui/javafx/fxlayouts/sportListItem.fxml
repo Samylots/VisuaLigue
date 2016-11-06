@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="sportItem" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualigue.gui.javafx.fxcontrollers.items.SportListItemController">
+   <center>
+      <Label fx:id="sportTitle" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
+   </center>
+   <left>
+      <ImageView fx:id="sportPicture" fitHeight="61.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+   </left>
+   <padding>
+      <Insets bottom="5.0" left="8.0" right="8.0" top="5.0" />
+   </padding>
+   <right>
+      <Button fx:id="selectButton" mnemonicParsing="false" onAction="#selectSport" text="Select" BorderPane.alignment="CENTER" />
+   </right>
+</BorderPane>

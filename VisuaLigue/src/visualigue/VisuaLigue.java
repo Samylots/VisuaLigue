@@ -6,13 +6,13 @@
 package visualigue;
 
 import java.io.Serializable;
-import visualigue.gui.layouts.FXLoader;
+import visualigue.gui.javafx.fxlayouts.FXLoader;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import visualigue.gui.MainWindowController;
+import visualigue.gui.javafx.fxcontrollers.MainWindowController;
 
 /**
  *
@@ -25,6 +25,7 @@ public class VisuaLigue extends Application implements Serializable {
 
         Node node = FXLoader.getInstance().load("mainWindow.fxml");
         MainWindowController controller = FXLoader.getInstance().getLastController();
+        controller.init();
         /*Button btn = new Button();
          btn.setText("Say 'Hello World'");
          btn.setOnAction(new EventHandler<ActionEvent>() {
