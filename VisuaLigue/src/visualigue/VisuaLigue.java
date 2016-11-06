@@ -5,38 +5,26 @@
  */
 package visualigue;
 
+import java.io.Serializable;
 import visualigue.gui.layouts.FXLoader;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import visualigue.domain.dumies.Sport;
-import visualigue.gui.SportListController;
+import visualigue.gui.MainWindowController;
 
 /**
  *
  * @author samap
  */
-public class VisuaLigue extends Application {
-
-    List<Sport> sports = new ArrayList<>();
+public class VisuaLigue extends Application implements Serializable {
 
     @Override
     public void start(Stage primaryStage) {
-        sports.add(new Sport("/", "Soccer", "1"));
-        sports.add(new Sport("/", "Football", "2"));
-        sports.add(new Sport("/", "Hockey", "3"));
-        sports.add(new Sport("/", "Hockey", "3"));
-        sports.add(new Sport("/", "Hockey", "3"));
-        sports.add(new Sport("/", "Hockey", "3"));
-        sports.add(new Sport("/", "Hockey", "3"));
 
-        Node node = FXLoader.getInstance().load("sportList.fxml");
-        SportListController controller = FXLoader.getInstance().getLastController();
-        controller.init(sports);
+        Node node = FXLoader.getInstance().load("mainWindow.fxml");
+        MainWindowController controller = FXLoader.getInstance().getLastController();
         /*Button btn = new Button();
          btn.setText("Say 'Hello World'");
          btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -49,9 +37,9 @@ public class VisuaLigue extends Application {
 
          StackPane root = new StackPane();
          root.getChildren().add(btn);*/
-        Scene scene = new Scene((Parent) node, 300, 400);
+        Scene scene = new Scene((Parent) node, 800, 600);
 
-        primaryStage.setTitle("Hello World!");
+        primaryStage.setTitle("VisuaLigue - SSM");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

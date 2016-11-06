@@ -11,19 +11,18 @@ import java.io.Serializable;
  *
  * @author Samuel
  */
-public class Sport implements Serializable {
+public class Obstacle implements Serializable {
 
     String picUrl;
     String name;
     String id;
 
-    public Sport() {
+    public String getPicUrl() {
+        return picUrl;
     }
 
-    public Sport(String picUrl, String name, String id) {
-        this.name = name;
+    public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;
-        this.id = id;
     }
 
     public String getName() {
@@ -32,14 +31,6 @@ public class Sport implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPicUrl() {
-        return picUrl;
-    }
-
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
     }
 
     public String getId() {

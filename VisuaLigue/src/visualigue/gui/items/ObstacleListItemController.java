@@ -6,7 +6,6 @@
 package visualigue.gui.items;
 
 import java.io.File;
-import java.io.Serializable;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -16,7 +15,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
@@ -25,24 +23,19 @@ import javafx.scene.layout.BorderPane;
  *
  * @author Samuel
  */
-public class SportListItemController implements Initializable, Serializable {
+public class ObstacleListItemController implements Initializable {
 
     @FXML
     private BorderPane sportItem;
     @FXML
-    private ImageView sportPicture;
+    private ImageView picture;
     @FXML
-    private Label sportTitle;
+    private Label name;
     @FXML
     private Button selectButton;
 
-    private String sportDomainId;
-
     /**
      * Initializes the controller class.
-     *
-     * @param url
-     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -72,15 +65,19 @@ public class SportListItemController implements Initializable, Serializable {
 
         //need to be last, because it stop the method if there is no picture...
         System.out.println("TRYING " + picUrl);
-        sportPicture.setImage(new Image(picUrl));
+        picture.setImage(new Image(picUrl));
     }
 
     public void setPicture(File file) {
-        sportPicture.setImage(new Image(file.toURI().toString()));
+        picture.setImage(new Image(file.toURI().toString()));
     }
 
     @FXML
-    public void selectSport() {
-        System.out.println("Sport #" + sportDomainId + " selected!");
+    private void deleteObstacle(ActionEvent event) {
     }
+
+    @FXML
+    private void selectObstacle(ActionEvent event) {
+    }
+
 }

@@ -12,7 +12,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.chart.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualigue.gui.layouts.AjouterUnSportController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualigue.gui.AddSportController">
    <children>
       <VBox alignment="BOTTOM_RIGHT">
          <children>
@@ -34,11 +34,11 @@
                         </VBox>
                         <VBox prefHeight="310.0" prefWidth="197.0" spacing="10.0">
                            <children>
-                              <TextField />
-                              <TextField />
-                              <TextField />
-                              <TextField />
-                              <TextArea />
+                              <TextField fx:id="name" />
+                              <TextField fx:id="totalPlayer" />
+                              <TextField fx:id="width" />
+                              <TextField fx:id="height" />
+                              <TextArea fx:id="categories" />
                            </children>
                         </VBox>
                      </children>
@@ -47,10 +47,10 @@
                      <children>
                         <VBox spacing="10.0">
                            <children>
-                              <Button mnemonicParsing="false" text="Import accessory picture" />
-                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                              <Button mnemonicParsing="false" text="Import field picture" />
-                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                              <Button mnemonicParsing="false" onAction="#importAccessory" text="Import accessory picture" />
+                              <ImageView fx:id="accessoryPreview" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                              <Button mnemonicParsing="false" onAction="#importFieldPicture" text="Import field picture" />
+                              <ImageView fx:id="fieldPreview" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
                            </children>
                         </VBox>
                      </children>
@@ -62,8 +62,8 @@
             </HBox>
             <HBox alignment="BOTTOM_RIGHT" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" text="Cancel" />
-                  <Button mnemonicParsing="false" text="Confirm" />
+                  <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+                  <Button mnemonicParsing="false" onAction="#confirm" text="Confirm" />
                </children>
             </HBox>
          </children>
