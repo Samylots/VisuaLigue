@@ -11,13 +11,13 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import visualigue.domain.utils.Mode;
@@ -34,6 +34,10 @@ public class MainWindowController implements Initializable, Serializable {
 
     @FXML
     private BorderPane root;
+
+    private StackPane fieldLayer;
+
+    private MainToolbarController toolbar;
 
     /**
      * Initializes the controller class.
@@ -52,17 +56,29 @@ public class MainWindowController implements Initializable, Serializable {
 
     @FXML
     private void newGame(ActionEvent event) {
-        System.out.println("NEW GAME?" + getClass().getResource("/visualigue/gui/javafx/fxlayouts/icons/field.jpg").toString());
+        StackPane pane = new StackPane();
         ImageView field = new ImageView(getClass().getResource("/visualigue/gui/javafx/fxlayouts/icons/field.jpg").toString());
-        root.setCenter(field);
+        pane.getChildren().add(field);
+        root.setCenter(pane);
+        fieldLayer = pane;
+        pane.setOnMouseClicked((MouseEvent me) -> {
+            doActions(me.getX(), me.getY());
+        });
 
         Node node = FXLoader.getInstance().load("mainToolbar.fxml");
-        MainToolbarController controller = FXLoader.getInstance().getLastController();
+        toolbar = FXLoader.getInstance().getLastController();
         root.setLeft(node);
     }
 
     @FXML
     private void openGame(ActionEvent event) {
+        Node node = FXLoader.getInstance().load("gameList.fxml");
+        GameListController controller = FXLoader.getInstance().getLastController();
+        CustomWindow window = new CustomWindow(root, (Parent) node);
+        window.setTitle("Game List");
+        window.showAndWait();
+        /*Dialog popup = new Dialog("Game Loader", "This game has been successfully loaded!", root);
+         newGame(event);*/
     }
 
     @FXML
@@ -117,6 +133,44 @@ public class MainWindowController implements Initializable, Serializable {
 
     public void changeViewTo(Mode state) {
         root.setBottom(state.getNode());
+    }
+
+    private void doActions(double x, double y) {
+        if (fieldLayer != null) {
+            ImageView entity;
+            double realx = -(fieldLayer.getWidth() / 2) + x;
+            double realy = -(fieldLayer.getHeight() / 2) + y;
+            switch (toolbar.getEditMode()) {
+
+                case ADD_ACCESSORY:
+                    entity = new ImageView(new Image(getClass().getResource("/visualigue/gui/javafx/fxlayouts/icons/accessory.png").toString()));
+                    entity.setFitWidth(20);
+                    entity.setFitHeight(20);
+                    entity.translateXProperty().set(realx);
+                    entity.translateYProperty().set(realy);
+                    fieldLayer.getChildren().add(entity);
+                    break;
+                case ADD_OBSTACLE:
+                    entity = new ImageView(new Image(getClass().getResource("/visualigue/gui/javafx/fxlayouts/icons/obstacle.png").toString()));
+                    entity.setFitWidth(20);
+                    entity.setFitHeight(20);
+                    entity.translateXProperty().set(realx);
+                    entity.translateYProperty().set(realy);
+                    fieldLayer.getChildren().add(entity);
+                    break;
+                case ADD_PLAYER:
+                    entity = new ImageView(new Image(getClass().getResource("/visualigue/gui/javafx/fxlayouts/icons/player.png").toString()));
+                    entity.setFitWidth(20);
+                    entity.setFitHeight(20);
+                    entity.translateXProperty().set(realx);
+                    entity.translateYProperty().set(realy);
+                    fieldLayer.getChildren().add(entity);
+                    break;
+                default:
+                case CURSOR:
+                    break;
+            }
+        }
     }
 
 }

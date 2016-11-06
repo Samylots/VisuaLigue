@@ -21,6 +21,16 @@ import javafx.scene.control.ToolBar;
  */
 public class MainToolbarController implements Initializable {
 
+    enum EditMode {
+
+        CURSOR,
+        ADD_PLAYER,
+        ADD_ACCESSORY,
+        ADD_OBSTACLE;
+    }
+
+    private EditMode mode;
+
     @FXML
     private ToolBar toolbar;
 
@@ -29,27 +39,32 @@ public class MainToolbarController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        mode = EditMode.CURSOR;
         // TODO
     }
 
     @FXML
     private void cursorMode(ActionEvent event) {
         untoggleOthers(event.getSource());
+        mode = EditMode.CURSOR;
     }
 
     @FXML
     private void addPlayerMode(ActionEvent event) {
         untoggleOthers(event.getSource());
+        mode = EditMode.ADD_PLAYER;
     }
 
     @FXML
     private void AddAccessoryMode(ActionEvent event) {
         untoggleOthers(event.getSource());
+        mode = EditMode.ADD_ACCESSORY;
     }
 
     @FXML
     private void addObstacleMode(ActionEvent event) {
         untoggleOthers(event.getSource());
+        mode = EditMode.ADD_OBSTACLE;
     }
 
     private void untoggleOthers(Object source) {
@@ -60,6 +75,10 @@ public class MainToolbarController implements Initializable {
             }
         }
         ((ToggleButton) source).setSelected(true);
+    }
+
+    public EditMode getEditMode() {
+        return mode;
     }
 
 }
