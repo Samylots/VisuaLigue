@@ -26,8 +26,8 @@
             </Menu>
           <Menu mnemonicParsing="false" text="View">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#setToMode1" text="Creation mode 1" />
-                  <MenuItem mnemonicParsing="false" onAction="#setToMode2" text="Creation mode 2" />
+              <MenuItem mnemonicParsing="false" onAction="#setToMode1" text="Creation Mode : Frame By Frame" />
+                  <MenuItem mnemonicParsing="false" onAction="#setToMode2" text="Creation Mode : Real Time" />
                   <MenuItem mnemonicParsing="false" onAction="#visualize" text="Visualization" />
                   <RadioMenuItem mnemonicParsing="false" onAction="#toggleRoles" text="Hide/Show Roles" />
             </items>

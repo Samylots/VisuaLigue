@@ -14,9 +14,9 @@
    <children>
       <HBox alignment="CENTER_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: -fx-box-border, -fx-inner-border, -fx-body-color;;">
          <children>
-            <Label text="Sports" />
+            <Label text="Obstacles" />
             <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-            <Button fx:id="addSport" mnemonicParsing="false" onAction="#addNewObstacle" text="Add new Sport" />
+            <Button fx:id="addSport" mnemonicParsing="false" onAction="#addNewObstacle" text="Add new Obstacle" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

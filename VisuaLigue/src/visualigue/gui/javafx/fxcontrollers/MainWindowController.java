@@ -51,19 +51,22 @@ public class MainWindowController implements Initializable, Serializable {
         StackPane node = new StackPane();
         node.getChildren().add(new Label("No Game To Show\nClick on File -> New Game To Start!"));
         root.setCenter(node);
-        changeViewTo(Mode.FRAME_BY_FRAME);
     }
 
     @FXML
     private void newGame(ActionEvent event) {
         StackPane pane = new StackPane();
-        ImageView field = new ImageView(getClass().getResource("/visualigue/gui/javafx/fxlayouts/icons/field.jpg").toString());
-        pane.getChildren().add(field);
-        root.setCenter(pane);
         fieldLayer = pane;
+        root.setCenter(pane);
+        ImageView field = new ImageView(getClass().getResource("/visualigue/gui/javafx/fxlayouts/icons/field.jpg").toString());
+        /*field.fitWidthProperty().bind(pane.widthProperty());
+         field.fitWidthProperty().bind(pane.widthProperty());*/
+        pane.getChildren().add(field);
         pane.setOnMouseClicked((MouseEvent me) -> {
             doActions(me.getX(), me.getY());
         });
+
+        changeViewTo(Mode.FRAME_BY_FRAME);
 
         Node node = FXLoader.getInstance().load("mainToolbar.fxml");
         toolbar = FXLoader.getInstance().getLastController();

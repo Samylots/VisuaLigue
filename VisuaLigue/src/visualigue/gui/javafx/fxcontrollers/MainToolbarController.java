@@ -40,6 +40,7 @@ public class MainToolbarController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         mode = EditMode.CURSOR;
+        ((ToggleButton) toolbar.getItems().get(0)).setSelected(true);
         // TODO
     }
 

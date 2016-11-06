@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<TitledPane animated="false" collapsible="false" text="Game creation mode 2 manipulation board" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualigue.gui.javafx.fxcontrollers.states.RealTimeBoardController">
+<TitledPane animated="false" collapsible="false" text="Real Time manipulation board" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualigue.gui.javafx.fxcontrollers.states.RealTimeBoardController">
    <content>
       <VBox>
          <children>
