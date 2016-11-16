@@ -1,12 +1,12 @@
 # Created by https://www.gitignore.io/api/netbeans,java
 
 ### NetBeans ###
-nbproject/private/
-build/
-nbbuild/
-dist/
-nbdist/
-.nb-gradle/
+/VisuaLigue/nbproject/private/
+/VisuaLigue/build/
+/VisuaLigue/nbbuild/
+/VisuaLigue/dist/
+/VisuaLigue/nbdist/
+/VisuaLigue/.nb-gradle/
 
 ### LeagueBoard Project ###
 /LeagueBoard/nbproject/private/
