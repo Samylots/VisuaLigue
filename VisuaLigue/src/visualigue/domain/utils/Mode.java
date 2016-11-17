@@ -6,9 +6,6 @@
 package visualigue.domain.utils;
 
 import java.io.Serializable;
-import javafx.scene.Node;
-import visualigue.gui.javafx.fxcontrollers.ObstacleListController;
-import visualigue.gui.javafx.fxlayouts.FXLoader;
 
 /**
  *
@@ -16,24 +13,8 @@ import visualigue.gui.javafx.fxlayouts.FXLoader;
  */
 public enum Mode implements Serializable {
 
-    FRAME_BY_FRAME("frameByFrameBoard.fxml"),
-    REAL_TIME("realTimeBoard.fxml"),
-    VISUALISATION("visualizationBoard.fxml");
+    FRAME_BY_FRAME,
+    REAL_TIME,
+    VISUALISATION;
 
-    private final String fxmlFile;
-
-    Mode(String file) {
-        fxmlFile = file;
-    }
-
-    public Node getNode() {
-        Node node = FXLoader.getInstance().load(fxmlFile);
-        return node;
-    }
-
-    public <T> T getController() {
-        Node node = FXLoader.getInstance().load(fxmlFile);
-        ObstacleListController controller = FXLoader.getInstance().getLastController();
-        return (T) controller;
-    }
 }

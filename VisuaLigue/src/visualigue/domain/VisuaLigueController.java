@@ -5,12 +5,10 @@
  */
 package visualigue.domain;
 
-import java.awt.Dimension;
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 import javafx.geometry.Dimension2D;
-import visualigue.domain.game.Action;
 import visualigue.domain.game.Game;
 import visualigue.domain.game.Obstacle;
 import visualigue.domain.game.Sport;
@@ -34,7 +32,6 @@ public class VisuaLigueController implements Serializable {
     private Ressources ressources;
     private double actualTime;
     private double frameTimeEquiv;
-    private double zoomFactor; //1 = default?
     private GameExporter exporter;
     private double stepTime;
     private Mode currentMode;
@@ -122,10 +119,6 @@ public class VisuaLigueController implements Serializable {
         this.currentMode = mode;
     }
 
-    public void zoom(double factor) {
-        //mous wheel factor for zoom
-    }
-
     public void undo() {
 
     }
@@ -160,10 +153,6 @@ public class VisuaLigueController implements Serializable {
 
     public double getFrameTimeEquiv() {
         return frameTimeEquiv;
-    }
-
-    public double getZoomFactor() {
-        return zoomFactor;
     }
 
     public double getStepTime() {
