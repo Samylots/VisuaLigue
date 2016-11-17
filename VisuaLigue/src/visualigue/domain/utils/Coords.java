@@ -45,6 +45,11 @@ public class Coords {
         this.y = y;
     }
 
+    public void invert() {
+        this.x = -this.x;
+        this.y = -this.y;
+    }
+
     @Override
     public String toString() {
         return "X:" + x + ", Y:" + y;
