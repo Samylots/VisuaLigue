@@ -5,6 +5,7 @@
  */
 package visualigue.domain.utils;
 
+import java.io.Serializable;
 import javafx.scene.Node;
 import visualigue.gui.javafx.fxcontrollers.ObstacleListController;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
@@ -13,7 +14,7 @@ import visualigue.gui.javafx.fxlayouts.FXLoader;
  *
  * @author Samuel
  */
-public enum Mode {
+public enum Mode implements Serializable {
 
     FRAME_BY_FRAME("frameByFrameBoard.fxml"),
     REAL_TIME("realTimeBoard.fxml"),

@@ -5,15 +5,17 @@
  */
 package visualigue.domain.game;
 
+import java.io.Serializable;
 import javafx.geometry.Dimension2D;
 import visualigue.domain.utils.Coords;
 import visualigue.domain.utils.Entity;
+import visualigue.services.persistence.Serializer;
 
 /**
  *
  * @author Samuel
  */
-public class Obstacle extends Entity {
+public class Obstacle extends Entity implements Serializable {
 
     String name;
 

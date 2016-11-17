@@ -5,11 +5,13 @@
  */
 package visualigue.domain.game;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Samuel
  */
-public class Action {
+public class Action implements Serializable {
 
     private final String name;
     private final double start;

@@ -5,6 +5,7 @@
  */
 package visualigue.domain.game;
 
+import java.io.Serializable;
 import java.util.List;
 import javafx.geometry.Dimension2D;
 import visualigue.domain.utils.Coords;
@@ -14,7 +15,7 @@ import visualigue.domain.utils.Entity;
  *
  * @author Samuel
  */
-public class Game {
+public class Game implements Serializable {
 
     private Sport sport;
     private List<Player> team;

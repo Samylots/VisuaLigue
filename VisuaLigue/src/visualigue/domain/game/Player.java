@@ -5,6 +5,7 @@
  */
 package visualigue.domain.game;
 
+import java.io.Serializable;
 import java.util.List;
 import javafx.geometry.Dimension2D;
 import visualigue.domain.utils.Coords;
@@ -14,13 +15,12 @@ import visualigue.domain.utils.Entity;
  *
  * @author Samuel
  */
-public class Player extends Entity {
+public class Player extends Entity implements Serializable {
 
     private String role;
     private String category;
     private Entity accessory;
     private List<Action> actions;
-    private List<Movement> movements;
 
     public Player(Coords position, Dimension2D dimensions) {
         super(position, dimensions);
@@ -56,21 +56,6 @@ public class Player extends Entity {
 
     public void deleteAction(double time) {
         //Todo find nearest Action at this time
-    }
-
-    public void addMovement(Movement movement) {
-        movements.add(movement); //TODO do i need to check is a movemnt à this time exists?
-    }
-
-    public Movement getCurrentMovement(double time) {
-        if (movements.isEmpty()) {
-            return null; //of throw exception?
-        }
-        return movements.get(0);
-    }
-
-    public void deleteMovement(double time) {
-        //Todo find nearest Movement at this time
     }
 
     public void shootAccessoryTo(Player player) {

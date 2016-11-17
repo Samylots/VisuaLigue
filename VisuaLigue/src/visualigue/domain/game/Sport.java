@@ -5,6 +5,7 @@
  */
 package visualigue.domain.game;
 
+import java.io.Serializable;
 import java.util.List;
 import javafx.geometry.Dimension2D;
 import visualigue.domain.utils.Entity;
@@ -13,7 +14,7 @@ import visualigue.domain.utils.Entity;
  *
  * @author Samuel
  */
-public class Sport {
+public class Sport implements Serializable {
 
     private final String name;
     private final Entity field;

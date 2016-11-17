@@ -6,11 +6,11 @@
 package visualigue.domain;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.List;
 import javafx.geometry.Dimension2D;
 import visualigue.domain.game.Action;
 import visualigue.domain.game.Game;
-import visualigue.domain.game.Movement;
 import visualigue.domain.game.Obstacle;
 import visualigue.domain.game.Sport;
 import visualigue.domain.utils.Coords;
@@ -24,17 +24,16 @@ import visualigue.services.persistence.Serializer;
  *
  * @author Samuel
  */
-public class VisuaLigue {
+public class VisuaLigueController implements Serializable {
 
     private String folder;
     private List<Game> games;
-    private Serializer serializer;
+    private transient Serializer serializer;
     private List<Sport> availableSports;
     private List<Action> availableActions;
     private List<Obstacle> availableObstacles;
     private double actualTime;
     private double frameTimeEquiv;
-    private Movement currentMovement; //pour la création d'un nouveau mouvement! (RealTime)
     private double zoomFactor; //1 = default?
     private GameExporter exporter;
     private double stepTime;
@@ -42,10 +41,11 @@ public class VisuaLigue {
     private Game currentGame;
     private boolean showingRoles;
 
-    public VisuaLigue(String folder) {
+    public VisuaLigueController() {
         this.showingRoles = true;
         this.currentMode = Mode.FRAME_BY_FRAME;
         this.folder = folder;
+        this.serializer = new Serializer(this);
     }
 
     public void createNewObstacle(String name, Coords coord, Dimension2D dimension) {
@@ -66,7 +66,7 @@ public class VisuaLigue {
     }
 
     public void createNewGame() {
-        //ask save etc.
+        //createNewGame...
     }
 
     public void loadGame(Game game) {
@@ -83,11 +83,6 @@ public class VisuaLigue {
 
     public void stopRecordingMovement() {
 
-    }
-
-    public void addPlayerMovement(Movement movement) {
-        //if game.currentEntity type of Player
-        //player . add movement
     }
 
     public void exportGame(String path) {

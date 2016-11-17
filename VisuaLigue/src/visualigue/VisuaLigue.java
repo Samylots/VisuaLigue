@@ -13,12 +13,19 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import visualigue.gui.javafx.fxcontrollers.MainWindowController;
+import visualigue.domain.VisuaLigueController;
 
 /**
  *
  * @author samap
  */
-public class VisuaLigue extends Application implements Serializable {
+public class VisuaLigue extends Application {
+    
+    private static VisuaLigueController controller = new VisuaLigueController();
+    
+    public static VisuaLigueController getController() {
+        return controller;
+    }
 
     @Override
     public void start(Stage primaryStage) {
@@ -26,6 +33,8 @@ public class VisuaLigue extends Application implements Serializable {
         Node node = FXLoader.getInstance().load("mainWindow.fxml");
         MainWindowController controller = FXLoader.getInstance().getLastController();
         controller.init();
+        
+        VisuaLigue.controller.createNewGame();
 
         Scene scene = new Scene((Parent) node, 800, 600);
 
