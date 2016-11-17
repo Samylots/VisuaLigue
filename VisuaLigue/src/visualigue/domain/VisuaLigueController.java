@@ -5,6 +5,7 @@
  */
 package visualigue.domain;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
@@ -16,6 +17,7 @@ import visualigue.domain.game.Sport;
 import visualigue.domain.utils.Coords;
 import visualigue.domain.utils.Entity;
 import visualigue.domain.utils.Mode;
+import visualigue.exceptions.NoCurrentGameException;
 import visualigue.services.exporters.GameExporter;
 import visualigue.services.exporters.GameExporterFactory;
 import visualigue.services.persistence.Serializer;
@@ -27,34 +29,30 @@ import visualigue.services.persistence.Serializer;
 public class VisuaLigueController implements Serializable {
 
     private String folder;
-    private List<Game> games;
+    private Game currentGame;
     private transient Serializer serializer;
-    private List<Sport> availableSports;
-    private List<Action> availableActions;
-    private List<Obstacle> availableObstacles;
+    private Ressources ressources;
     private double actualTime;
     private double frameTimeEquiv;
     private double zoomFactor; //1 = default?
     private GameExporter exporter;
     private double stepTime;
     private Mode currentMode;
-    private Game currentGame;
     private boolean showingRoles;
 
     public VisuaLigueController() {
         this.showingRoles = true;
         this.currentMode = Mode.FRAME_BY_FRAME;
-        this.folder = folder;
+        //this.folder = folder; //need to keep it on first save
         this.serializer = new Serializer(this);
     }
 
     public void createNewObstacle(String name, Coords coord, Dimension2D dimension) {
-        availableObstacles.add(new Obstacle(name, coord, dimension));
+        ressources.createNewObstacle(name, coord, dimension);
     }
 
     public void createNewSport(String name, int limit, Dimension2D fieldDimension, Entity accessory, List<String> categories) {
-        Entity field = new Entity(new Coords(), fieldDimension);
-        availableSports.add(new Sport(name, limit, field, accessory, categories));
+        ressources.createNewSport(name, limit, fieldDimension, accessory, categories);
     }
 
     public void editObstacle(String oldName, String newName, Coords coord, Dimension2D dimension) {
@@ -148,16 +146,12 @@ public class VisuaLigueController implements Serializable {
         return folder;
     }
 
-    public List<Game> getGames() {
-        return games;
-    }
-
     public List<Sport> getAvailableSports() {
-        return availableSports;
+        return ressources.getAvailableSports();
     }
 
     public List<Obstacle> getAvailableObstacles() {
-        return availableObstacles;
+        return ressources.getAvailableObstacles();
     }
 
     public double getActualTime() {
@@ -182,6 +176,13 @@ public class VisuaLigueController implements Serializable {
 
     public boolean isShowingRoles() {
         return showingRoles;
+    }
+
+    public Dimension2D getFieldDimension() {
+        if (currentGame == null) {
+            throw new NoCurrentGameException("There is no current game defined!");
+        }
+        return currentGame.getFieldDimension();
     }
 
 }

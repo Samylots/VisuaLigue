@@ -20,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import visualigue.domain.VisuaLigueController;
 import visualigue.domain.utils.Mode;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.Dialog;
@@ -37,7 +38,13 @@ public class MainWindowController implements Initializable, Serializable {
 
     private StackPane fieldLayer;
 
-    private MainToolbarController toolbar;
+    private Node mainToolbar;
+    private MainToolbarController mainToolbarController;
+
+    private Node board;
+    private BoardController boardController;
+
+    private VisuaLigueController domainController;
 
     /**
      * Initializes the controller class.
@@ -47,30 +54,27 @@ public class MainWindowController implements Initializable, Serializable {
         // TODO
     }
 
-    public void init() {
+    public void init(VisuaLigueController domainController) {
+        this.domainController = domainController;
         StackPane node = new StackPane();
         node.getChildren().add(new Label("No Game To Show\nClick on File -> New Game To Start!"));
         root.setCenter(node);
+
+        board = FXLoader.getInstance().load("Board.fxml");
+        boardController = FXLoader.getInstance().getLastController();
+
+        mainToolbar = FXLoader.getInstance().load("mainToolbar.fxml");
+        mainToolbarController = FXLoader.getInstance().getLastController();
     }
 
     @FXML
     private void newGame(ActionEvent event) {
-        StackPane pane = new StackPane();
-        fieldLayer = pane;
-        root.setCenter(pane);
-        ImageView field = new ImageView(getClass().getResource("/visualigue/gui/javafx/fxlayouts/icons/field.jpg").toString());
-        /*field.fitWidthProperty().bind(pane.widthProperty());
-         field.fitWidthProperty().bind(pane.widthProperty());*/
-        pane.getChildren().add(field);
-        pane.setOnMouseClicked((MouseEvent me) -> {
-            doActions(me.getX(), me.getY());
-        });
+        //open sport selection first
+        //boardController.setSport () etc.
+        root.setCenter(board);
 
         changeViewTo(Mode.FRAME_BY_FRAME);
-
-        Node node = FXLoader.getInstance().load("mainToolbar.fxml");
-        toolbar = FXLoader.getInstance().getLastController();
-        root.setLeft(node);
+        root.setLeft(mainToolbar);
     }
 
     @FXML
@@ -143,7 +147,7 @@ public class MainWindowController implements Initializable, Serializable {
             ImageView entity;
             double realx = -(fieldLayer.getWidth() / 2) + x;
             double realy = -(fieldLayer.getHeight() / 2) + y;
-            switch (toolbar.getEditMode()) {
+            switch (mainToolbarController.getEditMode()) {
 
                 case ADD_ACCESSORY:
                     entity = new ImageView(new Image(getClass().getResource("/visualigue/gui/javafx/fxlayouts/icons/accessory.png").toString()));

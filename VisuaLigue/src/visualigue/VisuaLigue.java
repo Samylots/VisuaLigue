@@ -20,21 +20,21 @@ import visualigue.domain.VisuaLigueController;
  * @author samap
  */
 public class VisuaLigue extends Application {
-    
-    private static VisuaLigueController controller = new VisuaLigueController();
-    
+
+    private static VisuaLigueController domainController = new VisuaLigueController();
+
     public static VisuaLigueController getController() {
-        return controller;
+        return domainController;
     }
 
     @Override
     public void start(Stage primaryStage) {
 
         Node node = FXLoader.getInstance().load("mainWindow.fxml");
-        MainWindowController controller = FXLoader.getInstance().getLastController();
-        controller.init();
-        
-        VisuaLigue.controller.createNewGame();
+        MainWindowController mainWindowController = FXLoader.getInstance().getLastController();
+        mainWindowController.init(domainController);
+
+        VisuaLigue.domainController.createNewGame(); //Vraiment nécessaire?
 
         Scene scene = new Scene((Parent) node, 800, 600);
 

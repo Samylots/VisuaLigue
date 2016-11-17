@@ -8,7 +8,9 @@ package visualigue.gui.javafx.fxcontrollers;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.canvas.Canvas;
 
 /**
  * FXML Controller class
@@ -16,6 +18,9 @@ import javafx.fxml.Initializable;
  * @author samap
  */
 public class BoardController implements Initializable, Serializable {
+
+    @FXML
+    Canvas canvas;
 
     /**
      * Initializes the controller class.

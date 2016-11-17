@@ -6,7 +6,6 @@
 package visualigue.gui.javafx.helpers;
 
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 /**
  *
