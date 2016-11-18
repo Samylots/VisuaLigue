@@ -5,7 +5,7 @@
  */
 package visualigue.domain;
 
-import javafx.geometry.Dimension2D;
+import visualigue.domain.utils.Dimension;
 import visualigue.domain.utils.Coords;
 
 /**
@@ -20,8 +20,8 @@ public class Converter {
         domain = domainController;
     }
 
-    public Coords pixelToMeter(Coords currentPos, Dimension2D uiDimension, double zoomFactor, Coords fieldOrigin) {
-        Dimension2D realDimension = domain.getFieldDimension();
+    public Coords pixelToMeter(Coords currentPos, Dimension uiDimension, double zoomFactor, Coords fieldOrigin) {
+        Dimension realDimension = domain.getFieldDimension();
         double x = currentPos.getX(), y = currentPos.getY();
         x -= fieldOrigin.getX();
         y -= fieldOrigin.getY();
@@ -30,8 +30,8 @@ public class Converter {
         return new Coords(x / uiDimension.getWidth() * realDimension.getWidth(), y / uiDimension.getHeight() * realDimension.getHeight());
     }
 
-    public Coords meterToPixel(Coords currentPos, Dimension2D uiDimension, double zoomFactor, Coords fieldOrigin) {
-        Dimension2D realDimension = domain.getFieldDimension();
+    public Coords meterToPixel(Coords currentPos, Dimension uiDimension, double zoomFactor, Coords fieldOrigin) {
+        Dimension realDimension = domain.getFieldDimension();
         double x = currentPos.getX(), y = currentPos.getY();
         x = x / realDimension.getWidth() * uiDimension.getWidth();
         y = y / realDimension.getHeight() * uiDimension.getHeight();

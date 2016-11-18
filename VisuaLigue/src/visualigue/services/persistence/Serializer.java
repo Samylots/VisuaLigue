@@ -22,12 +22,12 @@ import java.io.ByteArrayInputStream;
 
 /**
  *
- * @author Bruno
+ * @author Bruno L.L.
  */
 public class Serializer {
     
     private final String saveFileName = "save.ser";
-    private final int historySize = 3;
+    private final int historyMaxSize = 100;
     
     private LinkedList<byte[]> history = new LinkedList<byte[]>();
     private VisuaLigueController controller;
@@ -45,7 +45,7 @@ public class Serializer {
             out.close();
 
             int size = history.size();
-            if (size > historySize-1)
+            if (size > historyMaxSize-1)
                 history.remove(size-1);
             
             history.addFirst(byteArrayOut.toByteArray());

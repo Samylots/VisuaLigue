@@ -5,11 +5,13 @@
  */
 package visualigue.domain.utils;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Samuel
  */
-public class Coords {
+public class Coords implements Serializable {
 
     private double x;
     private double y;

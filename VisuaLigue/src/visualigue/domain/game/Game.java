@@ -7,56 +7,62 @@ package visualigue.domain.game;
 
 import java.io.Serializable;
 import java.util.List;
-import javafx.geometry.Dimension2D;
 import visualigue.domain.utils.Coords;
-import visualigue.domain.utils.Entity;
 
 /**
  *
- * @author Samuel
+ * @author Bruno L.L.
  */
 public class Game implements Serializable {
 
     private Sport sport;
-    private List<Player> team;
     private List<Obstacle> obstacles;
-    private double totalGameTime;
+    private Frame firstFrame;
+    private Frame lastFrame;
+    private int totalFrames;
     private Entity currentEntity;
+    private Frame currentFrame;
 
-    public void addPlayerAt(Coords coord, Dimension2D dimension) {
-        //TODO check sport team limit!
-        team.add(new Player(coord, dimension));
+    public void addPlayerAt(Coords coord, Player player) {
+        //TODO
     }
 
     public void deletePlayerAt(Coords coord) {
-        //TODO find player at coord
-        team.remove(0);
+        //TODO
     }
 
-    public void addObstacleAt(String name, Coords coord, Dimension2D dimension) {
-        obstacles.add(new Obstacle(name, coord, dimension));
+    public void addObstacleAt(Obstacle obstacle, Coords coord) {
+        // TODO add on current frame
+        obstacles.add(obstacle);
     }
 
     public void deleteObstacleAt(Coords coord) {
-        //TODO find obstacle at coord
+        //TODO find obstacle at coord, delete from frame
         obstacles.remove(0);
     }
 
     public void selectEntityAt(Coords coord) {
-        //select entity that has bounds
+        // TODO
+    }
+    
+    public void addAccessoryAt(Coords coord, Player player) {
+        //TODO
+    }
+
+    public void deleteAccessoryAt(Coords coord) {
+        //TODO
     }
 
     public void moveCurrentEntityTo(Coords coord) {
-        currentEntity.setPosition(coord);
+        // TODO
     }
 
     public void setSport(Sport sport) {
         this.sport = sport;
-        //TOdo checks team nb and positions (Field limits..!)
+        //TODO checks team nb and positions (Field limits..!)
     }
-
-    public Dimension2D getFieldDimension() {
-        return sport.getFieldDimension();
+    
+    public Sport getSport() {
+        return sport;
     }
-
 }

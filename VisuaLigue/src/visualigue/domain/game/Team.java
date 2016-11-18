@@ -6,23 +6,26 @@
 package visualigue.domain.game;
 
 import java.io.Serializable;
-import visualigue.domain.utils.Dimension;
-import visualigue.services.persistence.Serializer;
 
 /**
  *
  * @author Bruno L.L.
  */
-public class Obstacle extends Entity implements Serializable {
+public class Team implements Serializable {
+    
+    private String name;
+    private String color;
 
-    String name;
-
-    public Obstacle(String name, Dimension dimension, String picturePath) {
-        super(dimension, picturePath);
+    public Team(String name, String color) {
         this.name = name;
+        this.color = color;
     }
-
+    
     public String getName() {
         return name;
+    }
+    
+    public String getColor() {
+        return color;
     }
 }

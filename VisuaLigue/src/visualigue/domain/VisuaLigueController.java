@@ -8,12 +8,12 @@ package visualigue.domain;
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
-import javafx.geometry.Dimension2D;
+import visualigue.domain.utils.Dimension;
 import visualigue.domain.game.Game;
 import visualigue.domain.game.Obstacle;
 import visualigue.domain.game.Sport;
 import visualigue.domain.utils.Coords;
-import visualigue.domain.utils.Entity;
+import visualigue.domain.game.Entity;
 import visualigue.domain.utils.Mode;
 import visualigue.exceptions.NoCurrentGameException;
 import visualigue.services.exporters.GameExporter;
@@ -44,6 +44,7 @@ public class VisuaLigueController implements Serializable {
         this.serializer = new Serializer(this);
     }
 
+    /*
     public void createNewObstacle(String name, Coords coord, Dimension2D dimension) {
         ressources.createNewObstacle(name, coord, dimension);
     }
@@ -55,7 +56,8 @@ public class VisuaLigueController implements Serializable {
     public void editObstacle(String oldName, String newName, Coords coord, Dimension2D dimension) {
         //TODO find obstacle by old name and edit it
     }
-
+    */
+    
     public void deleteObstacle(String name) {
         //find obstacle by name and delete it
     }
@@ -167,11 +169,11 @@ public class VisuaLigueController implements Serializable {
         return showingRoles;
     }
 
-    public Dimension2D getFieldDimension() {
+    public Dimension getFieldDimension() {
         if (currentGame == null) {
             throw new NoCurrentGameException("There is no current game defined!");
         }
-        return currentGame.getFieldDimension();
+        return currentGame.getSport().getFieldDimension();
     }
 
 }

@@ -7,47 +7,31 @@ package visualigue.domain.game;
 
 import java.io.Serializable;
 import java.util.List;
-import javafx.geometry.Dimension2D;
-import visualigue.domain.utils.Entity;
+import visualigue.domain.utils.Dimension;
+import visualigue.domain.game.Team;
 
 /**
  *
- * @author Samuel
+ * @author Bruno L.L.
  */
 public class Sport implements Serializable {
 
-    private final String name;
-    private final Entity field;
-    private final Entity accessory;
-    private final List<String> categories;
-    private final int teamLimit;
+    private String name;
+    private String fieldPicturePath;
+    private Dimension dimension;
+    private Entity accessory;
+    private String accessoryName;
+    private List<Team> team;
 
-    public Sport(String name, int teamLimit, Entity field, Entity accessory, List<String> categories) {
+    public Sport(String name, String fieldPicturePath, Dimension dimension, Entity accessory, String accessoryName) {
         this.name = name;
-        this.field = field;
+        this.fieldPicturePath = fieldPicturePath;
+        this.dimension = dimension;
         this.accessory = accessory;
-        this.categories = categories;
-        this.teamLimit = teamLimit;
+        this.accessoryName = accessoryName;
     }
 
-    public String getName() {
-        return name;
+    public Dimension getFieldDimension() {
+        return dimension;
     }
-
-    public Dimension2D getFieldDimension() {
-        return field.getDimension();
-    }
-
-    public Entity getAccessory() {
-        return accessory;
-    }
-
-    public List<String> getCategories() {
-        return categories;
-    }
-
-    public int getTeamLimit() {
-        return teamLimit;
-    }
-
 }

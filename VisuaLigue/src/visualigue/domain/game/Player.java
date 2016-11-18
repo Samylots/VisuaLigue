@@ -7,65 +7,27 @@ package visualigue.domain.game;
 
 import java.io.Serializable;
 import java.util.List;
-import javafx.geometry.Dimension2D;
 import visualigue.domain.utils.Coords;
-import visualigue.domain.utils.Entity;
+import visualigue.domain.game.Team;
+import visualigue.domain.game.Entity;
+import visualigue.domain.utils.Dimension;
 
 /**
  *
- * @author Samuel
+ * @author Bruno L.L.
  */
 public class Player extends Entity implements Serializable {
 
     private String role;
-    private String category;
-    private Entity accessory;
-    private List<Action> actions;
-
-    public Player(Coords position, Dimension2D dimensions) {
-        super(position, dimensions);
-        accessory = null;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
+    private String name;
+    
+    public Player(Dimension dimension, String picturePath, String role, String name) {
+        super(dimension, picturePath);
         this.role = role;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public void addAction(String name, double start, double duration) {
-        actions.add(new Action(name, start, duration));
-    }
-
-    public Action getCurrentAction(double time) {
-        if (actions.isEmpty()) {
-            return null; //of throw exception?
-        }
-        return actions.get(0);
-    }
-
-    public void deleteAction(double time) {
-        //Todo find nearest Action at this time
+        this.name = name;
     }
 
     public void shootAccessoryTo(Player player) {
-        player.receiveAccessory(accessory);
-        accessory = null;
+        // TODO
     }
-
-    public void receiveAccessory(Entity accessory) {
-        this.accessory = accessory;
-    }
-
-    //Todo make private methods to find nearet Movement/Action to given time...
 }
