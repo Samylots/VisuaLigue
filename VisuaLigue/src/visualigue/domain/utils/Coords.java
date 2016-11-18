@@ -47,9 +47,16 @@ public class Coords implements Serializable {
         this.y = y;
     }
 
-    public void invert() {
-        this.x = -this.x;
-        this.y = -this.y;
+    public void addX(double x) {
+        this.x += x;
+    }
+
+    public void addY(double y) {
+        this.y += y;
+    }
+
+    public Coords invert() {
+        return new Coords(-x, -y);
     }
 
     @Override

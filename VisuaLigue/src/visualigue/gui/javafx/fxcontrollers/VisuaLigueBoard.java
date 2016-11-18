@@ -14,6 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import visualigue.domain.Converter;
 import visualigue.domain.VisuaLigueController;
 import visualigue.domain.utils.Coords;
@@ -70,14 +71,14 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
                 drawAll();
             }
         });
-        setOnMouseEntered((MouseEvent e)->{
+        setOnMouseEntered((MouseEvent e) -> {
             isOnBoard = true;
         });
-        setOnMouseExited((MouseEvent e)->{
+        setOnMouseExited((MouseEvent e) -> {
             isOnBoard = false;
         });
         setOnMouseMoved((final MouseEvent event) -> {
-            if(isOnBoard){
+            if (isOnBoard) {
                 updateMousePos(event);
                 drawAll();
             }
@@ -174,11 +175,12 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
      * Drawing mouse position info on board
      */
     private void drawPos() {
-        gc.setLineWidth(1.5);
+        gc.setFont(Font.font(20));
+        gc.setLineWidth(3);
         gc.setStroke(Color.BLACK);
-        gc.strokeText(mouseX + "," + mouseY, 100 - origin.getX(), 10 - origin.getY());
+        gc.strokeText(getMousePosition().toString(), 110 - origin.getX(), 15 - origin.getY());
         gc.setFill(Color.WHITE);
-        gc.fillText(mouseX + "," + mouseY, 100 - origin.getX(), 10 - origin.getY());
+        gc.fillText(getMousePosition().toString(), 110 - origin.getX(), 15 - origin.getY());
     }
 
     public void toggleRoles() {
@@ -186,16 +188,12 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
     }
 
     private void drawMiniMap() {
-        double finalWidth, finalHeight, reduction;
         double widthReduction = fieldPicture.getWidth() / MINIMAP_MAX_WIDTH;
         double heigtReduction = fieldPicture.getHeight() / MINIMAP_MAX_HEIGHT;
-        if (widthReduction > heigtReduction) {
-            reduction = widthReduction;
-        } else {
-            reduction = heigtReduction;
-        }
-        finalWidth = fieldPicture.getWidth() / reduction;
-        finalHeight = fieldPicture.getHeight() / reduction;
+        double reduction;
+        reduction = Math.max(widthReduction, heigtReduction);
+        double finalWidth = fieldPicture.getWidth() / reduction;
+        double finalHeight = fieldPicture.getHeight() / reduction;
         gc.setFill(Color.WHITE);
         gc.fillRect(0 - origin.getX(), 0 - origin.getY(), finalWidth, finalHeight);
         gc.drawImage(fieldPicture, 0 - origin.getX(), 0 - origin.getY(), finalWidth, finalHeight);
@@ -203,40 +201,49 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
     }
 
     private void drawViewOnMinimap(double reduction) {
-        Coords viewOrigin = new Coords(origin);
-        double viewWidth = 0, viewHeight = 0;
-        double oriX = (viewOrigin.getX() / reduction / zoomFactor);
-        double oriY = (viewOrigin.getY() / reduction / zoomFactor);
-
-        //width
-        if (getActualFieldWidth() + origin.getX() < getWidth()) {
-            viewWidth = (fieldPicture.getWidth() / reduction);
-        } else {
-            viewWidth = (fieldPicture.getWidth() / reduction) + ((getWidth() - (getActualFieldWidth() + origin.getX())) / zoomFactor / reduction);//max
+        double viewWidth = fieldPicture.getWidth() / reduction;
+        double viewHeight = fieldPicture.getHeight() / reduction;
+        double leftHiddenZone = -(origin.getX() / reduction / zoomFactor);
+        double topHiddenZone = -(origin.getY() / reduction / zoomFactor);
+        Coords viewOrigin = origin.invert(); //Undo board translation to always print it at top left
+        //view width
+        if (!isRightBoundInView()) {
+            double rightHiddenZone = -((getWidth() - (getActualFieldWidth() + origin.getX())) / zoomFactor / reduction);
+            viewWidth -= rightHiddenZone;
         }
-        //height
-        if (getActualFieldHeight() + origin.getY() < getHeight()) {
-            viewHeight = (fieldPicture.getHeight() / reduction);
-        } else {
-            viewHeight = (fieldPicture.getHeight() / reduction) + ((getHeight() - (getActualFieldHeight() + origin.getY())) / zoomFactor / reduction);//max
+        //view height
+        if (!isBottomBoundInView()) {
+            double bottomHiddenZone = -((getHeight() - (getActualFieldHeight() + origin.getY())) / zoomFactor / reduction);
+            viewHeight -= bottomHiddenZone;
         }
 
-        if (viewOrigin.getX() > 0) {
-            viewOrigin.setX(-viewOrigin.getX()); //max
-        } else {
-            viewWidth += oriX;
-            viewOrigin.setX(-viewOrigin.getX() - oriX);
+        if (!isLeftBoundInView()) {
+            viewWidth -= leftHiddenZone;
+            viewOrigin.addX(leftHiddenZone);
         }
-        if (viewOrigin.getY() > 0) {
-            viewOrigin.setY(-viewOrigin.getY()); //max
-        } else {
-            viewHeight += oriY;
-            viewOrigin.setY(-viewOrigin.getY() - oriY);
+        if (!isTopBoundInView()) {
+            viewHeight -= topHiddenZone;
+            viewOrigin.addY(topHiddenZone);
         }
-
         gc.setStroke(Color.RED);
         gc.setLineWidth(2);
         gc.strokeRect(viewOrigin.getX(), viewOrigin.getY(), viewWidth, viewHeight);
+    }
+
+    private boolean isLeftBoundInView() {
+        return origin.getX() > 0;
+    }
+
+    private boolean isTopBoundInView() {
+        return origin.getY() > 0;
+    }
+
+    private boolean isRightBoundInView() {
+        return getActualFieldWidth() + origin.getX() < getWidth();
+    }
+
+    private boolean isBottomBoundInView() {
+        return getActualFieldHeight() + origin.getY() < getHeight();
     }
 
     private double getActualFieldWidth() {
