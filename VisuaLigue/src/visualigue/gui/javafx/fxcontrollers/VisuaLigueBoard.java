@@ -11,8 +11,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
@@ -34,6 +32,7 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
     private final MainWindowController parentController;
 
     private boolean isShowingRoles = true;
+    private boolean isOnBoard = false;
 
     private final GraphicsContext gc = getGraphicsContext2D(); //Quicker access to it's graphic context
     private final Coords origin; //Field board's origin on board's space
@@ -64,16 +63,24 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
         });
 
         setOnMouseDragged((MouseEvent event) -> {
-            if (event.isSecondaryButtonDown()) {
+            if (event.isSecondaryButtonDown() && isOnBoard) {
                 updateMousePos(event.getX(), event.getY());
                 Coords newMousePos = getMousePosition();
                 translate(newMousePos.getX() - oldMousePos.getX(), newMousePos.getY() - oldMousePos.getY());
                 drawAll();
             }
         });
+        setOnMouseEntered((MouseEvent e)->{
+            isOnBoard = true;
+        });
+        setOnMouseExited((MouseEvent e)->{
+            isOnBoard = false;
+        });
         setOnMouseMoved((final MouseEvent event) -> {
-            updateMousePos(event);
-            drawAll();
+            if(isOnBoard){
+                updateMousePos(event);
+                drawAll();
+            }
         });
     }
 
@@ -203,7 +210,6 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
 
         //width
         if (getActualFieldWidth() + origin.getX() < getWidth()) {
-            System.out.println(viewOrigin);
             viewWidth = (fieldPicture.getWidth() / reduction);
         } else {
             viewWidth = (fieldPicture.getWidth() / reduction) + ((getWidth() - (getActualFieldWidth() + origin.getX())) / zoomFactor / reduction);//max
