@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package visualigue.gui.javafx.helpers;
+package visualigue.gui.javafx.models;
 
 import javafx.scene.image.Image;
 
@@ -13,8 +13,15 @@ import javafx.scene.image.Image;
  */
 public class Sport {
 
+    private int sportId;
     private String name;
     private Image pic;
+
+    public Sport(String name, Image pic, int id) {
+        this.sportId = id;
+        this.name = name;
+        this.pic = pic;
+    }
 
     public String getName() {
         return name;
@@ -30,6 +37,10 @@ public class Sport {
 
     public void setPic(String path) {
         this.pic = new Image(path);
+    }
+
+    public int getSportId() {
+        return sportId;
     }
 
 }

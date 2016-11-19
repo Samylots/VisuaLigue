@@ -18,6 +18,8 @@ import javafx.scene.text.Font;
 import visualigue.domain.Converter;
 import visualigue.domain.VisuaLigueController;
 import visualigue.domain.utils.Coords;
+import visualigue.domain.utils.Dimension;
+import visualigue.gui.javafx.fxdrawers.GameDrawer;
 
 /**
  * FXML Controller class
@@ -32,16 +34,16 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
 
     private final MainWindowController parentController;
 
-    private boolean isShowingRoles = true;
     private boolean isOnBoard = false;
 
     private final GraphicsContext gc = getGraphicsContext2D(); //Quicker access to it's graphic context
     private final Coords origin; //Field board's origin on board's space
     private double zoomFactor;
     private final Converter converter;
+    private final GameDrawer drawer;
     private final VisuaLigueController domain;
     //TODO change it to be the sport's game field picture (on ini, getting it from domain)
-    private Image fieldPicture = new Image(getClass().getResource("/visualigue/gui/javafx/fxlayouts/icons/accessory.png").toString(), 500, 300, false, true);
+    private Image fieldPicture;//= new Image(getClass().getResource("/visualigue/gui/javafx/fxlayouts/icons/accessory.png").toString(), 500, 300, false, true);
 
     private Coords oldMousePos; //Previous recorded mouse position
     private final DoubleProperty mouseX = new SimpleDoubleProperty(); //Actual mouse X position
@@ -53,6 +55,7 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
         origin = new Coords();
         domain = domainController;
         this.parentController = parentController;
+        drawer = new GameDrawer(this, domain);
         converter = new Converter(domainController);
         setOnScroll((ScrollEvent event) -> {
             if (event.getDeltaY() > 0) {
@@ -93,11 +96,13 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
     private void zoom(double delta) {
         Coords oldCoords = getMousePosition();
         Coords newCoords = getMousePosition();
-        zoomFactor *= delta;
-        newCoords.setX(newCoords.getX() * delta);
-        newCoords.setY(newCoords.getY() * delta);
-        translate(oldCoords.getX() - newCoords.getX(), oldCoords.getY() - newCoords.getY());
-        setMousePos((oldCoords.getX() * delta), (oldCoords.getY() * delta));
+        if (zoomFactor * delta < 27000) {
+            zoomFactor *= delta;
+            newCoords.setX(newCoords.getX() * delta);
+            newCoords.setY(newCoords.getY() * delta);
+            translate(oldCoords.getX() - newCoords.getX(), oldCoords.getY() - newCoords.getY());
+            setMousePos((oldCoords.getX() * delta), (oldCoords.getY() * delta));
+        }
     }
 
     private void updateMousePos(MouseEvent event) {
@@ -159,16 +164,22 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
      */
     private void drawAll() {
         clear();
+        fieldPicture = new Image(domain.getFieldPicPath());
+        drawField();
+        drawer.drawGame();
+        if (domain.isShowingRoles()) {
+            drawPos();
+        }
+        drawMiniMap();
+    }
+
+    private void drawField() {
         gc.setFill(Color.CYAN);
         gc.fillRect(0, 0, getActualFieldWidth(), getActualFieldHeight());
         gc.drawImage(fieldPicture, 0, 0, getActualFieldWidth(), getActualFieldHeight());
         gc.setStroke(Color.RED);
         gc.setLineWidth(2);
         gc.strokeRect(0, 0, getActualFieldWidth(), getActualFieldHeight());
-        if (isShowingRoles) {
-            drawPos();
-        }
-        drawMiniMap();
     }
 
     /**
@@ -181,10 +192,6 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
         gc.strokeText(getMousePosition().toString(), 110 - origin.getX(), 15 - origin.getY());
         gc.setFill(Color.WHITE);
         gc.fillText(getMousePosition().toString(), 110 - origin.getX(), 15 - origin.getY());
-    }
-
-    public void toggleRoles() {
-        isShowingRoles = !isShowingRoles;
     }
 
     private void drawMiniMap() {
@@ -253,4 +260,17 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
     private double getActualFieldHeight() {
         return fieldPicture.getHeight() * zoomFactor;
     }
+
+    public Dimension getActualFieldDimension() {
+        return new Dimension(getActualFieldWidth(), getActualFieldHeight());
+    }
+
+    public Converter getConverter() {
+        return converter;
+    }
+
+    public double getZoomFactor() {
+        return zoomFactor;
+    }
+
 }

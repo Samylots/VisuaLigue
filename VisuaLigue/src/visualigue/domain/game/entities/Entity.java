@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package visualigue.domain.game;
+package visualigue.domain.game.entities;
 
 import visualigue.domain.utils.Dimension;
 import java.io.Serializable;
@@ -14,12 +14,21 @@ import java.io.Serializable;
  */
 public class Entity implements Serializable {
 
+    private static int ID_GENERATOR = 1;
+
+    private final int id;
     private final String picturePath;
     private final Dimension dimension;
 
     public Entity(Dimension dimension, String picturePath) {
+        id = ID_GENERATOR;
+        ID_GENERATOR++;
         this.picturePath = picturePath;
         this.dimension = dimension;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getPicturePath() {

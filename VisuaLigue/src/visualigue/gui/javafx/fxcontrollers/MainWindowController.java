@@ -75,10 +75,29 @@ public class MainWindowController implements Initializable, Serializable {
     private void newGame(ActionEvent event) {
         //open sport selection first
         //boardController.setSport () etc.
-        root.setCenter(board);
 
-        changeViewTo(UIMode.FRAME_BY_FRAME);
-        root.setLeft(mainToolbar);
+        int sportId = chooseSport();
+        if (sportId != 0) {
+            domainController.createNewGame();
+            domainController.setSport(sportId);
+
+            root.setCenter(board);
+            changeViewTo(UIMode.FRAME_BY_FRAME);
+            root.setLeft(mainToolbar);
+        } else {
+            Dialog popup = new Dialog("Game creation error", "Please, choose a sport to create a new game.", root);
+        }
+    }
+
+    private int chooseSport() {
+        Node node = FXLoader.getInstance().load("sportList.fxml");
+        SportListController controller = FXLoader.getInstance().getLastController();
+        CustomWindow window = new CustomWindow(root, (Parent) node);
+        controller.init(domainController, window);
+        controller.refreshSports();
+        window.setTitle("Choose game sport");
+        window.showAndWait();
+        return controller.getSelectedId();
     }
 
     @FXML
@@ -103,8 +122,9 @@ public class MainWindowController implements Initializable, Serializable {
     private void openSportList(ActionEvent event) {
         Node node = FXLoader.getInstance().load("sportList.fxml");
         SportListController controller = FXLoader.getInstance().getLastController();
-        controller.refreshSports();
         CustomWindow window = new CustomWindow(root, (Parent) node);
+        controller.init(domainController, window);
+        controller.refreshSports();
         window.setTitle("Sport List");
         window.showAndWait();
     }
@@ -136,7 +156,7 @@ public class MainWindowController implements Initializable, Serializable {
 
     @FXML
     private void toggleRoles(ActionEvent event) {
-        board.toggleRoles();
+        domainController.toggleRoles();
     }
 
     @FXML

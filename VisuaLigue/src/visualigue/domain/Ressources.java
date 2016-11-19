@@ -5,13 +5,12 @@
  */
 package visualigue.domain;
 
+import java.util.ArrayList;
 import java.util.List;
-import javafx.geometry.Dimension2D;
 import visualigue.domain.game.Game;
-import visualigue.domain.game.Obstacle;
+import visualigue.domain.game.entities.Obstacle;
 import visualigue.domain.game.Sport;
-import visualigue.domain.utils.Coords;
-import visualigue.domain.game.Entity;
+import visualigue.exceptions.NoSuchId;
 
 /**
  *
@@ -19,17 +18,20 @@ import visualigue.domain.game.Entity;
  */
 public class Ressources {
 
-    private List<Game> games;
-    private List<Sport> availableSports;
-    private List<Obstacle> availableObstacles;
+    private final List<Game> games = new ArrayList<>();
+    private final List<Sport> availableSports = new ArrayList<>();
+    private final List<Obstacle> availableObstacles = new ArrayList<>();
 
-    public void createNewObstacle(String name, Coords coord, Dimension2D dimension) {
-        //availableObstacles.add(new Obstacle(name, coord, dimension));
+    public void addGame(Game game) {
+        games.add(game);
     }
 
-    public void createNewSport(String name, int limit, Dimension2D fieldDimension, Entity accessory, List<String> categories) {
-        //Entity field = new Entity(new Coords(), fieldDimension);
-        //availableSports.add(new Sport(name, limit, field, accessory, categories));
+    public void addSport(Sport sport) {
+        availableSports.add(sport);
+    }
+
+    public void addObstacle(Obstacle obstacle) {
+        availableObstacles.add(obstacle);
     }
 
     public List<Game> getGames() {
@@ -42,6 +44,39 @@ public class Ressources {
 
     public List<Obstacle> getAvailableObstacles() {
         return availableObstacles;
+    }
+
+    public Sport getSport(int id) {
+        for (Sport sport : availableSports) {
+            if (sport.getSportId() == id) {
+                return sport;
+            }
+        }
+        throw new NoSuchId("There is no such id '" + id + "' in available sports.");
+    }
+
+    public void deleteObstacle(int obstacleId) {
+        Obstacle obstalceToDelete = null;
+        for (Obstacle obstacle : availableObstacles) {
+            if (obstacle.getId() == obstacleId) {
+                obstalceToDelete = obstacle;
+            }
+        }
+        availableObstacles.remove(obstalceToDelete);
+    }
+
+    public void deleteSport(int sportId) {
+        Sport sportToDelete = null;
+        for (Sport sport : availableSports) {
+            if (sport.getSportId() == sportId) {
+                sportToDelete = sport;
+            }
+        }
+        availableSports.remove(sportToDelete);
+    }
+
+    public void deleteGame(Game currentGame) {
+        //TODO do we really allow deleting a game? Does it have an id?
     }
 
 }

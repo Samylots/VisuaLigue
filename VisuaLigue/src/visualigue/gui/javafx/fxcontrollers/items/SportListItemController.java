@@ -9,16 +9,15 @@ import java.io.File;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import visualigue.gui.javafx.fxcontrollers.SportListController;
 
 /**
  * FXML Controller class
@@ -26,6 +25,8 @@ import javafx.scene.layout.BorderPane;
  * @author Samuel
  */
 public class SportListItemController implements Initializable, Serializable {
+
+    private SportListController parentController;
 
     @FXML
     private BorderPane sportItem;
@@ -36,7 +37,7 @@ public class SportListItemController implements Initializable, Serializable {
     @FXML
     private Button selectButton;
 
-    private String sportDomainId;
+    private int id;
 
     /**
      * Initializes the controller class.
@@ -56,13 +57,14 @@ public class SportListItemController implements Initializable, Serializable {
      * @param sportName
      * @param domainId
      */
-    public void init(String picUrl, String sportName, String domainId) {
+    public void init(SportListController controller, Image pic, String sportName, int domainId) {
+        parentController = controller;
         sportTitle.setText(sportName);
-        sportDomainId = domainId;
+        id = domainId;
 
         //As you can see, it's possible to stack handler on each other! This button will do all handlers declared.
         selectButton.setOnMouseClicked((MouseEvent e) -> {
-            System.out.println("This is another way to add handler on controls");
+            controller.select(domainId);
         });
         //But it need to be different action. Exemple: this handler will overide the "selectSport()" function declared in the FXML file
         //Comment this to see the "selectSport()" in action!
@@ -71,7 +73,7 @@ public class SportListItemController implements Initializable, Serializable {
          });*/
 
         //need to be last, because it stop the method if there is no picture...
-        sportPicture.setImage(new Image(picUrl));
+        sportPicture.setImage(pic);
     }
 
     public void setPicture(File file) {
@@ -80,6 +82,7 @@ public class SportListItemController implements Initializable, Serializable {
 
     @FXML
     public void selectSport() {
-        System.out.println("Sport #" + sportDomainId + " selected!");
+        parentController.select(id);
+        System.out.println("Sport #" + id + " selected!");
     }
 }

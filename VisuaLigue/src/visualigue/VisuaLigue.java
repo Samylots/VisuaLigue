@@ -34,11 +34,9 @@ public class VisuaLigue extends Application {
         MainWindowController mainWindowController = FXLoader.getInstance().getLastController();
         mainWindowController.init(domainController);
 
-        VisuaLigue.domainController.createNewGame(); //Vraiment nécessaire?
-
         Scene scene = new Scene((Parent) node, 800, 600);
 
-        primaryStage.setTitle("VisuaLigue - SSM");
+        primaryStage.setTitle("VisuaLigue - BSSM");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

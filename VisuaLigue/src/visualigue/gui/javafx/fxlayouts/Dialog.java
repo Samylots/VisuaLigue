@@ -26,11 +26,15 @@ public class Dialog extends Stage {
     private Button ok = new Button("Ok");
     private Button cancel = new Button("Cancel");
 
+    private boolean action = false;
+
     public Dialog(String title, String message, Parent node) {
         ok.setOnAction((ActionEvent) -> {
+            action = true;
             this.close();
         });
         cancel.setOnAction((ActionEvent) -> {
+            action = false;
             this.close();
         });
 
@@ -54,4 +58,7 @@ public class Dialog extends Stage {
         this.showAndWait();
     }
 
+    public boolean isConfirmed() {
+        return action;
+    }
 }

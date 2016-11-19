@@ -7,13 +7,16 @@ package visualigue.domain;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import visualigue.domain.utils.Dimension;
 import visualigue.domain.game.Game;
-import visualigue.domain.game.Obstacle;
+import visualigue.domain.game.entities.Obstacle;
 import visualigue.domain.game.Sport;
 import visualigue.domain.utils.Coords;
-import visualigue.domain.game.Entity;
+import visualigue.domain.game.entities.Entity;
+import visualigue.domain.game.Position;
+import visualigue.domain.game.Team;
 import visualigue.domain.utils.Mode;
 import visualigue.exceptions.NoCurrentGameException;
 import visualigue.services.exporters.GameExporter;
@@ -28,8 +31,8 @@ public class VisuaLigueController implements Serializable {
 
     private String folder;
     private Game currentGame;
-    private transient Serializer serializer;
-    private Ressources ressources;
+    private final transient Serializer serializer;
+    private final Ressources ressources = new Ressources();
     private double actualTime;
     private double frameTimeEquiv;
     private GameExporter exporter;
@@ -44,26 +47,19 @@ public class VisuaLigueController implements Serializable {
         this.serializer = new Serializer(this);
     }
 
-    /*
-    public void createNewObstacle(String name, Coords coord, Dimension2D dimension) {
-        ressources.createNewObstacle(name, coord, dimension);
-    }
-
-    public void createNewSport(String name, int limit, Dimension2D fieldDimension, Entity accessory, List<String> categories) {
-        ressources.createNewSport(name, limit, fieldDimension, accessory, categories);
-    }
-
-    public void editObstacle(String oldName, String newName, Coords coord, Dimension2D dimension) {
-        //TODO find obstacle by old name and edit it
-    }
-    */
-    
-    public void deleteObstacle(String name) {
-        //find obstacle by name and delete it
+    public void deleteObstacle(int obstacleId) {
+        //find obstacle by id and delete it
     }
 
     public void createNewGame() {
         //createNewGame...
+        currentGame = new Game();
+    }
+
+    public int createNewSport(String name, String fieldPath, double fieldWidth, double fielHeight, String accessoryPath, double accessoryWidth, double accessoryHeight) {
+        Sport newSport = new Sport(name, fieldPath, new Dimension(fieldWidth, fielHeight), new Entity(new Dimension(accessoryWidth, accessoryHeight), accessoryPath));
+        ressources.addSport(newSport);
+        return newSport.getSportId();
     }
 
     public void loadGame(Game game) {
@@ -122,11 +118,11 @@ public class VisuaLigueController implements Serializable {
     }
 
     public void undo() {
-
+        //serializer
     }
 
     public void redo() {
-
+        //serializer
     }
 
     public void togglePlayerRoles() {
@@ -169,11 +165,54 @@ public class VisuaLigueController implements Serializable {
         return showingRoles;
     }
 
+    public void toggleRoles() {
+        showingRoles = !showingRoles;
+    }
+
     public Dimension getFieldDimension() {
         if (currentGame == null) {
             throw new NoCurrentGameException("There is no current game defined!");
         }
         return currentGame.getSport().getFieldDimension();
+    }
+
+    public List<Entity> getGameEntities() {
+        if (currentGame == null) {
+            throw new NoCurrentGameException("There is no current game defined!");
+        }
+        List<Entity> entities = new ArrayList<>();
+        entities.addAll(currentGame.getSport().getPlayers());
+        entities.addAll(currentGame.getSport().getAccessories());
+        entities.addAll(currentGame.getObstacles());
+        return entities;
+    }
+
+    public List<Position> getActualPositions() {
+        if (currentGame == null) {
+            throw new NoCurrentGameException("There is no current game defined!");
+        }
+        return currentGame.getCurrentPositions();
+    }
+
+    public void addPlayerAt(Coords coords, int playerId) {
+        currentGame.addPlayerAt(coords, playerId);
+    }
+
+    public void addTeamToSport(String teamName, String teamColor, int sportId) {
+        ressources.getSport(sportId).addTeam(new Team(teamName, teamColor));
+    }
+
+    public void addPlayerToSportTeam(String playerName, String playerRole, String teamName, int sportId) {
+        //TODO remove static player pic?
+        ressources.getSport(sportId).getTeam(teamName).addPlayer("/visualigue/gui/javafx/fxlayouts/icons/player.png", playerName, playerRole);
+    }
+
+    public String getFieldPicPath() {
+        return currentGame.getSport().getFieldPicturePath();
+    }
+
+    public void setSport(int sportId) {
+        currentGame.setSport(ressources.getSport(sportId));
     }
 
 }

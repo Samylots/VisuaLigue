@@ -6,13 +6,10 @@
 package visualigue.gui.javafx.fxcontrollers;
 
 import visualigue.gui.javafx.fxcontrollers.items.SportListItemController;
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -20,8 +17,13 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import visualigue.domain.VisuaLigueController;
+import visualigue.domain.game.Sport;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
+import visualigue.gui.javafx.models.ModelFactory;
+import visualigue.gui.javafx.models.PlayerTableItem;
+import visualigue.gui.javafx.models.TeamTableItem;
 
 /**
  * FXML Controller class
@@ -37,6 +39,10 @@ public class SportListController implements Initializable, Serializable {
     @FXML
     private VBox sportList;
 
+    private int selectedId;
+    private VisuaLigueController domain;
+    private Stage stage;
+
     /**
      * Initializes the controller class.
      *
@@ -47,37 +53,65 @@ public class SportListController implements Initializable, Serializable {
     public void initialize(URL url, ResourceBundle rb) {
     }
 
-    public void refreshSports() {
-        sportList.getChildren().clear();
-        //addSportListItems(DomainController.getInstance().getSports());
+    public void init(VisuaLigueController domain, Stage stage) {
+        this.stage = stage;
+        this.domain = domain;
     }
 
-    /*private void addSportListItems(List<Sport> sports) {
-     for (Sport sport : sports) {
-     addSportListItem(sport);
-     }
-     }*/
-    /*private void addSportListItem(Sport sport) {
-     Node node = FXLoader.getInstance().load("sportListItem.fxml");
-     SportListItemController itemController = FXLoader.getInstance().getLastController();
-     try {
-     itemController.init(sport.getPicUrl(), sport.getName(), sport.getId());
-     } catch (Exception e) {
-     //no pic then...
-     }
-     sportList.getChildren().add(node);
-     }*/
+    public void refreshSports() {
+        sportList.getChildren().clear();
+        addSportListItems(domain.getAvailableSports());
+    }
+
+    private void addSportListItems(List<Sport> sports) {
+        sports.stream().forEach((sport) -> {
+            addSportListItem(ModelFactory.createSport(sport));
+        });
+    }
+
+    private void addSportListItem(visualigue.gui.javafx.models.Sport sport) {
+        Node node = FXLoader.getInstance().load("sportListItem.fxml");
+        SportListItemController itemController = FXLoader.getInstance().getLastController();
+        try {
+            itemController.init(this, sport.getPic(), sport.getName(), sport.getSportId());
+        } catch (Exception e) {
+            //no pic then...
+        }
+        sportList.getChildren().add(node);
+    }
+
     @FXML
     public void addNewSport() {
         Node node = FXLoader.getInstance().load("addSport.fxml");
         AddSportController controller = FXLoader.getInstance().getLastController();
         CustomWindow window = new CustomWindow(root, (Parent) node);
-        controller.init((Stage) window);
+        controller.init((Stage) window, (Parent) node);
         window.showAndWait();
         if (controller.isConfirmed()) {
+            addSportToDomain(controller);
             //DomainController.getInstance().addSport(controller.getFieldPath(), controller.getName());
             refreshSports();
         }
+    }
+
+    public void addSportToDomain(AddSportController sport) {
+        int sportId = domain.createNewSport(sport.getSportName(), sport.getFieldPath(), (double) sport.getFieldWidth(), (double) sport.getFieldHeight(),
+                sport.getAccessoryPath(), sport.getAccessoryWidth(), sport.getAccessoryHeight());
+        sport.getTeamsData().stream().forEach((team) -> {
+            domain.addTeamToSport(team.getName(), team.getColor(), sportId);
+        });
+        sport.getPlayersData().stream().forEach((player) -> {
+            domain.addPlayerToSportTeam(player.getName(), player.getRole(), player.getTeam(), sportId);
+        });
+    }
+
+    public void select(int id) {
+        selectedId = id;
+        stage.close();
+    }
+
+    public int getSelectedId() {
+        return selectedId;
     }
 
 }

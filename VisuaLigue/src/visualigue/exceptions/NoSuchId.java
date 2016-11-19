@@ -3,12 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package visualigue.gui.javafx.helpers;
+package visualigue.exceptions;
 
 /**
  *
  * @author Samuel
  */
-public class UIController {
+public class NoSuchId extends RuntimeException {
+
+    public NoSuchId() {
+    }
+
+    public NoSuchId(String message) {
+        super(message);
+    }
 
 }

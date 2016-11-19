@@ -12,64 +12,156 @@
 <?import java.lang.*?>
 <?import javafx.scene.chart.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualigue.gui.javafx.fxcontrollers.AddSportController">
+<VBox spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualigue.gui.javafx.fxcontrollers.AddSportController">
    <children>
-      <VBox alignment="BOTTOM_RIGHT">
+      <HBox spacing="10.0">
          <children>
-            <HBox spacing="20.0">
+            <VBox alignment="BOTTOM_RIGHT">
                <children>
-                  <HBox>
+                  <HBox alignment="CENTER_LEFT">
                      <children>
-                        <VBox prefHeight="380.0" prefWidth="114.0" spacing="10.0">
+                        <TextField fx:id="sportName" promptText="Sport name" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="10.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="8.0" />
+                     </padding>
+                  </HBox>
+                  <HBox VBox.vgrow="ALWAYS">
+                     <children>
+                        <HBox HBox.hgrow="ALWAYS">
                            <children>
-                              <Label prefHeight="25.0" text="Sport name" />
-                              <Label prefHeight="25.0" text="Total player" />
-                              <Label prefHeight="25.0" text="Field width" />
-                              <Label prefHeight="25.0" text="Field height" />
-                              <Label prefHeight="25.0" text="Categories" />
+                              <VBox alignment="CENTER">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#importAccessory" text="Import accessory picture" />
+                                    <ImageView fx:id="accessoryPreview" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
+                                    <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="ALWAYS">
+                                       <children>
+                                          <TextField fx:id="accessoryWidth" prefWidth="100.0" promptText="Width" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER">
+                                 <children>
+                                    <TextField fx:id="accessoryHeight" prefWidth="50.0" promptText="Height" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        <HBox HBox.hgrow="ALWAYS">
+                           <children>
+                              <VBox alignment="CENTER">
+                                 <children>
+                                    <Button mnemonicParsing="false" onAction="#importField" text="Import field picture" />
+                                    <ImageView fx:id="fieldPreview" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" smooth="false" />
+                                    <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="ALWAYS">
+                                       <children>
+                                          <TextField fx:id="fieldWidth" prefWidth="100.0" promptText="Width" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER">
+                                 <children>
+                                    <TextField fx:id="fieldHeigth" prefWidth="50.0" promptText="Height" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <VBox>
+         <children>
+            <TitledPane animated="false" collapsible="false" contentDisplay="RIGHT" text="Teams">
+               <content>
+                  <VBox>
+                     <children>
+                        <TableView fx:id="teams" prefHeight="150.0" prefWidth="250.0">
+                          <columns>
+                            <TableColumn fx:id="teamNameCol" prefWidth="75.0" text="Name" />
+                            <TableColumn fx:id="teamColorCol" prefWidth="75.0" text="Color" />
+                          </columns>
+                        </TableView>
+                        <HBox spacing="5.0">
+                           <children>
+                              <TextField fx:id="newTeamName" promptText="Name" />
+                              <ColorPicker fx:id="newTeamColor" promptText="Color" />
+                              <Button mnemonicParsing="false" onAction="#addNewTeam" text="Add" />
                            </children>
                            <padding>
-                              <Insets left="10.0" right="10.0" />
+                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                           </padding>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="-1.0" left="-1.0" right="-1.0" top="-1.0" />
+                     </padding>
+                  </VBox>
+               </content>
+               <graphic>
+                  <Button fx:id="deleteTeamButton" mnemonicParsing="false" onAction="#deleteSelectedTeam" text="Delete selected team" />
+               </graphic>
+            </TitledPane>
+         </children>
+      </VBox>
+      <HBox spacing="5.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox HBox.hgrow="ALWAYS">
+               <children>
+                  <TitledPane animated="false" collapsible="false" contentDisplay="RIGHT" text="Players">
+                     <content>
+                        <VBox>
+                           <children>
+                              <TableView fx:id="players" prefHeight="150.0" prefWidth="250.0">
+                                 <columns>
+                                    <TableColumn fx:id="playerNameCol" prefWidth="75.0" text="Name" />
+                                    <TableColumn fx:id="playerRoleCol" prefWidth="75.0" text="Role" />
+                                    <TableColumn fx:id="playerTeamCol" prefWidth="75.0" text="Team" />
+                                 </columns>
+                              </TableView>
+                              <HBox spacing="5.0">
+                                 <children>
+                                    <TextField fx:id="newPlayerName" promptText="Name" />
+                                    <TextField fx:id="newPlayerRole" promptText="Role" />
+                                    <ChoiceBox fx:id="newPlayerTeam" prefWidth="150.0" />
+                                    <Button mnemonicParsing="false" onAction="#addNewPlayer" text="Add" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets bottom="-1.0" left="-1.0" right="-1.0" top="-1.0" />
                            </padding>
                         </VBox>
-                        <VBox prefHeight="310.0" prefWidth="197.0" spacing="10.0">
-                           <children>
-                              <TextField fx:id="name" />
-                              <TextField fx:id="totalPlayer" />
-                              <TextField fx:id="width" />
-                              <TextField fx:id="height" />
-                              <TextArea fx:id="categories" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-                  <HBox>
-                     <children>
-                        <VBox spacing="10.0">
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#importAccessory" text="Import accessory picture" />
-                              <ImageView fx:id="accessoryPreview" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                              <Button mnemonicParsing="false" onAction="#importFieldPicture" text="Import field picture" />
-                              <ImageView fx:id="fieldPreview" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
+                     </content>
+                     <graphic>
+                        <Button fx:id="deletePlayerButton" mnemonicParsing="false" onAction="#deleteSelectedPlayer" text="Delete selected player" />
+                     </graphic>
+                  </TitledPane>
                </children>
-               <padding>
-                  <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="BOTTOM_RIGHT" spacing="10.0">
-               <children>
-                  <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
-                  <Button mnemonicParsing="false" onAction="#confirm" text="Confirm" />
-               </children>
-            </HBox>
+            </VBox>
          </children>
-         <padding>
-            <Insets bottom="10.0" right="10.0" />
-         </padding>
-      </VBox>
+      </HBox>
+      <HBox alignment="BOTTOM_RIGHT" spacing="10.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+            <Button mnemonicParsing="false" onAction="#confirm" text="Confirm" />
+         </children>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </HBox>
    </children>
-</Pane>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</VBox>
