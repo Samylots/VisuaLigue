@@ -5,11 +5,13 @@
  */
 package visualigue.domain.utils;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Bruno L.L.
  */
-public class Dimension {
+public class Dimension implements Serializable {
     
     private double width;
     private double height;

@@ -133,8 +133,6 @@ public class Serializer {
     }
     
     private void restoreController(VisuaLigueController controllerToRestore) {
-        // TODO: assigner tous les variables du controlleur
-        
-        //controller.stepTime = controllerToRestore.stepTime;
+        controller.copy(controllerToRestore);
     }
 }

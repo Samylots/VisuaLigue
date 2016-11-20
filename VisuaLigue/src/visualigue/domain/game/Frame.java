@@ -13,6 +13,9 @@ import java.util.Map;
 import visualigue.domain.game.Position;
 import java.util.TreeMap;
 import visualigue.domain.utils.Coords;
+import visualigue.domain.utils.Dimension;
+import visualigue.exceptions.*;
+import visualigue.domain.game.entities.Player;
 
 /**
  *
@@ -23,7 +26,7 @@ public class Frame implements Serializable {
     private Frame next;
     private Frame back;
     //Index of TreeMap is entity Id
-    private final Map<Integer, Position> positions = new TreeMap<>();
+    private final Map<Integer, Position> positions = new TreeMap<Integer, Position>();
 
     public Frame getNext() {
         return next;
@@ -36,13 +39,49 @@ public class Frame implements Serializable {
     public void addEntityAt(Entity entity, Coords coords) {
         positions.put(entity.getId(), new Position(coords, entity));
     }
-
-    public List<Position> getPositions() {
-        List<Position> positionsList = new ArrayList<>();
-        positions.entrySet().stream().forEach((position) -> {
-            positionsList.add(position.getValue());
-        });
-        return positionsList;
+    
+    public void addEntityAt(Entity entity, Coords coords, Player player) {
+        positions.put(entity.getId(), new Position(coords, entity, player));
     }
 
+    public Map<Integer, Position> getPositions() {
+        return positions;
+    }
+    
+    public boolean hasEntity(int id) {
+        return positions.containsKey(id);
+    }
+    
+    public void removeEntity(int id) {
+        if (positions.remove(id) == null) {
+            throw new NoSuchId();
+        }
+    }
+    
+    public Entity findEntityAt(Coords coords) {
+        for (Map.Entry<Integer, Position> entry : positions.entrySet()) {
+            Position pos = entry.getValue();
+
+            if (pos.isInBounds(coords)) {
+                return pos.getEntity();
+            }
+        }
+        return null;
+    }
+    
+    public Position findCollisionAt(Entity entity, Coords coords) {
+        for (Map.Entry<Integer, Position> entry : positions.entrySet()) {
+            Position pos = entry.getValue();
+
+            if (pos.collidesWith(entity, coords)) {
+                return pos;
+            }
+        }
+        return null;
+    }
+    
+    public void movePosition(int id, Coords coords) {
+        Position position = positions.get(id);
+        position.setLocation(coords);
+    }
 }

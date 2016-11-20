@@ -6,6 +6,7 @@
 package visualigue.gui.javafx.fxdrawers;
 
 import java.util.List;
+import java.util.Map;
 import javafx.scene.image.Image;
 import visualigue.domain.VisuaLigueController;
 import visualigue.domain.game.entities.Entity;
@@ -15,6 +16,7 @@ import visualigue.domain.game.Position;
 import visualigue.domain.utils.Coords;
 import visualigue.domain.utils.Dimension;
 import visualigue.gui.javafx.fxcontrollers.VisuaLigueBoard;
+import java.util.HashMap;
 
 /**
  *
@@ -31,37 +33,36 @@ public class GameDrawer {
     }
 
     public void drawGame() {
-        List<Position> positions = domain.getActualPositions();
-        positions.stream().forEach((position) -> {
-            Entity entity = position.getEntity();
-            if (entity instanceof Player) {
-                drawPlayer((Player) entity, getPixelPosition(position.getCoords()));
-            } else if (entity instanceof Obstacle) {
-                drawObstacle((Obstacle) entity, getPixelPosition(position.getCoords()));
-            } else if (entity instanceof Entity) {
-                drawEntity((Entity) entity, getPixelPosition(position.getCoords()));
+        List<HashMap<String, Object>> positions = domain.getActualPositions();
+
+        for (HashMap<String, Object> position : positions) {
+            String type = (String)position.get("type");
+        
+            if (type == "Player") {
+                drawPlayer(position);
+            } else if (type == "Obstacle") {
+                drawObstacle(position);
+            } else if (type == "Accessory") {
+                drawEntity(position);
             } else {
                 //error or not?
             }
-        });
+        };
     }
 
-    private void drawPlayer(Player player, Coords position) {
-        Dimension playerDimension = player.getDimension();
-        canvas.getGraphicsContext2D().drawImage(new Image(player.getPicturePath()), position.getX(), position.getY(), playerDimension.getWidth(), playerDimension.getHeight());
+    private void drawPlayer(HashMap<String, Object> position) {
+        canvas.getGraphicsContext2D().drawImage(new Image((String)position.get("picturePath")), (double)position.get("x"), (double)position.get("y"), (double)position.get("width"), (double)position.get("height"));
         if (domain.isShowingRoles()) {
             //TODO draw roles/names etc.
         }
     }
 
-    private void drawObstacle(Obstacle obstacle, Coords position) {
-        Dimension dimension = obstacle.getDimension();
-        canvas.getGraphicsContext2D().drawImage(new Image(obstacle.getPicturePath()), position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight());
+    private void drawObstacle(HashMap<String, Object> position) {
+        canvas.getGraphicsContext2D().drawImage(new Image((String)position.get("picturePath")), (double)position.get("x"), (double)position.get("y"), (double)position.get("width"), (double)position.get("height"));
     }
 
-    private void drawEntity(Entity accessory, Coords position) {
-        Dimension dimension = accessory.getDimension();
-        canvas.getGraphicsContext2D().drawImage(new Image(accessory.getPicturePath()), position.getX(), position.getY(), dimension.getWidth(), dimension.getHeight());
+    private void drawEntity(HashMap<String, Object> position) {
+        canvas.getGraphicsContext2D().drawImage(new Image((String)position.get("picturePath")), (double)position.get("x"), (double)position.get("y"), (double)position.get("width"), (double)position.get("height"));
     }
 
     private Coords getPixelPosition(Coords domainCoords) {

@@ -18,12 +18,12 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import visualigue.domain.VisuaLigueController;
-import visualigue.domain.game.Sport;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 import visualigue.gui.javafx.models.ModelFactory;
 import visualigue.gui.javafx.models.PlayerTableItem;
 import visualigue.gui.javafx.models.TeamTableItem;
+import java.util.HashMap;
 
 /**
  * FXML Controller class
@@ -63,7 +63,7 @@ public class SportListController implements Initializable, Serializable {
         addSportListItems(domain.getAvailableSports());
     }
 
-    private void addSportListItems(List<Sport> sports) {
+    private void addSportListItems(List<HashMap<String, Object>> sports) {
         sports.stream().forEach((sport) -> {
             addSportListItem(ModelFactory.createSport(sport));
         });

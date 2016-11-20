@@ -26,6 +26,12 @@ public class Player extends Entity implements Serializable {
         this.role = role;
         this.name = name;
     }
+    
+    public Player(Player player) {
+        super(player);
+        this.role = player.getRole();
+        this.name = player.getName();
+    }
 
     public String getRole() {
         return role;

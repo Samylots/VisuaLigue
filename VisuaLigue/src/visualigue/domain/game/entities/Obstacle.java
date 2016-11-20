@@ -21,6 +21,11 @@ public class Obstacle extends Entity implements Serializable {
         super(dimension, picturePath);
         this.name = name;
     }
+    
+    public Obstacle(Obstacle obstacle) {
+        super(obstacle);
+        this.name = obstacle.getName();
+    }
 
     public String getName() {
         return name;

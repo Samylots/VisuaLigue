@@ -7,6 +7,7 @@ package visualigue.domain.game;
 
 import visualigue.domain.game.entities.Player;
 import visualigue.domain.game.entities.Entity;
+import visualigue.domain.game.entities.Accessory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +26,10 @@ public class Sport implements Serializable {
     private String name;
     private String fieldPicturePath;
     private Dimension fieldDimension;
-    private Entity accessory;
-    private List<Entity> accessories;
+    private Accessory accessory;
     private final List<Team> teams = new ArrayList<>();
 
-    public Sport(String name, String fieldPicturePath, Dimension dimension, Entity accessory) {
+    public Sport(String name, String fieldPicturePath, Dimension dimension, Accessory accessory) {
         this.sportId = SPORT_ID_GENERATOR;
         SPORT_ID_GENERATOR++;
         this.name = name;
@@ -38,7 +38,7 @@ public class Sport implements Serializable {
         this.accessory = accessory;
     }
 
-    public Entity getSportAccessory() {
+    public Accessory getSportAccessory() {
         return accessory;
     }
 
@@ -67,10 +67,6 @@ public class Sport implements Serializable {
         return players;
     }
 
-    public List<Entity> getAccessories() {
-        return accessories;
-    }
-
     public void addTeam(Team team) {
         teams.add(team);
     }
@@ -92,7 +88,7 @@ public class Sport implements Serializable {
         return fieldPicturePath;
     }
 
-    public Entity getAccessory() {
+    public Accessory getAccessory() {
         return accessory;
     }
 

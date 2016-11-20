@@ -11,12 +11,13 @@ import visualigue.domain.game.Game;
 import visualigue.domain.game.entities.Obstacle;
 import visualigue.domain.game.Sport;
 import visualigue.exceptions.NoSuchId;
+import java.io.Serializable;
 
 /**
  *
  * @author Samuel
  */
-public class Ressources {
+public class Ressources implements Serializable {
 
     private final List<Game> games = new ArrayList<>();
     private final List<Sport> availableSports = new ArrayList<>();
@@ -66,17 +67,20 @@ public class Ressources {
     }
 
     public void deleteSport(int sportId) {
-        Sport sportToDelete = null;
         for (Sport sport : availableSports) {
             if (sport.getSportId() == sportId) {
-                sportToDelete = sport;
+                for (Game game : games) {
+                    if (game.getSport().getSportId() == sportId) {
+                        games.remove(game);
+                    }
+                }
+                availableSports.remove(sport);
             }
         }
-        availableSports.remove(sportToDelete);
     }
 
     public void deleteGame(Game currentGame) {
-        //TODO do we really allow deleting a game? Does it have an id?
+        games.remove(currentGame);
     }
 
 }

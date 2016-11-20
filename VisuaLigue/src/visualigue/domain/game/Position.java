@@ -30,14 +30,63 @@ public class Position implements Serializable {
         this.entity = entity;
         this.owner = owner;
     }
-
-    public boolean isInBounds(Coords coords) {
-        // TODO
-        return true;
+    
+    public void setLocation(Coords coords) {
+        this.coords = coords;
     }
 
-    public Position(Coords location) {
-        this.coords = location;
+    public boolean isInBounds(Coords coords) {
+        double x = coords.getX();
+        double y = coords.getY();
+        double thisX = this.coords.getX();
+        double thisY = this.coords.getY();
+        double width = entity.getDimension().getWidth();
+        double height = entity.getDimension().getHeight();
+        
+        if (x >= thisX - width/2 
+            && x <= thisX + width/2
+            && y >= thisY - height/2
+            && y <= thisY + height/2) {
+
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean collidesWith(Entity entity, Coords coords) {
+        double thisX = this.coords.getX();
+        double thisY = this.coords.getY();
+        double thisWidth = this.entity.getDimension().getWidth();
+        double thisHeight = this.entity.getDimension().getHeight();
+
+        double x = coords.getX();
+        double y = coords.getY();
+        double width = entity.getDimension().getWidth();
+        double height = entity.getDimension().getHeight();
+        
+        if ((x - width/2 >= thisX - thisWidth/2 
+            && x - width/2 <= thisX + thisWidth/2
+            && y + height/2 >= thisY - thisHeight/2
+            && y + height/2 <= thisY + thisHeight/2)
+            ||
+            (x + width/2 >= thisX - thisWidth/2 
+            && x + width/2 <= thisX + thisWidth/2
+            && y + height/2 >= thisY - thisHeight/2
+            && y + height/2 <= thisY + thisHeight/2)
+            ||    
+            (x - width/2 >= thisX - thisWidth/2 
+            && x - width/2 <= thisX + thisWidth/2
+            && y - height/2 >= thisY - thisHeight/2
+            && y - height/2 <= thisY + thisHeight/2)
+            ||    
+            (x + width/2 >= thisX - thisWidth/2 
+            && x + width/2 <= thisX + thisWidth/2
+            && y - height/2 >= thisY - thisHeight/2
+            && y - height/2 <= thisY + thisHeight/2)){
+
+            return true;
+        }
+        return false;
     }
 
     public Coords getCoords() {
@@ -54,6 +103,10 @@ public class Position implements Serializable {
 
     public Player getOwner() {
         return owner;
+    }
+    
+    public void setOwner(Player owner) {
+        this.owner = owner;
     }
 
 }

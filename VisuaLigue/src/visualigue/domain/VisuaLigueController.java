@@ -9,19 +9,24 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.image.Image;
 import visualigue.domain.utils.Dimension;
 import visualigue.domain.game.Game;
 import visualigue.domain.game.entities.Obstacle;
 import visualigue.domain.game.Sport;
 import visualigue.domain.utils.Coords;
 import visualigue.domain.game.entities.Entity;
+import visualigue.domain.game.entities.Accessory;
 import visualigue.domain.game.Position;
 import visualigue.domain.game.Team;
 import visualigue.domain.utils.Mode;
 import visualigue.exceptions.NoCurrentGameException;
+import visualigue.gui.javafx.models.ModelFactory;
 import visualigue.services.exporters.GameExporter;
 import visualigue.services.exporters.GameExporterFactory;
 import visualigue.services.persistence.Serializer;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -32,7 +37,7 @@ public class VisuaLigueController implements Serializable {
     private String folder;
     private Game currentGame;
     private final transient Serializer serializer;
-    private final Ressources ressources = new Ressources();
+    private Ressources ressources = new Ressources();
     private double actualTime;
     private double frameTimeEquiv;
     private GameExporter exporter;
@@ -45,6 +50,20 @@ public class VisuaLigueController implements Serializable {
         this.currentMode = Mode.FRAME_BY_FRAME;
         //this.folder = folder; //need to keep it on first save
         this.serializer = new Serializer(this);
+        
+        this.serializer.loadFromFile();
+    }
+    
+    public void copy(VisuaLigueController controller) {
+        this.folder = controller.folder;
+        this.currentGame = controller.currentGame;
+        this.ressources = controller.ressources;
+        this.actualTime = controller.actualTime;
+        this.frameTimeEquiv = controller.frameTimeEquiv;
+        this.exporter = controller.exporter;
+        this.stepTime = controller.stepTime;
+        this.currentMode = controller.currentMode;
+        this.showingRoles = controller.showingRoles;
     }
 
     public void deleteObstacle(int obstacleId) {
@@ -57,7 +76,7 @@ public class VisuaLigueController implements Serializable {
     }
 
     public int createNewSport(String name, String fieldPath, double fieldWidth, double fielHeight, String accessoryPath, double accessoryWidth, double accessoryHeight) {
-        Sport newSport = new Sport(name, fieldPath, new Dimension(fieldWidth, fielHeight), new Entity(new Dimension(accessoryWidth, accessoryHeight), accessoryPath));
+        Sport newSport = new Sport(name, fieldPath, new Dimension(fieldWidth, fielHeight), new Accessory(new Dimension(accessoryWidth, accessoryHeight), accessoryPath));
         ressources.addSport(newSport);
         return newSport.getSportId();
     }
@@ -118,11 +137,11 @@ public class VisuaLigueController implements Serializable {
     }
 
     public void undo() {
-        //serializer
+        this.serializer.undo();
     }
 
     public void redo() {
-        //serializer
+        this.serializer.redo();
     }
 
     public void togglePlayerRoles() {
@@ -137,8 +156,20 @@ public class VisuaLigueController implements Serializable {
         return folder;
     }
 
-    public List<Sport> getAvailableSports() {
-        return ressources.getAvailableSports();
+    public List<HashMap<String, Object>> getAvailableSports() {
+        List<HashMap<String, Object>> returnData = new ArrayList<HashMap<String, Object>>();
+        List<Sport> sports = ressources.getAvailableSports();
+        
+        sports.stream().forEach((sport) -> {
+            HashMap<String, Object> sportData = new HashMap<String, Object>();
+            sportData.put("name", sport.getName());
+            sportData.put("fieldPicturePath", sport.getFieldPicturePath());
+            sportData.put("id", sport.getSportId());
+            
+            returnData.add(sportData);
+        });
+        
+        return returnData;
     }
 
     public List<Obstacle> getAvailableObstacles() {
@@ -182,16 +213,33 @@ public class VisuaLigueController implements Serializable {
         }
         List<Entity> entities = new ArrayList<>();
         entities.addAll(currentGame.getSport().getPlayers());
-        entities.addAll(currentGame.getSport().getAccessories());
+        entities.addAll(currentGame.getAccessories());
         entities.addAll(currentGame.getObstacles());
         return entities;
     }
 
-    public List<Position> getActualPositions() {
+    public List<HashMap<String, Object>> getActualPositions() {
         if (currentGame == null) {
             throw new NoCurrentGameException("There is no current game defined!");
         }
-        return currentGame.getCurrentPositions();
+        List<HashMap<String, Object>> returnData = new ArrayList<HashMap<String, Object>>();
+        Map<Integer, Position> currentPositions = currentGame.getCurrentPositions();
+        
+        for (Map.Entry<Integer, Position> entry : currentPositions.entrySet()) {
+            int id = entry.getKey();
+            Position pos = entry.getValue();
+            
+            HashMap<String, Object> positionData = new HashMap<String, Object>();
+            positionData.put("picturePath", pos.getEntity().getPicturePath());
+            positionData.put("x", pos.getCoords().getX());
+            positionData.put("y", pos.getCoords().getY());
+            positionData.put("width", pos.getEntity().getDimension().getWidth());
+            positionData.put("height", pos.getEntity().getDimension().getHeight());
+            positionData.put("type", pos.getEntity().getClass().getName());
+
+            returnData.add(positionData);
+        }
+        return returnData;
     }
 
     public void addPlayerAt(Coords coords, int playerId) {
@@ -215,4 +263,7 @@ public class VisuaLigueController implements Serializable {
         currentGame.setSport(ressources.getSport(sportId));
     }
 
+    public void close() {
+        this.serializer.saveToFile();
+    }
 }

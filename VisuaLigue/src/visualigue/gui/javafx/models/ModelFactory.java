@@ -5,7 +5,9 @@
  */
 package visualigue.gui.javafx.models;
 
+import java.util.HashMap;
 import javafx.scene.image.Image;
+import java.util.List;
 
 /**
  *
@@ -13,7 +15,7 @@ import javafx.scene.image.Image;
  */
 public class ModelFactory {
 
-    public static Sport createSport(visualigue.domain.game.Sport sport) {
-        return new Sport(sport.getName(), new Image(sport.getFieldPicturePath()), sport.getSportId());
+    public static Sport createSport(HashMap<String, Object> sport) {
+        return new Sport((String)sport.get("name"), new Image((String)sport.get("fieldPicturePath")), (Integer)sport.get("id"));
     }
 }

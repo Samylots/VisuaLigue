@@ -12,7 +12,7 @@ import java.io.Serializable;
  *
  * @author Bruno L.L.
  */
-public class Entity implements Serializable {
+public abstract class Entity implements Serializable {
 
     private static int ID_GENERATOR = 1;
 
@@ -25,6 +25,13 @@ public class Entity implements Serializable {
         ID_GENERATOR++;
         this.picturePath = picturePath;
         this.dimension = dimension;
+    }
+    
+    public Entity(Entity entity) {
+        id = ID_GENERATOR;
+        ID_GENERATOR++;
+        this.picturePath = entity.getPicturePath();
+        this.dimension = entity.getDimension();
     }
 
     public int getId() {

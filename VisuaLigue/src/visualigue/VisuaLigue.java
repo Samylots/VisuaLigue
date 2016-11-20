@@ -32,6 +32,7 @@ public class VisuaLigue extends Application {
 
         Node node = FXLoader.getInstance().load("mainWindow.fxml");
         MainWindowController mainWindowController = FXLoader.getInstance().getLastController();
+
         mainWindowController.init(domainController);
 
         Scene scene = new Scene((Parent) node, 800, 600);
@@ -39,6 +40,11 @@ public class VisuaLigue extends Application {
         primaryStage.setTitle("VisuaLigue - BSSM");
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+    
+    @Override
+    public void stop() {
+        this.domainController.close();
     }
 
     /**
