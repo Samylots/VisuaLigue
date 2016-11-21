@@ -8,6 +8,7 @@ package visualigue.gui.javafx.fxcontrollers;
 import java.io.Serializable;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -15,10 +16,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import visualigue.domain.Converter;
 import visualigue.domain.VisuaLigueController;
 import visualigue.domain.utils.Coords;
-import visualigue.domain.utils.Dimension;
 import visualigue.gui.javafx.fxdrawers.GameDrawer;
 import visualigue.dto.DimensionDTO;
 
@@ -187,14 +188,23 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
      * Drawing mouse position info on board
      */
     private void drawPos() {
+        
+        
+        gc.setTextAlign(TextAlignment.LEFT);
+        gc.setTextBaseline(VPos.BOTTOM);
+        
         gc.setFont(Font.font(20));
         gc.setLineWidth(3);
         gc.setStroke(Color.BLACK);
-        gc.strokeText(getMousePosition().toString(), 110 - origin.getX(), 15 - origin.getY());
+        Coords realCoords = converter.pixelToMeter(getMousePosition(), getActualFieldPixelDimension());
+        gc.strokeText("X: " + realCoords.getX() + " m, Y: " + realCoords.getY() + " m", - origin.getX(), getHeight() - origin.getY());
         gc.setFill(Color.WHITE);
-        gc.fillText(getMousePosition().toString(), 110 - origin.getX(), 15 - origin.getY());
+        gc.fillText("X: " + realCoords.getX() + " m, Y: " + realCoords.getY() + " m", - origin.getX(), getHeight() - origin.getY());
     }
 
+    /**
+     * Drawing minimap of actual view of game field on board
+     */
     private void drawMiniMap() {
         double widthReduction = fieldPicture.getWidth() / MINIMAP_MAX_WIDTH;
         double heigtReduction = fieldPicture.getHeight() / MINIMAP_MAX_HEIGHT;
@@ -262,8 +272,8 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
         return fieldPicture.getHeight() * zoomFactor;
     }
 
-    public DimensionDTO getActualFieldDimension() {
-        return getConverter().pixelToDimension(getActualFieldWidth(), getActualFieldHeight());
+    public DimensionDTO getActualFieldPixelDimension() {
+        return converter.pixelToDimension(getActualFieldWidth(), getActualFieldHeight());
     }
 
     public Converter getConverter() {

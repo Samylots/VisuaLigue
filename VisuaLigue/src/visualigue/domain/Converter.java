@@ -22,8 +22,13 @@ public class Converter {
 
     public Coords pixelToMeter(Coords currentPos, DimensionDTO uiDimension) {
         DimensionDTO realDimension = domain.getFieldDimension();
-        double x = currentPos.getX(), y = currentPos.getY();
-        return new Coords(x / uiDimension.width * realDimension.width, y / uiDimension.height * realDimension.height);
+        double x = currentPos.getX();
+        double y = currentPos.getY();
+        x /= uiDimension.width ;
+        x *= realDimension.width;
+        y /= uiDimension.height;
+        y *= realDimension.height;
+        return new Coords(round(x) , round(y) );
     }
 
     public Coords meterToPixel(Coords currentPos, DimensionDTO uiDimension) {
@@ -31,7 +36,11 @@ public class Converter {
         double x = currentPos.getX(), y = currentPos.getY();
         x = x / realDimension.width * uiDimension.width;
         y = y / realDimension.height * uiDimension.height;
-        return new Coords(x, y);
+        return new Coords(round(x), round(y));
+    }
+   
+    private double round(double value){
+        return Math.round(value * 1000.0) / 1000.0;
     }
     
     public DimensionDTO pixelToDimension(double width, double height) {

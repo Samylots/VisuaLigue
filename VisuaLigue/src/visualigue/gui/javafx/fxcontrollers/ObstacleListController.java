@@ -5,9 +5,7 @@
  */
 package visualigue.gui.javafx.fxcontrollers;
 
-import visualigue.gui.javafx.fxcontrollers.AddObstacleController;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,8 +15,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import visualigue.domain.game.entities.Obstacle;
-import visualigue.gui.javafx.fxcontrollers.items.ObstacleListItemController;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 

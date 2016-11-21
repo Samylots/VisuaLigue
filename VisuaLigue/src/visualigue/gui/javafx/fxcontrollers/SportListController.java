@@ -21,8 +21,6 @@ import visualigue.domain.VisuaLigueController;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 import visualigue.gui.javafx.models.ModelFactory;
-import visualigue.gui.javafx.models.PlayerTableItem;
-import visualigue.gui.javafx.models.TeamTableItem;
 import visualigue.dto.*;
 
 /**

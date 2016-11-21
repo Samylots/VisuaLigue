@@ -65,7 +65,7 @@ public class GameDrawer {
     }
 
     private Coords getPixelPosition(Coords domainCoords) {
-        return canvas.getConverter().meterToPixel(domainCoords, canvas.getActualFieldDimension());
+        return canvas.getConverter().meterToPixel(domainCoords, canvas.getActualFieldPixelDimension());
     }
 
 }
