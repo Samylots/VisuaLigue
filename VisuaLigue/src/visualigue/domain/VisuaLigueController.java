@@ -15,7 +15,7 @@ import visualigue.domain.game.Game;
 import visualigue.domain.game.entities.Obstacle;
 import visualigue.domain.game.Sport;
 import visualigue.domain.utils.Coords;
-import visualigue.domain.game.entities.Entity;
+import visualigue.domain.game.entities.*;
 import visualigue.domain.game.entities.Accessory;
 import visualigue.domain.game.Position;
 import visualigue.domain.game.Team;
@@ -27,6 +27,7 @@ import visualigue.services.exporters.GameExporterFactory;
 import visualigue.services.persistence.Serializer;
 import java.util.HashMap;
 import java.util.Map;
+import visualigue.dto.*;
 
 /**
  *
@@ -44,6 +45,7 @@ public class VisuaLigueController implements Serializable {
     private double stepTime;
     private Mode currentMode;
     private boolean showingRoles;
+    private DTOFactory DTOFactory = new DTOFactory();
 
     public VisuaLigueController() {
         this.showingRoles = true;
@@ -64,6 +66,28 @@ public class VisuaLigueController implements Serializable {
         this.stepTime = controller.stepTime;
         this.currentMode = controller.currentMode;
         this.showingRoles = controller.showingRoles;
+    }
+    
+    public List<TeamDTO> getCurrentGameTeams() {  
+        Team team1 = new Team("Équipe 1", "f0f0f0");
+        team1.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
+        team1.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
+        team1.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
+        team1.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
+        team1.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
+        
+        Team team2 = new Team("Équipe 2", "f00f00");
+        team2.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
+        team2.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
+        team2.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
+        team2.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
+        team2.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
+        
+        List<TeamDTO> returnVal = new ArrayList<TeamDTO>();
+        returnVal.add(DTOFactory.createTeamDTO(team1));
+        returnVal.add(DTOFactory.createTeamDTO(team2));
+        
+        return returnVal;
     }
 
     public void deleteObstacle(int obstacleId) {
@@ -172,8 +196,22 @@ public class VisuaLigueController implements Serializable {
         return returnData;
     }
 
-    public List<Obstacle> getAvailableObstacles() {
-        return ressources.getAvailableObstacles();
+    public List<HashMap<String, Object>> getAvailableObstacles() {
+        List<HashMap<String, Object>> returnData = new ArrayList<HashMap<String, Object>>();
+        List<Obstacle> obstacles = ressources.getAvailableObstacles();
+        
+        obstacles.stream().forEach((obstacle) -> {
+            HashMap<String, Object> obstacleData = new HashMap<String, Object>();
+            obstacleData.put("name", obstacle.getName());
+            obstacleData.put("picturePath", obstacle.getPicturePath());
+            obstacleData.put("id", obstacle.getId());
+            obstacleData.put("width", obstacle.getDimension().getWidth());
+            obstacleData.put("height", obstacle.getDimension().getHeight());
+            
+            returnData.add(obstacleData);
+        });
+        
+        return returnData;
     }
 
     public double getActualTime() {
