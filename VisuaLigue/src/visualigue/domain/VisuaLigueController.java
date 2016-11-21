@@ -45,7 +45,6 @@ public class VisuaLigueController implements Serializable {
     private double stepTime;
     private Mode currentMode;
     private boolean showingRoles;
-    private DTOFactory DTOFactory = new DTOFactory();
 
     public VisuaLigueController() {
         this.showingRoles = true;
@@ -84,8 +83,8 @@ public class VisuaLigueController implements Serializable {
         team2.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
         
         List<TeamDTO> returnVal = new ArrayList<TeamDTO>();
-        returnVal.add(DTOFactory.createTeamDTO(team1));
-        returnVal.add(DTOFactory.createTeamDTO(team2));
+        returnVal.add(new TeamDTO(team1));
+        returnVal.add(new TeamDTO(team2));
         
         return returnVal;
     }
@@ -180,35 +179,23 @@ public class VisuaLigueController implements Serializable {
         return folder;
     }
 
-    public List<HashMap<String, Object>> getAvailableSports() {
-        List<HashMap<String, Object>> returnData = new ArrayList<HashMap<String, Object>>();
+    public List<SportDTO> getAvailableSports() {
+        List<SportDTO> returnData = new ArrayList<SportDTO>();
         List<Sport> sports = ressources.getAvailableSports();
         
         sports.stream().forEach((sport) -> {
-            HashMap<String, Object> sportData = new HashMap<String, Object>();
-            sportData.put("name", sport.getName());
-            sportData.put("fieldPicturePath", sport.getFieldPicturePath());
-            sportData.put("id", sport.getSportId());
-            
-            returnData.add(sportData);
+            returnData.add(new SportDTO(sport));
         });
         
         return returnData;
     }
 
-    public List<HashMap<String, Object>> getAvailableObstacles() {
-        List<HashMap<String, Object>> returnData = new ArrayList<HashMap<String, Object>>();
+    public List<ObstacleDTO> getAvailableObstacles() {
+        List<ObstacleDTO> returnData = new ArrayList<ObstacleDTO>();
         List<Obstacle> obstacles = ressources.getAvailableObstacles();
         
         obstacles.stream().forEach((obstacle) -> {
-            HashMap<String, Object> obstacleData = new HashMap<String, Object>();
-            obstacleData.put("name", obstacle.getName());
-            obstacleData.put("picturePath", obstacle.getPicturePath());
-            obstacleData.put("id", obstacle.getId());
-            obstacleData.put("width", obstacle.getDimension().getWidth());
-            obstacleData.put("height", obstacle.getDimension().getHeight());
-            
-            returnData.add(obstacleData);
+            returnData.add(new ObstacleDTO(obstacle));
         });
         
         return returnData;
@@ -238,11 +225,11 @@ public class VisuaLigueController implements Serializable {
         showingRoles = !showingRoles;
     }
 
-    public Dimension getFieldDimension() {
+    public DimensionDTO getFieldDimension() {
         if (currentGame == null) {
             throw new NoCurrentGameException("There is no current game defined!");
         }
-        return currentGame.getSport().getFieldDimension();
+        return new DimensionDTO(currentGame.getSport().getFieldDimension());
     }
 
     public List<Entity> getGameEntities() {
@@ -256,26 +243,18 @@ public class VisuaLigueController implements Serializable {
         return entities;
     }
 
-    public List<HashMap<String, Object>> getActualPositions() {
+    public List<PositionDTO> getActualPositions() {
         if (currentGame == null) {
             throw new NoCurrentGameException("There is no current game defined!");
         }
-        List<HashMap<String, Object>> returnData = new ArrayList<HashMap<String, Object>>();
+        List<PositionDTO> returnData = new ArrayList<PositionDTO>();
         Map<Integer, Position> currentPositions = currentGame.getCurrentPositions();
         
         for (Map.Entry<Integer, Position> entry : currentPositions.entrySet()) {
             int id = entry.getKey();
             Position pos = entry.getValue();
-            
-            HashMap<String, Object> positionData = new HashMap<String, Object>();
-            positionData.put("picturePath", pos.getEntity().getPicturePath());
-            positionData.put("x", pos.getCoords().getX());
-            positionData.put("y", pos.getCoords().getY());
-            positionData.put("width", pos.getEntity().getDimension().getWidth());
-            positionData.put("height", pos.getEntity().getDimension().getHeight());
-            positionData.put("type", pos.getEntity().getClass().getName());
 
-            returnData.add(positionData);
+            returnData.add(new PositionDTO(pos));
         }
         return returnData;
     }

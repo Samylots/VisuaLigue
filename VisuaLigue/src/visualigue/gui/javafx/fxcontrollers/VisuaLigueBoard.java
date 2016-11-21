@@ -20,6 +20,7 @@ import visualigue.domain.VisuaLigueController;
 import visualigue.domain.utils.Coords;
 import visualigue.domain.utils.Dimension;
 import visualigue.gui.javafx.fxdrawers.GameDrawer;
+import visualigue.dto.DimensionDTO;
 
 /**
  * FXML Controller class
@@ -261,8 +262,8 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
         return fieldPicture.getHeight() * zoomFactor;
     }
 
-    public Dimension getActualFieldDimension() {
-        return new Dimension(getActualFieldWidth(), getActualFieldHeight());
+    public DimensionDTO getActualFieldDimension() {
+        return getConverter().pixelToDimension(getActualFieldWidth(), getActualFieldHeight());
     }
 
     public Converter getConverter() {

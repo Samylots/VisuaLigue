@@ -5,7 +5,7 @@
  */
 package visualigue.domain;
 
-import visualigue.domain.utils.Dimension;
+import visualigue.dto.DimensionDTO;
 import visualigue.domain.utils.Coords;
 
 /**
@@ -20,17 +20,21 @@ public class Converter {
         domain = domainController;
     }
 
-    public Coords pixelToMeter(Coords currentPos, Dimension uiDimension) {
-        Dimension realDimension = domain.getFieldDimension();
+    public Coords pixelToMeter(Coords currentPos, DimensionDTO uiDimension) {
+        DimensionDTO realDimension = domain.getFieldDimension();
         double x = currentPos.getX(), y = currentPos.getY();
-        return new Coords(x / uiDimension.getWidth() * realDimension.getWidth(), y / uiDimension.getHeight() * realDimension.getHeight());
+        return new Coords(x / uiDimension.width * realDimension.width, y / uiDimension.height * realDimension.height);
     }
 
-    public Coords meterToPixel(Coords currentPos, Dimension uiDimension) {
-        Dimension realDimension = domain.getFieldDimension();
+    public Coords meterToPixel(Coords currentPos, DimensionDTO uiDimension) {
+        DimensionDTO realDimension = domain.getFieldDimension();
         double x = currentPos.getX(), y = currentPos.getY();
-        x = x / realDimension.getWidth() * uiDimension.getWidth();
-        y = y / realDimension.getHeight() * uiDimension.getHeight();
+        x = x / realDimension.width * uiDimension.width;
+        y = y / realDimension.height * uiDimension.height;
         return new Coords(x, y);
+    }
+    
+    public DimensionDTO pixelToDimension(double width, double height) {
+        return new DimensionDTO(width, height);
     }
 }
