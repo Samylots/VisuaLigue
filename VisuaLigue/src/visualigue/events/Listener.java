@@ -3,19 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package visualigue.exceptions;
+package visualigue.events;
 
 /**
  *
- * @author Samuel
+ * @author Bruno L.L.
  */
-public class NoSuchId extends RuntimeException {
-
-    public NoSuchId() {
-    }
-
-    public NoSuchId(String message) {
-        super(message);
-    }
-
+public interface Listener {
+    
 }

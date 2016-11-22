@@ -29,7 +29,6 @@ public class VisuaLigue extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
         Node node = FXLoader.getInstance().load("mainWindow.fxml");
         MainWindowController mainWindowController = FXLoader.getInstance().getLastController();
 

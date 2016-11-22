@@ -27,7 +27,11 @@ import visualigue.services.exporters.GameExporterFactory;
 import visualigue.services.persistence.Serializer;
 import java.util.HashMap;
 import java.util.Map;
+import visualigue.domain.game.Frame;
 import visualigue.dto.*;
+import visualigue.exceptions.CantDeleteFrameException;
+import visualigue.exceptions.MustPlaceAllPlayersOnFieldException;
+import visualigue.events.*;
 
 /**
  *
@@ -65,6 +69,12 @@ public class VisuaLigueController implements Serializable {
         this.stepTime = controller.stepTime;
         this.currentMode = controller.currentMode;
         this.showingRoles = controller.showingRoles;
+    }
+    
+    public void addEventListener(String event, Listener listener) {
+        if (event == "draw") {
+            Game.addDrawListener((DrawListener)listener);
+        }
     }
     
     public List<TeamDTO> getCurrentGameTeams() {  
@@ -282,5 +292,21 @@ public class VisuaLigueController implements Serializable {
 
     public void close() {
         this.serializer.saveToFile();
+    }
+    
+    public void newFrame() {
+        currentGame.newFrame();
+    }
+    
+    public void deleteCurrentFrame() {
+        currentGame.deleteCurrentFrame();
+    }
+    
+    public void nextFrame() {
+        currentGame.nextFrame();
+    }
+    
+    public void previousFrame() {
+        currentGame.previousFrame();
     }
 }

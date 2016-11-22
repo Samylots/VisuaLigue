@@ -10,7 +10,7 @@ import java.util.List;
 import visualigue.domain.game.Game;
 import visualigue.domain.game.entities.Obstacle;
 import visualigue.domain.game.Sport;
-import visualigue.exceptions.NoSuchId;
+import visualigue.exceptions.NoSuchIdException;
 import java.io.Serializable;
 
 /**
@@ -53,7 +53,7 @@ public class Ressources implements Serializable {
                 return sport;
             }
         }
-        throw new NoSuchId("There is no such id '" + id + "' in available sports.");
+        throw new NoSuchIdException("There is no such id '" + id + "' in available sports.");
     }
 
     public void deleteObstacle(int obstacleId) {

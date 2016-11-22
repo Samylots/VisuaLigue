@@ -16,14 +16,14 @@ import visualigue.domain.game.Position;
 import visualigue.domain.utils.Coords;
 import visualigue.domain.utils.Dimension;
 import visualigue.gui.javafx.fxcontrollers.VisuaLigueBoard;
-import java.util.HashMap;
+import visualigue.events.DrawListener;
 import visualigue.dto.*;
 
 /**
  *
  * @author Samuel
  */
-public class GameDrawer {
+public class GameDrawer implements DrawListener {
 
     private final VisuaLigueBoard canvas;
     private final VisuaLigueController domain;
@@ -31,6 +31,12 @@ public class GameDrawer {
     public GameDrawer(VisuaLigueBoard canvas, VisuaLigueController domain) {
         this.canvas = canvas;
         this.domain = domain;
+        
+        domain.addEventListener("draw", this);
+    }
+    
+    public void redraw() {
+        drawGame();
     }
 
     public void drawGame() {

@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import visualigue.domain.utils.Coords;
 import visualigue.exceptions.*;
+import visualigue.events.*;
+import java.util.Map;
+import java.util.ArrayList;
 
 /**
  *
@@ -29,12 +32,17 @@ public class Game implements Serializable {
     private int totalFrames;
     private Entity currentEntity;
     private Frame currentFrame;
+    private static List<DrawListener> drawListeners = new ArrayList<DrawListener>();
 
     public Game() {
         firstFrame = new Frame();
         lastFrame = firstFrame;
         totalFrames = 1;
         currentFrame = firstFrame;
+    }
+    
+    public static void addDrawListener(DrawListener listener) {
+        drawListeners.add(listener);
     }
 
     public void addPlayerAt(Coords coords, int playerId) {
@@ -50,6 +58,7 @@ public class Game implements Serializable {
                 throw new CollisionDetectedException("Collided with: " + collidesWithPosition.getEntity().getId());
             }
         }
+        triggerReDraw();
     }
 
     public void deletePlayerAt(Coords coords) {
@@ -60,6 +69,7 @@ public class Game implements Serializable {
         } else {
             throw new NoEntityAtLocationException("There is no entity at this location");
         }
+        triggerReDraw();
     }
 
     public void addObstacleAt(Obstacle obstacle, Coords coords) {
@@ -72,6 +82,7 @@ public class Game implements Serializable {
         } else {
             throw new CollisionDetectedException("Collided with: " + collidesWithPosition.getEntity().getId());
         }
+        triggerReDraw();
     }
 
     public void deleteObstacleAt(Coords coords) {
@@ -83,6 +94,7 @@ public class Game implements Serializable {
         } else {
             throw new NoEntityAtLocationException("There is no entity at this location");
         }
+        triggerReDraw();
     }
 
     public void selectEntityAt(Coords coords) {
@@ -90,6 +102,8 @@ public class Game implements Serializable {
         
         if (entity != null) {
             currentEntity = entity;
+        } else {
+            throw new NoEntityAtLocationException("There is no entity at this location");
         }
     }
 
@@ -99,7 +113,7 @@ public class Game implements Serializable {
         Accessory copy = new Accessory(accessory);
    
         if (collidesWithPosition != null) {
-            if (collidesWithPosition.getEntity().getClass().getName() == "Player") {
+            if (collidesWithPosition.getEntity() instanceof Player) {
                 accessories.add(copy);
                 currentFrame.addEntityAt(copy, collidesWithPosition.getCoords(), (Player)collidesWithPosition.getEntity());
             } else {
@@ -109,6 +123,7 @@ public class Game implements Serializable {
             accessories.add(copy);
             currentFrame.addEntityAt(copy, coords);
         }
+        triggerReDraw();
     }
 
     public void deleteAccessoryAt(Coords coords) {
@@ -120,6 +135,7 @@ public class Game implements Serializable {
         } else {
             throw new NoEntityAtLocationException("There is no entity at this location");
         }
+        triggerReDraw();
     }
 
     public void moveCurrentEntityTo(Coords coords) {
@@ -128,8 +144,20 @@ public class Game implements Serializable {
         if (collidesWithPosition == null) {
             currentFrame.movePosition(currentEntity.getId(), coords);
         } else {
+            Entity collidedWithEntity = collidesWithPosition.getEntity();
+            
+            if (currentEntity instanceof Accessory && collidedWithEntity instanceof Player) {
+                currentFrame.movePosition(currentEntity.getId(), collidesWithPosition.getCoords());
+                currentFrame.setOwner(currentEntity.getId(), (Player)collidedWithEntity);
+            }
+            if (currentEntity instanceof Player && collidedWithEntity instanceof Accessory) {
+                currentFrame.movePosition(currentEntity.getId(), coords);
+                currentFrame.movePosition(collidedWithEntity.getId(), coords);
+                currentFrame.setOwner(collidedWithEntity.getId(), (Player)currentEntity);
+            }
             throw new CollisionDetectedException("Collided with: " + collidesWithPosition.getEntity().getId());
         }
+        triggerReDraw();
     }
 
     public void setSport(Sport sport) {
@@ -151,5 +179,64 @@ public class Game implements Serializable {
 
     public Map<Integer, Position> getCurrentPositions() {
         return currentFrame.getPositions();
+    }
+    
+    public void newFrame() {
+        if (currentFrame == firstFrame && totalFrames == 1) {
+            Map<Integer, Position> positions = currentFrame.getPositions();
+
+            for (Player player : sport.getPlayers()) {
+                if (!positions.containsKey(player.getId())) {
+                    throw new MustPlaceAllPlayersOnFieldException("You have to place all players on the field before creating a new image");
+                }
+            }
+        }       
+        
+        ++totalFrames;
+        Frame newFrame = new Frame();
+        Frame lastFrameTmp = lastFrame;
+        lastFrame.setNext(newFrame);
+        lastFrame = newFrame;
+        lastFrame.setBack(lastFrameTmp);
+        currentFrame = newFrame;
+        triggerReDraw();
+    }
+    
+    public void deleteCurrentFrame() {
+        if (currentFrame == firstFrame && totalFrames == 1) {
+            throw new CantDeleteFrameException("Can't delete frame if there's only one");
+        }
+        --totalFrames;
+
+        if (currentFrame == firstFrame) {
+            currentFrame.getNext().setBack(null);
+            firstFrame = currentFrame.getNext();
+            currentFrame = currentFrame.getNext();
+        } else if(currentFrame == lastFrame) {
+            currentFrame.getBack().setNext(null);
+            lastFrame = currentFrame.getBack();
+            currentFrame = currentFrame.getBack();
+        } else {
+            currentFrame.getBack().setNext(currentFrame.getNext());
+            currentFrame.getNext().setBack(currentFrame.getBack());
+            currentFrame = currentFrame.getNext();
+        }
+        triggerReDraw();
+    }
+    
+    public void nextFrame() {
+        currentFrame = currentFrame.getNext();
+        triggerReDraw();
+    }
+    
+    public void previousFrame() {
+        currentFrame = currentFrame.getBack();
+        triggerReDraw();
+    }
+    
+    private void triggerReDraw() {
+        for (DrawListener listener : drawListeners) {
+            listener.redraw();
+        }
     }
 }
