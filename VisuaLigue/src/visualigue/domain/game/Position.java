@@ -8,7 +8,7 @@ package visualigue.domain.game;
 import visualigue.domain.game.entities.Player;
 import visualigue.domain.game.entities.Entity;
 import java.io.Serializable;
-import visualigue.domain.utils.Coords;
+import visualigue.utils.Coords;
 
 /**
  *

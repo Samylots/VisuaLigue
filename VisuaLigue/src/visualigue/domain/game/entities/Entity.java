@@ -5,7 +5,7 @@
  */
 package visualigue.domain.game.entities;
 
-import visualigue.domain.utils.Dimension;
+import visualigue.utils.Dimension;
 import java.io.Serializable;
 
 /**

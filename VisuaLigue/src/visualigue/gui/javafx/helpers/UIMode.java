@@ -7,7 +7,7 @@ package visualigue.gui.javafx.helpers;
 
 import java.io.Serializable;
 import javafx.scene.Node;
-import visualigue.domain.utils.Mode;
+import visualigue.utils.Mode;
 import visualigue.gui.javafx.fxcontrollers.ObstacleListController;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 

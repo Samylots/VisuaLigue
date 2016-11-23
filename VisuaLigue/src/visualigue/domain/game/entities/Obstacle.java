@@ -6,7 +6,7 @@
 package visualigue.domain.game.entities;
 
 import java.io.Serializable;
-import visualigue.domain.utils.Dimension;
+import visualigue.utils.Dimension;
 import visualigue.services.persistence.Serializer;
 
 /**

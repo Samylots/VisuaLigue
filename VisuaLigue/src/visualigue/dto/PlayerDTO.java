@@ -5,7 +5,7 @@
  */
 package visualigue.dto;
 
-import visualigue.domain.utils.Dimension;
+import visualigue.utils.Dimension;
 import visualigue.domain.game.entities.Player;
 import visualigue.domain.game.entities.Entity;
 import visualigue.dto.EntityDTO;

@@ -12,37 +12,90 @@ import visualigue.domain.game.entities.Entity;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import visualigue.domain.utils.Coords;
+import visualigue.utils.Coords;
 import visualigue.exceptions.*;
 import visualigue.events.*;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  *
  * @author Bruno L.L.
  */
 public class Game implements Serializable {
+    
+    private static int GAME_ID_GENERATOR = 1;
 
     private Sport sport;
-    private List<Obstacle> obstacles;
-    private List<Accessory> accessories;
+    private List<Obstacle> obstacles = new ArrayList<Obstacle>();
+    private List<Accessory> accessories = new ArrayList<Accessory>();
     private Frame firstFrame;
     private Frame lastFrame;
     private int totalFrames;
     private Entity currentEntity;
     private Frame currentFrame;
     private static List<DrawListener> drawListeners = new ArrayList<DrawListener>();
+    private transient Timer playbackTimer = new Timer();
+    private int id;
+    private String name;
+    
+    private final int frameTimeEquiv = 2*1000;
 
-    public Game() {
+    public Game(String name, Sport sport) {
+        this.id = GAME_ID_GENERATOR;
+        GAME_ID_GENERATOR++;
+        
         firstFrame = new Frame();
         lastFrame = firstFrame;
         totalFrames = 1;
         currentFrame = firstFrame;
+        this.name = name;
+        this.sport = sport;
+    }
+    
+    public int getId() {
+        return this.id;
+    }
+    
+    public String getName() {
+        return this.name;
     }
     
     public static void addDrawListener(DrawListener listener) {
         drawListeners.add(listener);
+    }
+    
+    public void startGame() {
+        playbackTimer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                if (currentFrame != lastFrame) {
+                    currentFrame = currentFrame.getNext();
+                    triggerReDraw();
+                } else {
+                    playbackTimer.cancel();
+                }
+            }
+        }, frameTimeEquiv, frameTimeEquiv);
+    }
+    
+    public void pauseGame() {
+        playbackTimer.cancel();
+    }
+    
+    public void goToFrame(int number) {
+        Frame frameIt = firstFrame;
+        
+        int i = 1;
+        do {
+            if (number == i) {
+                currentFrame = frameIt;
+                break;
+            }
+            frameIt = frameIt.getNext();
+            ++i;
+        } while (frameIt != lastFrame);
     }
 
     public void addPlayerAt(Coords coords, int playerId) {
@@ -191,7 +244,6 @@ public class Game implements Serializable {
                 }
             }
         }       
-        
         ++totalFrames;
         Frame newFrame = new Frame();
         Frame lastFrameTmp = lastFrame;

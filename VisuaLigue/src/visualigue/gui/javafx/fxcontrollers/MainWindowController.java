@@ -75,8 +75,7 @@ public class MainWindowController implements Initializable, Serializable {
 
         int sportId = chooseSport();
         if (sportId != 0) {
-            domainController.createNewGame();
-            domainController.setSport(sportId);
+            domainController.createNewGame("Mettre un nom ici", sportId);
 
             root.setCenter(board);
             changeViewTo(UIMode.FRAME_BY_FRAME);

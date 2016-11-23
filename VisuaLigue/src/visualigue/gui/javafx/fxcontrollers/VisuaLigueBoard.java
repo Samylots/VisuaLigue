@@ -17,11 +17,11 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import visualigue.domain.Converter;
+import visualigue.utils.Converter;
 import visualigue.domain.VisuaLigueController;
-import visualigue.domain.utils.Coords;
+import visualigue.utils.Coords;
 import visualigue.gui.javafx.fxdrawers.GameDrawer;
-import visualigue.dto.DimensionDTO;
+import visualigue.utils.Dimension;
 
 /**
  * FXML Controller class
@@ -272,7 +272,7 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
         return fieldPicture.getHeight() * zoomFactor;
     }
 
-    public DimensionDTO getActualFieldPixelDimension() {
+    public Dimension getActualFieldPixelDimension() {
         return converter.pixelToDimension(getActualFieldWidth(), getActualFieldHeight());
     }
 
