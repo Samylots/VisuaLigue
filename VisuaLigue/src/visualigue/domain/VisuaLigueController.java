@@ -115,8 +115,10 @@ public class VisuaLigueController implements Serializable {
     }
     
     // Faire un popup pour demander le nom et caller cette méthode juste quand on a le nom et le sport choisi
-    public void createNewGame(String name, int sportId) {
-        currentGame = new Game(name, ressources.getSport(sportId));
+    public int createNewGame(String name, int sportId) {
+        Game newGame = new Game(name, ressources.getSport(sportId));
+        ressources.addGame(newGame);
+        return newGame.getId();
     }
 
     public int createNewSport(String name, String fieldPath, double fieldWidth, double fielHeight, String accessoryPath, double accessoryWidth, double accessoryHeight) {
