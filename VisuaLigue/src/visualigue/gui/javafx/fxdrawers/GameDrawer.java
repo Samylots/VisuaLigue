@@ -13,8 +13,8 @@ import visualigue.domain.game.entities.Entity;
 import visualigue.domain.game.entities.Obstacle;
 import visualigue.domain.game.entities.Player;
 import visualigue.domain.game.Position;
-import visualigue.domain.utils.Coords;
-import visualigue.domain.utils.Dimension;
+import visualigue.utils.Coords;
+import visualigue.utils.Dimension;
 import visualigue.gui.javafx.fxcontrollers.VisuaLigueBoard;
 import visualigue.events.DrawListener;
 import visualigue.dto.*;
@@ -56,18 +56,18 @@ public class GameDrawer implements DrawListener {
     }
 
     private void drawPlayer(PositionDTO position) {
-        canvas.getGraphicsContext2D().drawImage(new Image(position.entity.picturePath), position.coords.x, position.coords.y, position.entity.dimension.width, position.entity.dimension.height);
+        canvas.getGraphicsContext2D().drawImage(new Image(position.entity.picturePath), position.coords.getX(), position.coords.getY(), position.entity.dimension.getWidth(), position.entity.dimension.getHeight());
         if (domain.isShowingRoles()) {
             //TODO draw roles/names etc.
         }
     }
 
     private void drawObstacle(PositionDTO position) {
-        canvas.getGraphicsContext2D().drawImage(new Image(position.entity.picturePath), position.coords.x, position.coords.y, position.entity.dimension.width, position.entity.dimension.height);
+        canvas.getGraphicsContext2D().drawImage(new Image(position.entity.picturePath), position.coords.getX(), position.coords.getY(), position.entity.dimension.getWidth(), position.entity.dimension.getHeight());
     }
 
     private void drawEntity(PositionDTO position) {
-        canvas.getGraphicsContext2D().drawImage(new Image(position.entity.picturePath), position.coords.x, position.coords.y, position.entity.dimension.width, position.entity.dimension.height);
+        canvas.getGraphicsContext2D().drawImage(new Image(position.entity.picturePath), position.coords.getX(), position.coords.getY(), position.entity.dimension.getWidth(), position.entity.dimension.getHeight());
     }
 
     private Coords getPixelPosition(Coords domainCoords) {

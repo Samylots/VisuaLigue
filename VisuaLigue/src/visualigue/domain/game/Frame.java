@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 import visualigue.domain.game.Position;
 import java.util.TreeMap;
-import visualigue.domain.utils.Coords;
-import visualigue.domain.utils.Dimension;
+import visualigue.utils.Coords;
+import visualigue.utils.Dimension;
 import visualigue.exceptions.*;
 import visualigue.domain.game.entities.Player;
 

@@ -7,10 +7,10 @@ package visualigue.domain.game.entities;
 
 import java.io.Serializable;
 import java.util.List;
-import visualigue.domain.utils.Coords;
+import visualigue.utils.Coords;
 import visualigue.domain.game.Team;
 import visualigue.domain.game.entities.Entity;
-import visualigue.domain.utils.Dimension;
+import visualigue.utils.Dimension;
 
 /**
  *

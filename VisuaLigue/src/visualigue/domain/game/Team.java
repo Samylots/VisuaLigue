@@ -9,7 +9,7 @@ import visualigue.domain.game.entities.Player;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import visualigue.domain.utils.Dimension;
+import visualigue.utils.Dimension;
 import visualigue.exceptions.NoPlayerWithSpecifiedIdException;
 
 /**

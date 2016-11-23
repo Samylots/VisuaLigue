@@ -10,16 +10,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.image.Image;
-import visualigue.domain.utils.Dimension;
+import visualigue.utils.Dimension;
 import visualigue.domain.game.Game;
 import visualigue.domain.game.entities.Obstacle;
 import visualigue.domain.game.Sport;
-import visualigue.domain.utils.Coords;
+import visualigue.utils.Coords;
 import visualigue.domain.game.entities.*;
 import visualigue.domain.game.entities.Accessory;
 import visualigue.domain.game.Position;
 import visualigue.domain.game.Team;
-import visualigue.domain.utils.Mode;
+import visualigue.utils.Mode;
 import visualigue.exceptions.NoCurrentGameException;
 import visualigue.gui.javafx.models.ModelFactory;
 import visualigue.services.exporters.GameExporter;
@@ -77,35 +77,34 @@ public class VisuaLigueController implements Serializable {
         }
     }
     
+    public void startGame() {
+        currentGame.pauseGame();
+    }
+    
+    public void pauseGame() {
+        currentGame.startGame();
+    }
+    
+    public void goToFrame(int number) {
+        currentGame.goToFrame(number);
+    }
+    
     public List<TeamDTO> getCurrentGameTeams() {  
-        Team team1 = new Team("Équipe 1", "f0f0f0");
-        team1.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
-        team1.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
-        team1.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
-        team1.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
-        team1.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
-        
-        Team team2 = new Team("Équipe 2", "f00f00");
-        team2.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
-        team2.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
-        team2.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
-        team2.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
-        team2.addPlayer("picturePath/img.jpg", "Bruno", "Avant");
-        
         List<TeamDTO> returnVal = new ArrayList<TeamDTO>();
-        returnVal.add(new TeamDTO(team1));
-        returnVal.add(new TeamDTO(team2));
+        List<Team> teams = currentGame.getSport().getTeams();
         
+        for (Team team : teams) {
+            returnVal.add(new TeamDTO(team));
+        }
         return returnVal;
     }
 
     public void deleteObstacle(int obstacleId) {
-        //find obstacle by id and delete it
+        ressources.deleteObstacle(obstacleId);
     }
 
-    public void createNewGame() {
-        //createNewGame...
-        currentGame = new Game();
+    public void createNewGame(String name, int sportId) {
+        currentGame = new Game(name, ressources.getSport(sportId));
     }
 
     public int createNewSport(String name, String fieldPath, double fieldWidth, double fielHeight, String accessoryPath, double accessoryWidth, double accessoryHeight) {
@@ -135,14 +134,6 @@ public class VisuaLigueController implements Serializable {
         String type = path;
         exporter = GameExporterFactory.getExporter(type);
         exporter.export(new File(path));
-    }
-
-    public void startGame() {
-
-    }
-
-    public void pauseGame() {
-
     }
 
     public void foward() {
@@ -210,6 +201,17 @@ public class VisuaLigueController implements Serializable {
         
         return returnData;
     }
+    
+    public List<GameDTO> getAvailableGames() {
+        List<Game> games = ressources.getGames();
+        List<GameDTO> returnData = new ArrayList<GameDTO>();
+        
+        games.stream().forEach((game) -> {
+            returnData.add(new GameDTO(game));
+        });
+        
+        return returnData;
+    }
 
     public double getActualTime() {
         return actualTime;
@@ -235,22 +237,15 @@ public class VisuaLigueController implements Serializable {
         showingRoles = !showingRoles;
     }
 
-    public DimensionDTO getFieldDimension() {
+    public Dimension getFieldDimension() {
         if (currentGame == null) {
             throw new NoCurrentGameException("There is no current game defined!");
         }
-        return new DimensionDTO(currentGame.getSport().getFieldDimension());
+        return new Dimension(currentGame.getSport().getFieldDimension());
     }
 
-    public List<Entity> getGameEntities() {
-        if (currentGame == null) {
-            throw new NoCurrentGameException("There is no current game defined!");
-        }
-        List<Entity> entities = new ArrayList<>();
-        entities.addAll(currentGame.getSport().getPlayers());
-        entities.addAll(currentGame.getAccessories());
-        entities.addAll(currentGame.getObstacles());
-        return entities;
+    public AccessoryDTO getGameAccessrory() {
+        return new AccessoryDTO(currentGame.getSport().getAccessory());
     }
 
     public List<PositionDTO> getActualPositions() {
@@ -284,10 +279,6 @@ public class VisuaLigueController implements Serializable {
 
     public String getFieldPicPath() {
         return currentGame.getSport().getFieldPicturePath();
-    }
-
-    public void setSport(int sportId) {
-        currentGame.setSport(ressources.getSport(sportId));
     }
 
     public void close() {

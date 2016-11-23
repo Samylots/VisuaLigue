@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package visualigue.domain.utils;
+package visualigue.utils;
 
 import java.io.Serializable;
 

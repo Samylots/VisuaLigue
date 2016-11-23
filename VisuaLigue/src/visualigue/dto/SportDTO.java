@@ -10,7 +10,7 @@ import java.util.List;
 import visualigue.domain.game.Sport;
 import visualigue.domain.game.Team;
 import visualigue.domain.game.entities.Accessory;
-import visualigue.domain.utils.Dimension;
+import visualigue.utils.Dimension;
 
 /**
  *
@@ -21,14 +21,14 @@ public class SportDTO {
     public int id;
     public String name;
     public String fieldPicturePath;
-    public DimensionDTO fieldDimension;
+    public Dimension fieldDimension;
     public AccessoryDTO accessory;
     public List<TeamDTO> teams;
     
     public SportDTO(Sport sport) {
         this.id = sport.getSportId();
         this.name = sport.getName();
-        this.fieldDimension = new DimensionDTO(sport.getFieldDimension());
+        this.fieldDimension = sport.getFieldDimension();
         this.fieldPicturePath = sport.getFieldPicturePath();
         this.accessory = new AccessoryDTO(sport.getAccessory());
         

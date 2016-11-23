@@ -6,9 +6,8 @@
 package visualigue.dto;
 
 import visualigue.domain.game.entities.Player;
-import visualigue.domain.utils.Dimension;
+import visualigue.utils.Dimension;
 import visualigue.domain.game.entities.Entity;
-import visualigue.dto.DimensionDTO;
 
 /**
  *
@@ -17,17 +16,17 @@ import visualigue.dto.DimensionDTO;
 public class EntityDTO {
     public int id;
     public String picturePath;
-    public DimensionDTO dimension;
+    public Dimension dimension;
     
     public EntityDTO(Dimension dimension, int id, String picturePath) {
         this.id = id;
         this.picturePath = picturePath;
-        this.dimension = new DimensionDTO(dimension);
+        this.dimension = dimension;
     }
     
     public EntityDTO(Entity entity) {
         this.id = entity.getId();
         this.picturePath = entity.getPicturePath();
-        this.dimension = new DimensionDTO(entity.getDimension());
+        this.dimension = entity.getDimension();
     }
 }
