@@ -16,13 +16,14 @@ import visualigue.domain.game.Position;
 import visualigue.domain.utils.Coords;
 import visualigue.domain.utils.Dimension;
 import visualigue.gui.javafx.fxcontrollers.VisuaLigueBoard;
-import java.util.HashMap;
+import visualigue.events.DrawListener;
+import visualigue.dto.*;
 
 /**
  *
  * @author Samuel
  */
-public class GameDrawer {
+public class GameDrawer implements DrawListener {
 
     private final VisuaLigueBoard canvas;
     private final VisuaLigueController domain;
@@ -30,19 +31,23 @@ public class GameDrawer {
     public GameDrawer(VisuaLigueBoard canvas, VisuaLigueController domain) {
         this.canvas = canvas;
         this.domain = domain;
+        
+        domain.addEventListener("draw", this);
+    }
+    
+    public void redraw() {
+        drawGame();
     }
 
     public void drawGame() {
-        List<HashMap<String, Object>> positions = domain.getActualPositions();
+        List<PositionDTO> positions = domain.getActualPositions();
 
-        for (HashMap<String, Object> position : positions) {
-            String type = (String)position.get("type");
-        
-            if (type == "Player") {
+        for (PositionDTO position : positions) {
+            if (position.entity instanceof PlayerDTO) {
                 drawPlayer(position);
-            } else if (type == "Obstacle") {
+            } else if (position.entity instanceof ObstacleDTO) {
                 drawObstacle(position);
-            } else if (type == "Accessory") {
+            } else if (position.entity instanceof AccessoryDTO) {
                 drawEntity(position);
             } else {
                 //error or not?
@@ -50,23 +55,23 @@ public class GameDrawer {
         };
     }
 
-    private void drawPlayer(HashMap<String, Object> position) {
-        canvas.getGraphicsContext2D().drawImage(new Image((String)position.get("picturePath")), (double)position.get("x"), (double)position.get("y"), (double)position.get("width"), (double)position.get("height"));
+    private void drawPlayer(PositionDTO position) {
+        canvas.getGraphicsContext2D().drawImage(new Image(position.entity.picturePath), position.coords.x, position.coords.y, position.entity.dimension.width, position.entity.dimension.height);
         if (domain.isShowingRoles()) {
             //TODO draw roles/names etc.
         }
     }
 
-    private void drawObstacle(HashMap<String, Object> position) {
-        canvas.getGraphicsContext2D().drawImage(new Image((String)position.get("picturePath")), (double)position.get("x"), (double)position.get("y"), (double)position.get("width"), (double)position.get("height"));
+    private void drawObstacle(PositionDTO position) {
+        canvas.getGraphicsContext2D().drawImage(new Image(position.entity.picturePath), position.coords.x, position.coords.y, position.entity.dimension.width, position.entity.dimension.height);
     }
 
-    private void drawEntity(HashMap<String, Object> position) {
-        canvas.getGraphicsContext2D().drawImage(new Image((String)position.get("picturePath")), (double)position.get("x"), (double)position.get("y"), (double)position.get("width"), (double)position.get("height"));
+    private void drawEntity(PositionDTO position) {
+        canvas.getGraphicsContext2D().drawImage(new Image(position.entity.picturePath), position.coords.x, position.coords.y, position.entity.dimension.width, position.entity.dimension.height);
     }
 
     private Coords getPixelPosition(Coords domainCoords) {
-        return canvas.getConverter().meterToPixel(domainCoords, canvas.getActualFieldDimension());
+        return canvas.getConverter().meterToPixel(domainCoords, canvas.getActualFieldPixelDimension());
     }
 
 }

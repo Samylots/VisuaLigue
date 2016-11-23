@@ -7,22 +7,21 @@ package visualigue.dto;
 
 import visualigue.domain.utils.Dimension;
 import visualigue.domain.game.entities.Player;
+import visualigue.domain.game.entities.Entity;
+import visualigue.dto.EntityDTO;
 
 /**
  *
  * @author Bruno L.L.
  */
-public class PlayerDTO {
-    public int id;
-    public String picturePath;
-    public Dimension dimension;
+public class PlayerDTO extends EntityDTO {
+    public int number;
     public String role;
     public String name;
     
-    public PlayerDTO(Player player, int id) {
-        this.id = id;
-        this.picturePath = player.getPicturePath();
-        this.dimension = player.getDimension();
+    public PlayerDTO(Player player, int number) {
+        super(player.getDimension(), player.getId(), player.getPicturePath());
+        this.number = number;
         this.role = player.getRole();
         this.name = player.getName();
     }

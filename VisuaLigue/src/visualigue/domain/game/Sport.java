@@ -12,7 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import visualigue.domain.utils.Dimension;
-import visualigue.exceptions.NoSuchId;
+import visualigue.exceptions.NoSuchIdException;
 
 /**
  *
@@ -77,7 +77,7 @@ public class Sport implements Serializable {
                 return team;
             }
         }
-        throw new NoSuchId("There is no such team named '" + teamName + "' in teams of current sport.");
+        throw new NoSuchIdException("There is no such team named '" + teamName + "' in teams of current sport.");
     }
 
     public String getName() {

@@ -35,6 +35,14 @@ public class Frame implements Serializable {
     public Frame getBack() {
         return back;
     }
+    
+    public void setNext(Frame frame) {
+        this.next = frame;
+    }
+    
+    public void setBack(Frame frame) {
+        this.back = frame;
+    }
 
     public void addEntityAt(Entity entity, Coords coords) {
         positions.put(entity.getId(), new Position(coords, entity));
@@ -54,7 +62,7 @@ public class Frame implements Serializable {
     
     public void removeEntity(int id) {
         if (positions.remove(id) == null) {
-            throw new NoSuchId();
+            throw new NoSuchIdException();
         }
     }
     
@@ -83,5 +91,9 @@ public class Frame implements Serializable {
     public void movePosition(int id, Coords coords) {
         Position position = positions.get(id);
         position.setLocation(coords);
+    }
+
+    public void setOwner(int idEntity, Player owner) {
+        positions.get(idEntity).setOwner(owner);
     }
 }

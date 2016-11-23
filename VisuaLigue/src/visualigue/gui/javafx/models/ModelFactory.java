@@ -8,6 +8,7 @@ package visualigue.gui.javafx.models;
 import java.util.HashMap;
 import javafx.scene.image.Image;
 import java.util.List;
+import visualigue.dto.SportDTO;
 
 /**
  *
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class ModelFactory {
 
-    public static Sport createSport(HashMap<String, Object> sport) {
-        return new Sport((String)sport.get("name"), new Image((String)sport.get("fieldPicturePath")), (Integer)sport.get("id"));
+    public static Sport createSport(SportDTO sport) {
+        return new Sport(sport.name, new Image(sport.fieldPicturePath), sport.id);
     }
 }
