@@ -19,6 +19,7 @@ public class Position implements Serializable {
     private Coords coords;
     private Entity entity;
     private Player owner;
+    private boolean isMoved = false;
 
     public Position(Coords location, Entity entity) {
         this.coords = location;
@@ -109,4 +110,12 @@ public class Position implements Serializable {
         this.owner = owner;
     }
 
+    public boolean getIsMoved() {
+        return this.isMoved;
+    }
+    
+    public void setIsMoved(boolean isMoved) {
+        this.isMoved = isMoved;
+    }
+    
 }

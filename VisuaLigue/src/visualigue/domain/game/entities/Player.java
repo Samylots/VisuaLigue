@@ -20,7 +20,7 @@ public class Player extends Entity implements Serializable {
 
     private String role;
     private String name;
-
+    
     public Player(Dimension dimension, String picturePath, String role, String name) {
         super(dimension, picturePath);
         this.role = role;

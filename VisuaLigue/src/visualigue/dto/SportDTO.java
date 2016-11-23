@@ -26,7 +26,7 @@ public class SportDTO {
     public List<TeamDTO> teams;
     
     public SportDTO(Sport sport) {
-        this.id = sport.getSportId();
+        this.id = sport.getId();
         this.name = sport.getName();
         this.fieldDimension = sport.getFieldDimension();
         this.fieldPicturePath = sport.getFieldPicturePath();

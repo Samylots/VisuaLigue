@@ -18,11 +18,13 @@ public class PlayerDTO extends EntityDTO {
     public int number;
     public String role;
     public String name;
+    public boolean isOnBoard;
     
     public PlayerDTO(Player player, int number) {
         super(player.getDimension(), player.getId(), player.getPicturePath());
         this.number = number;
         this.role = player.getRole();
         this.name = player.getName();
+        this.isOnBoard = false;
     }
 }

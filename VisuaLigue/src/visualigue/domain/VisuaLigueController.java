@@ -27,11 +27,15 @@ import visualigue.services.exporters.GameExporterFactory;
 import visualigue.services.persistence.Serializer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimerTask;
 import visualigue.domain.game.Frame;
 import visualigue.dto.*;
 import visualigue.exceptions.CantDeleteFrameException;
 import visualigue.exceptions.MustPlaceAllPlayersOnFieldException;
 import visualigue.events.*;
+import visualigue.exceptions.CollisionDetectedException;
+import visualigue.exceptions.NoEntityAtLocationException;
+import visualigue.exceptions.PlayerAlreadyOnFieldException;
 
 /**
  *
@@ -46,7 +50,6 @@ public class VisuaLigueController implements Serializable {
     private double actualTime;
     private double frameTimeEquiv;
     private GameExporter exporter;
-    private double stepTime;
     private Mode currentMode;
     private boolean showingRoles;
 
@@ -66,7 +69,6 @@ public class VisuaLigueController implements Serializable {
         this.actualTime = controller.actualTime;
         this.frameTimeEquiv = controller.frameTimeEquiv;
         this.exporter = controller.exporter;
-        this.stepTime = controller.stepTime;
         this.currentMode = controller.currentMode;
         this.showingRoles = controller.showingRoles;
     }
@@ -90,19 +92,29 @@ public class VisuaLigueController implements Serializable {
     }
     
     public List<TeamDTO> getCurrentGameTeams() {  
-        List<TeamDTO> returnVal = new ArrayList<TeamDTO>();
+        List<TeamDTO> returnData = new ArrayList<TeamDTO>();
         List<Team> teams = currentGame.getSport().getTeams();
+        List<Integer> playersOnBoard = currentGame.getPlayersOnBoard();
         
         for (Team team : teams) {
-            returnVal.add(new TeamDTO(team));
+            TeamDTO teamDTO = new TeamDTO(team);
+            
+            // Setting isOnBoard values
+            for (PlayerDTO playerDTO : teamDTO.players) {
+                if (playersOnBoard.contains(playerDTO.id)) {
+                    playerDTO.isOnBoard = true;
+                }
+            }
+            returnData.add(teamDTO);
         }
-        return returnVal;
+        return returnData;
     }
 
     public void deleteObstacle(int obstacleId) {
         ressources.deleteObstacle(obstacleId);
     }
-
+    
+    // Faire un popup pour demander le nom et caller cette méthode juste quand on a le nom et le sport choisi
     public void createNewGame(String name, int sportId) {
         currentGame = new Game(name, ressources.getSport(sportId));
     }
@@ -110,7 +122,7 @@ public class VisuaLigueController implements Serializable {
     public int createNewSport(String name, String fieldPath, double fieldWidth, double fielHeight, String accessoryPath, double accessoryWidth, double accessoryHeight) {
         Sport newSport = new Sport(name, fieldPath, new Dimension(fieldWidth, fielHeight), new Accessory(new Dimension(accessoryWidth, accessoryHeight), accessoryPath));
         ressources.addSport(newSport);
-        return newSport.getSportId();
+        return newSport.getId();
     }
 
     public void loadGame(Game game) {
@@ -152,10 +164,6 @@ public class VisuaLigueController implements Serializable {
 
     }
 
-    public void configStepTime(double step) {
-        this.stepTime = step;
-    }
-
     public void changeMode(Mode mode) {
         this.currentMode = mode;
     }
@@ -172,8 +180,8 @@ public class VisuaLigueController implements Serializable {
         this.showingRoles = !this.showingRoles;
     }
 
-    public void click(Coords coord) {
-        //faire tout les events d'un clique..?
+    public void selectEntityAt(Coords coord) {
+        currentGame.selectEntityAt(coord);
     }
 
     public String getFolder() {
@@ -215,14 +223,6 @@ public class VisuaLigueController implements Serializable {
 
     public double getActualTime() {
         return actualTime;
-    }
-
-    public double getFrameTimeEquiv() {
-        return frameTimeEquiv;
-    }
-
-    public double getStepTime() {
-        return stepTime;
     }
 
     public Mode getCurrentMode() {
@@ -299,5 +299,30 @@ public class VisuaLigueController implements Serializable {
     
     public void previousFrame() {
         currentGame.previousFrame();
+    }
+
+    // Remplacer par une seule fonction deleteCurrentEntity?
+    public void deletePlayerAt(Coords coords) {
+        currentGame.deleteAccessoryAt(coords);
+    }
+
+    public void addObstacleAt(Obstacle obstacle, Coords coords) {
+        currentGame.addObstacleAt(obstacle, coords);
+    }
+
+    public void deleteObstacleAt(Coords coords) {
+        currentGame.deleteObstacleAt(coords);
+    }
+
+    public void addAccessoryAt(Coords coords) {
+        currentGame.addAccessoryAt(coords);
+    }
+
+    public void deleteAccessoryAt(Coords coords) {
+        currentGame.deleteAccessoryAt(coords);
+    }
+
+    public void moveCurrentEntityTo(Coords coords) {
+        currentGame.moveCurrentEntityTo(coords);
     }
 }

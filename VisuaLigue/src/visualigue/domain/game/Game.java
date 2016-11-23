@@ -28,9 +28,9 @@ public class Game implements Serializable {
     
     private static int GAME_ID_GENERATOR = 1;
 
-    private Sport sport;
+    // Keeping a local list of obstacles in case they are deleted in the future
     private List<Obstacle> obstacles = new ArrayList<Obstacle>();
-    private List<Accessory> accessories = new ArrayList<Accessory>();
+    private Sport sport;
     private Frame firstFrame;
     private Frame lastFrame;
     private int totalFrames;
@@ -78,6 +78,19 @@ public class Game implements Serializable {
                 }
             }
         }, frameTimeEquiv, frameTimeEquiv);
+    }
+    
+    public List<Integer> getPlayersOnBoard() {
+        List<Integer> returnData = new ArrayList<Integer>();
+        
+        for (Map.Entry<Integer, Position> entry : currentFrame.getPositions().entrySet()) {
+            Position pos = entry.getValue();
+            Entity entity = pos.getEntity();
+            if (entity instanceof Player) {
+                returnData.add(entity.getId());
+            }
+        }
+        return returnData;
     }
     
     public void pauseGame() {
@@ -163,18 +176,15 @@ public class Game implements Serializable {
     public void addAccessoryAt(Coords coords) {
         Accessory accessory = this.sport.getAccessory();
         Position collidesWithPosition = currentFrame.findCollisionAt(accessory, coords);
-        Accessory copy = new Accessory(accessory);
-   
+
         if (collidesWithPosition != null) {
             if (collidesWithPosition.getEntity() instanceof Player) {
-                accessories.add(copy);
-                currentFrame.addEntityAt(copy, collidesWithPosition.getCoords(), (Player)collidesWithPosition.getEntity());
+                currentFrame.addEntityAt(accessory, collidesWithPosition.getCoords(), (Player)collidesWithPosition.getEntity());
             } else {
                 throw new CollisionDetectedException("Collided with: " + collidesWithPosition.getEntity().getId());
             }
         } else {
-            accessories.add(copy);
-            currentFrame.addEntityAt(copy, coords);
+            currentFrame.addEntityAt(accessory, coords);
         }
         triggerReDraw();
     }
@@ -184,7 +194,6 @@ public class Game implements Serializable {
 
         if (entity != null) {
             currentFrame.removeEntity(entity.getId());
-            accessories.remove(entity);
         } else {
             throw new NoEntityAtLocationException("There is no entity at this location");
         }
@@ -213,21 +222,8 @@ public class Game implements Serializable {
         triggerReDraw();
     }
 
-    public void setSport(Sport sport) {
-        this.sport = sport;
-        //TODO checks team nb and positions (Field limits..!)
-    }
-
     public Sport getSport() {
         return sport;
-    }
-
-    public List<Obstacle> getObstacles() {
-        return obstacles;
-    }
-    
-    public List<Accessory> getAccessories() {
-        return accessories;
     }
 
     public Map<Integer, Position> getCurrentPositions() {
@@ -245,12 +241,12 @@ public class Game implements Serializable {
             }
         }       
         ++totalFrames;
-        Frame newFrame = new Frame();
+        Frame newFrame = new Frame(lastFrame);
         Frame lastFrameTmp = lastFrame;
         lastFrame.setNext(newFrame);
         lastFrame = newFrame;
-        lastFrame.setBack(lastFrameTmp);
         currentFrame = newFrame;
+
         triggerReDraw();
     }
     

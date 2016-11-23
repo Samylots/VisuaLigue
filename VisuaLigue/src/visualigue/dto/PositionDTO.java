@@ -17,9 +17,11 @@ public class PositionDTO {
     
     public Coords coords;
     public EntityDTO entity;
-
+    public boolean isMoved;
+    
     public PositionDTO(Position position) {
         this.coords = position.getCoords();
         this.entity = new EntityDTO(position.getEntity());
+        this.isMoved = position.getIsMoved();
     }
 }

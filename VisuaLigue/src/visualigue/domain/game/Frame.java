@@ -26,7 +26,19 @@ public class Frame implements Serializable {
     private Frame next;
     private Frame back;
     //Index of TreeMap is entity Id
-    private final Map<Integer, Position> positions = new TreeMap<Integer, Position>();
+    private Map<Integer, Position> positions = new TreeMap<Integer, Position>();
+    
+    public Frame() {}
+    
+    public Frame(Frame backFrame) {
+        this.back = backFrame;
+        this.positions = back.positions;
+        
+        for (Map.Entry<Integer, Position> entry : positions.entrySet()) {
+            Position pos = entry.getValue();
+            pos.setIsMoved(false);
+        }
+    }
 
     public Frame getNext() {
         return next;
@@ -91,6 +103,7 @@ public class Frame implements Serializable {
     public void movePosition(int id, Coords coords) {
         Position position = positions.get(id);
         position.setLocation(coords);
+        position.setIsMoved(true);
     }
 
     public void setOwner(int idEntity, Player owner) {

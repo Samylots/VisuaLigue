@@ -22,7 +22,7 @@ public class Sport implements Serializable {
 
     private static int SPORT_ID_GENERATOR = 1;
 
-    private int sportId;
+    private int id;
     private String name;
     private String fieldPicturePath;
     private Dimension fieldDimension;
@@ -30,7 +30,7 @@ public class Sport implements Serializable {
     private final List<Team> teams = new ArrayList<>();
 
     public Sport(String name, String fieldPicturePath, Dimension dimension, Accessory accessory) {
-        this.sportId = SPORT_ID_GENERATOR;
+        this.id = SPORT_ID_GENERATOR;
         SPORT_ID_GENERATOR++;
         this.name = name;
         this.fieldPicturePath = fieldPicturePath;
@@ -96,8 +96,8 @@ public class Sport implements Serializable {
         return teams;
     }
 
-    public int getSportId() {
-        return sportId;
+    public int getId() {
+        return id;
     }
 
 }

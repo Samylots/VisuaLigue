@@ -49,7 +49,7 @@ public class Ressources implements Serializable {
 
     public Sport getSport(int id) {
         for (Sport sport : availableSports) {
-            if (sport.getSportId() == id) {
+            if (sport.getId() == id) {
                 return sport;
             }
         }
@@ -68,9 +68,9 @@ public class Ressources implements Serializable {
 
     public void deleteSport(int sportId) {
         for (Sport sport : availableSports) {
-            if (sport.getSportId() == sportId) {
+            if (sport.getId() == sportId) {
                 for (Game game : games) {
-                    if (game.getSport().getSportId() == sportId) {
+                    if (game.getSport().getId() == sportId) {
                         games.remove(game);
                     }
                 }
