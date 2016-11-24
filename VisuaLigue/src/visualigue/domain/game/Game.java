@@ -11,7 +11,6 @@ import visualigue.domain.game.entities.Accessory;
 import visualigue.domain.game.entities.Entity;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 import visualigue.utils.Coords;
 import visualigue.exceptions.*;
 import visualigue.events.*;
@@ -30,6 +29,7 @@ public class Game implements Serializable {
 
     // Keeping a local list of obstacles in case they are deleted in the future
     private List<Obstacle> obstacles = new ArrayList<Obstacle>();
+    private List<Accessory> accessories = new ArrayList<Accessory>();
     private Sport sport;
     private Frame firstFrame;
     private Frame lastFrame;
@@ -176,15 +176,17 @@ public class Game implements Serializable {
     public void addAccessoryAt(Coords coords) {
         Accessory accessory = this.sport.getAccessory();
         Position collidesWithPosition = currentFrame.findCollisionAt(accessory, coords);
-
+Accessory copy = new Accessory(accessory);
         if (collidesWithPosition != null) {
             if (collidesWithPosition.getEntity() instanceof Player) {
-                currentFrame.addEntityAt(accessory, collidesWithPosition.getCoords(), (Player)collidesWithPosition.getEntity());
+                accessories.add(copy);
+                currentFrame.addEntityAt(copy, collidesWithPosition.getCoords(), (Player)collidesWithPosition.getEntity());
             } else {
                 throw new CollisionDetectedException("Collided with: " + collidesWithPosition.getEntity().getId());
             }
         } else {
-            currentFrame.addEntityAt(accessory, coords);
+            accessories.add(copy);
+            currentFrame.addEntityAt(copy, coords);
         }
         triggerReDraw();
     }
@@ -194,6 +196,7 @@ public class Game implements Serializable {
 
         if (entity != null) {
             currentFrame.removeEntity(entity.getId());
+            accessories.remove(entity);
         } else {
             throw new NoEntityAtLocationException("There is no entity at this location");
         }
@@ -286,5 +289,9 @@ public class Game implements Serializable {
         for (DrawListener listener : drawListeners) {
             listener.redraw();
         }
+    }
+    
+    public List<Accessory> getAccessories() {
+        return accessories;
     }
 }
