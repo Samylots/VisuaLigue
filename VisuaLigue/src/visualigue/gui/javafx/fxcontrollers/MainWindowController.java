@@ -18,6 +18,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import visualigue.domain.VisuaLigueController;
@@ -40,6 +41,7 @@ public class MainWindowController implements Initializable, Serializable {
     private StackPane fieldLayer;
 
     private ToolBar mainToolbar;
+    private HBox addPlayerToolBar;
     private MainToolbarController mainToolbarController;
 
     private VisuaLigueBoard board;
@@ -60,6 +62,8 @@ public class MainWindowController implements Initializable, Serializable {
         mainToolbar = (ToolBar) FXLoader.getInstance().load("mainToolbar.fxml");
         mainToolbarController = FXLoader.getInstance().getLastController();
 
+        addPlayerToolBar = new HBox(mainToolbar);
+        
         board = new VisuaLigueBoard(domainController, this);
         board.widthProperty().bind(root.widthProperty().subtract(mainToolbar.widthProperty()));
         board.heightProperty().bind(root.heightProperty());
@@ -79,12 +83,17 @@ public class MainWindowController implements Initializable, Serializable {
             InputDialog input = new InputDialog("New game", "Please name your new game", root);
             int gameId = domainController.createNewGame(input.getInput(), sportId);
             domainController.loadGame(gameId);
-            root.setCenter(board);
-            changeViewTo(UIMode.FRAME_BY_FRAME);
-            root.setLeft(mainToolbar);
+            initLayout();
         } else {
             Dialog popup = new Dialog("Game creation error", "Please, choose a sport to create a new game.", root);
         }
+    }
+    
+    private void initLayout(){
+            root.setCenter(board);
+            changeViewTo(UIMode.FRAME_BY_FRAME);
+            
+            root.setLeft(mainToolbar);
     }
 
     private int chooseSport() {
