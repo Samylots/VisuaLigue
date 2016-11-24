@@ -9,33 +9,23 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.scene.image.Image;
 import visualigue.utils.Dimension;
 import visualigue.domain.game.Game;
 import visualigue.domain.game.entities.Obstacle;
 import visualigue.domain.game.Sport;
 import visualigue.utils.Coords;
-import visualigue.domain.game.entities.*;
 import visualigue.domain.game.entities.Accessory;
 import visualigue.domain.game.Position;
 import visualigue.domain.game.Team;
 import visualigue.utils.Mode;
 import visualigue.exceptions.NoCurrentGameException;
-import visualigue.gui.javafx.models.ModelFactory;
 import visualigue.services.exporters.GameExporter;
 import visualigue.services.exporters.GameExporterFactory;
 import visualigue.services.persistence.Serializer;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.TimerTask;
-import visualigue.domain.game.Frame;
 import visualigue.dto.*;
-import visualigue.exceptions.CantDeleteFrameException;
-import visualigue.exceptions.MustPlaceAllPlayersOnFieldException;
 import visualigue.events.*;
-import visualigue.exceptions.CollisionDetectedException;
-import visualigue.exceptions.NoEntityAtLocationException;
-import visualigue.exceptions.PlayerAlreadyOnFieldException;
+import visualigue.gui.javafx.fxlayouts.Dialog;
 
 /**
  *
@@ -74,7 +64,7 @@ public class VisuaLigueController implements Serializable {
     }
     
     public void addEventListener(String event, Listener listener) {
-        if (event == "draw") {
+        if (event.equals("draw")) {
             Game.addDrawListener((DrawListener)listener);
         }
     }
@@ -92,7 +82,7 @@ public class VisuaLigueController implements Serializable {
     }
     
     public List<TeamDTO> getCurrentGameTeams() {  
-        List<TeamDTO> returnData = new ArrayList<TeamDTO>();
+        List<TeamDTO> returnData = new ArrayList<>();
         List<Team> teams = currentGame.getSport().getTeams();
         List<Integer> playersOnBoard = currentGame.getPlayersOnBoard();
         
@@ -114,7 +104,6 @@ public class VisuaLigueController implements Serializable {
         ressources.deleteObstacle(obstacleId);
     }
     
-    // Faire un popup pour demander le nom et caller cette méthode juste quand on a le nom et le sport choisi
     public int createNewGame(String name, int sportId) {
         Game newGame = new Game(name, ressources.getSport(sportId));
         ressources.addGame(newGame);
@@ -127,8 +116,9 @@ public class VisuaLigueController implements Serializable {
         return newSport.getId();
     }
 
-    public void loadGame(Game game) {
-        //load game etc..
+    public void loadGame(int gameId) {
+        //TODO check for saving?
+        currentGame = ressources.getGame(gameId);
     }
 
     public void startNewMovement() {
@@ -254,7 +244,7 @@ public class VisuaLigueController implements Serializable {
         if (currentGame == null) {
             throw new NoCurrentGameException("There is no current game defined!");
         }
-        List<PositionDTO> returnData = new ArrayList<PositionDTO>();
+        List<PositionDTO> returnData = new ArrayList<>();
         Map<Integer, Position> currentPositions = currentGame.getCurrentPositions();
         
         for (Map.Entry<Integer, Position> entry : currentPositions.entrySet()) {

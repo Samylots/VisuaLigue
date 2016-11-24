@@ -25,6 +25,7 @@ import visualigue.gui.javafx.helpers.UIMode;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.Dialog;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
+import visualigue.gui.javafx.fxlayouts.InputDialog;
 
 /**
  * FXML Controller class
@@ -75,8 +76,9 @@ public class MainWindowController implements Initializable, Serializable {
 
         int sportId = chooseSport();
         if (sportId != 0) {
-            domainController.createNewGame("Mettre un nom ici", sportId);
-
+            InputDialog input = new InputDialog("New game", "Please name your new game", root);
+            int gameId = domainController.createNewGame(input.getInput(), sportId);
+            domainController.loadGame(gameId);
             root.setCenter(board);
             changeViewTo(UIMode.FRAME_BY_FRAME);
             root.setLeft(mainToolbar);
@@ -103,6 +105,7 @@ public class MainWindowController implements Initializable, Serializable {
         CustomWindow window = new CustomWindow(root, (Parent) node);
         window.setTitle("Game List");
         window.showAndWait();
+        //ask if sure to change game etc..
         /*Dialog popup = new Dialog("Game Loader", "This game has been successfully loaded!", root);
          newGame(event);*/
     }

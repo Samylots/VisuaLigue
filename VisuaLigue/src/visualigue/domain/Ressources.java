@@ -55,6 +55,15 @@ public class Ressources implements Serializable {
         }
         throw new NoSuchIdException("There is no such id '" + id + "' in available sports.");
     }
+    
+    public Game getGame(int id) {
+        for (Game game : games) {
+            if (game.getId() == id) {
+                return game;
+            }
+        }
+        throw new NoSuchIdException("There is no such id '" + id + "' in available games.");
+    }
 
     public void deleteObstacle(int obstacleId) {
         Obstacle obstalceToDelete = null;
