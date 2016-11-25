@@ -37,6 +37,7 @@ public class Serializer {
         try {
             ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
             ObjectOutputStream out = new ObjectOutputStream(byteArrayOut);
+            controller.saveIdGeneration();
             out.writeObject(controller);
             out.close();
 
@@ -59,6 +60,7 @@ public class Serializer {
 
             FileOutputStream fileOut = new FileOutputStream(this.saveFileName);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            controller.saveIdGeneration();
             out.writeObject(controller);
             out.close();
             fileOut.close();
@@ -120,5 +122,6 @@ public class Serializer {
 
     private void restoreController(VisuaLigueController controllerToRestore) {
         controller.copy(controllerToRestore);
+        controller.restoreIdGeneration();
     }
 }

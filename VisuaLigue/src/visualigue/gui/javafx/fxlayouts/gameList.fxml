@@ -12,16 +12,12 @@
          <children>
             <Label text="Games" />
             <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
-            <Button fx:id="addSport" disable="true" mnemonicParsing="false" text="Add new Sport" visible="false" />
+            <Button fx:id="addSport" disable="true" mnemonicParsing="false" visible="false" />
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </padding>
       </HBox>
-      <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
-         <content>
-            <VBox fx:id="sportList" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
-         </content>
-      </ScrollPane>
+      <Accordion fx:id="sportList" maxHeight="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
    </children>
 </VBox>

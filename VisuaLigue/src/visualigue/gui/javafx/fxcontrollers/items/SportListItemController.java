@@ -85,4 +85,8 @@ public class SportListItemController implements Initializable, Serializable {
         parentController.select(id);
         System.out.println("Sport #" + id + " selected!");
     }
+
+    public void setSelectable(boolean selectable) {
+        selectButton.setDisable(!selectable);
+    }
 }

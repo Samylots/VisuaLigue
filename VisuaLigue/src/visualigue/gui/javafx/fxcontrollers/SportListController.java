@@ -40,6 +40,8 @@ public class SportListController implements Initializable, Serializable {
     private int selectedId;
     private Stage stage;
 
+    private boolean selectable;
+
     /**
      * Initializes the controller class.
      *
@@ -50,7 +52,8 @@ public class SportListController implements Initializable, Serializable {
     public void initialize(URL url, ResourceBundle rb) {
     }
 
-    public void init(Stage stage) {
+    public void init(Stage stage, boolean selectable) {
+        this.selectable = selectable;
         this.stage = stage;
     }
 
@@ -70,6 +73,7 @@ public class SportListController implements Initializable, Serializable {
         SportListItemController itemController = FXLoader.getInstance().getLastController();
         try {
             itemController.init(this, new Image(sport.fieldPicturePath), sport.name, sport.id);
+            itemController.setSelectable(selectable);
         } catch (Exception e) {
             //no pic then...
         }

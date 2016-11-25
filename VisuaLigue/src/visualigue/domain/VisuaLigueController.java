@@ -25,7 +25,7 @@ import visualigue.services.persistence.Serializer;
 import java.util.Map;
 import visualigue.dto.*;
 import visualigue.events.*;
-import visualigue.gui.javafx.fxlayouts.Dialog;
+import visualigue.utils.IdGenerator;
 
 /**
  *
@@ -43,6 +43,8 @@ public class VisuaLigueController implements Serializable {
     private Mode currentMode;
     private boolean showingRoles;
 
+    private int idGenetation;
+
     public VisuaLigueController() {
         this.showingRoles = true;
         this.currentMode = Mode.FRAME_BY_FRAME;
@@ -54,13 +56,14 @@ public class VisuaLigueController implements Serializable {
 
     public void copy(VisuaLigueController controller) {
         this.folder = controller.folder;
-        this.currentGame = controller.currentGame;
+        //this.currentGame = controller.currentGame; //On loading we don't want a game opened
         this.ressources = controller.ressources;
         this.actualTime = controller.actualTime;
         this.frameTimeEquiv = controller.frameTimeEquiv;
         this.exporter = controller.exporter;
         this.currentMode = controller.currentMode;
         this.showingRoles = controller.showingRoles;
+        this.idGenetation = controller.idGenetation;
     }
 
     public void addEventListener(String event, Listener listener) {
@@ -192,7 +195,7 @@ public class VisuaLigueController implements Serializable {
     }
 
     public List<ObstacleDTO> getAvailableObstacles() {
-        List<ObstacleDTO> returnData = new ArrayList<ObstacleDTO>();
+        List<ObstacleDTO> returnData = new ArrayList<>();
         List<Obstacle> obstacles = ressources.getAvailableObstacles();
 
         obstacles.stream().forEach((obstacle) -> {
@@ -202,9 +205,13 @@ public class VisuaLigueController implements Serializable {
         return returnData;
     }
 
+    public boolean sportHasGames(int sportId) {
+        return ressources.getGames().stream().anyMatch((game) -> (game.getSport().getId() == sportId));
+    }
+
     public List<GameDTO> getAvailableGames() {
         List<Game> games = ressources.getGames();
-        List<GameDTO> returnData = new ArrayList<GameDTO>();
+        List<GameDTO> returnData = new ArrayList<>();
 
         games.stream().forEach((game) -> {
             returnData.add(new GameDTO(game));
@@ -336,5 +343,13 @@ public class VisuaLigueController implements Serializable {
 
     public boolean hasOpenedGame() {
         return currentGame != null;
+    }
+
+    public void saveIdGeneration() {
+        idGenetation = IdGenerator.getInstance().getLastId();
+    }
+
+    public void restoreIdGeneration() {
+        IdGenerator.getInstance().restoreId(idGenetation);
     }
 }

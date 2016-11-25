@@ -78,14 +78,24 @@ public class MainWindowController implements Initializable, Serializable {
 
     @FXML
     private void newGame(ActionEvent event) {
-        int sportId = chooseSport();
-        if (sportId != 0) {
+        boolean wantToCreate = true;
+        int sportId = 0;
+
+        while (sportId == 0 && wantToCreate) {
+            sportId = chooseSport(true);
+            if (sportId == 0) {
+                Dialog popup = new Dialog("Game creation error", "Please, choose a sport to create a new game.", root);
+                wantToCreate = popup.isConfirmed();
+            }
+
+        }
+
+        if (wantToCreate) {
             InputDialog input = new InputDialog("New game", "Please name your new game", root);
-            int gameId = VisuaLigue.domain.createNewGame(input.getInput(), sportId);
-            VisuaLigue.domain.loadGame(gameId);
-            initLayout();
-        } else {
-            Dialog popup = new Dialog("Game creation error", "Please, choose a sport to create a new game.", root);
+            if (input.isConfirmed()) {
+                int gameId = VisuaLigue.domain.createNewGame(input.getInput(), sportId);
+                loadGame(gameId);
+            }
         }
     }
 
@@ -95,13 +105,13 @@ public class MainWindowController implements Initializable, Serializable {
         showDefaultToolbar();
     }
 
-    private int chooseSport() {
+    private int chooseSport(boolean isSelectable) {
         Node node = FXLoader.getInstance().load("sportList.fxml");
         SportListController controller = FXLoader.getInstance().getLastController();
         CustomWindow window = new CustomWindow(root, (Parent) node);
-        controller.init(window);
+        controller.init(window, isSelectable);
         controller.refreshSports();
-        window.setTitle("Choose game sport");
+        window.setTitle("Sport List");
         window.showAndWait();
         return controller.getSelectedId();
     }
@@ -111,8 +121,23 @@ public class MainWindowController implements Initializable, Serializable {
         Node node = FXLoader.getInstance().load("gameList.fxml");
         GameListController controller = FXLoader.getInstance().getLastController();
         CustomWindow window = new CustomWindow(root, (Parent) node);
+        controller.init(window);
+        controller.refreshGames();
         window.setTitle("Game List");
         window.showAndWait();
+
+        int gameId = controller.getSelectedId();
+        if (gameId > 0) {
+            if (VisuaLigue.domain.hasOpenedGame()) {
+                Dialog popup = new Dialog("Game Switching", "Are you sure you wan to change current game?", root);
+                if (popup.isConfirmed()) {
+                    loadGame(gameId);
+                }
+            } else {
+                loadGame(gameId);
+            }
+        }
+
         //ask if sure to change game etc..
         /*Dialog popup = new Dialog("Game Loader", "This game has been successfully loaded!", root);
          newGame(event);*/
@@ -127,13 +152,11 @@ public class MainWindowController implements Initializable, Serializable {
 
     @FXML
     private void openSportList(ActionEvent event) {
-        Node node = FXLoader.getInstance().load("sportList.fxml");
-        SportListController controller = FXLoader.getInstance().getLastController();
-        CustomWindow window = new CustomWindow(root, (Parent) node);
-        controller.init(window);
-        controller.refreshSports();
-        window.setTitle("Sport List");
-        window.showAndWait();
+        int sportId = chooseSport(VisuaLigue.domain.hasOpenedGame());
+        if (sportId > 0) {
+            //TODO make sure user want to change currentGame sport
+            //make changes by wiping all elements in current game but keep game name
+        }
     }
 
     @FXML
@@ -209,6 +232,11 @@ public class MainWindowController implements Initializable, Serializable {
         root.setLeft(addPlayerToolbar);
         board.widthProperty().bind(root.widthProperty().subtract(addPlayerToolbar.widthProperty()));
         Platform.runLater(() -> addPlayerToolbar.requestLayout()); //Node width bug fixing
+    }
+
+    public void loadGame(int gameId) {
+        VisuaLigue.domain.loadGame(gameId);
+        initLayout();
     }
 
 }

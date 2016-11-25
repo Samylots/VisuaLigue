@@ -5,15 +5,6 @@
  */
 package visualigue.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import visualigue.domain.game.Frame;
-import visualigue.domain.game.Sport;
-import visualigue.domain.game.entities.Accessory;
-import visualigue.domain.game.entities.Entity;
-import visualigue.domain.game.entities.Obstacle;
-import visualigue.events.DrawListener;
 import visualigue.domain.game.Game;
 
 /**
@@ -21,12 +12,16 @@ import visualigue.domain.game.Game;
  * @author Bruno L.L.
  */
 public class GameDTO {
-    
-    private int id;
-    private String name;
-    
+
+    public int id;
+    public int sportId;
+    public String name;
+    public String picPath;
+
     public GameDTO(Game game) {
         this.id = game.getId();
         this.name = game.getName();
+        this.sportId = game.getSport().getId();
+        this.picPath = game.getSport().getFieldPicturePath(); //TODO change it to Game pic preview generated!
     }
 }

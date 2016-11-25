@@ -13,14 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import visualigue.utils.Dimension;
 import visualigue.exceptions.NoSuchIdException;
+import visualigue.utils.IdGenerator;
 
 /**
  *
  * @author Bruno L.L.
  */
 public class Sport implements Serializable {
-
-    private static int SPORT_ID_GENERATOR = 1;
 
     private int id;
     private String name;
@@ -30,8 +29,7 @@ public class Sport implements Serializable {
     private final List<Team> teams = new ArrayList<>();
 
     public Sport(String name, String fieldPicturePath, Dimension dimension, Accessory accessory) {
-        this.id = SPORT_ID_GENERATOR;
-        SPORT_ID_GENERATOR++;
+        this.id = IdGenerator.getInstance().generateId();
         this.name = name;
         this.fieldPicturePath = fieldPicturePath;
         this.fieldDimension = dimension;
