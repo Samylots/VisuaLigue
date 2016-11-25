@@ -48,10 +48,10 @@ public class VisuaLigueController implements Serializable {
         this.currentMode = Mode.FRAME_BY_FRAME;
         //this.folder = folder; //need to keep it on first save
         this.serializer = new Serializer(this);
-        
+
         this.serializer.loadFromFile();
     }
-    
+
     public void copy(VisuaLigueController controller) {
         this.folder = controller.folder;
         this.currentGame = controller.currentGame;
@@ -62,33 +62,33 @@ public class VisuaLigueController implements Serializable {
         this.currentMode = controller.currentMode;
         this.showingRoles = controller.showingRoles;
     }
-    
+
     public void addEventListener(String event, Listener listener) {
         if (event.equals("draw")) {
-            Game.addDrawListener((DrawListener)listener);
+            Game.addDrawListener((DrawListener) listener);
         }
     }
-    
+
     public void startGame() {
         currentGame.pauseGame();
     }
-    
+
     public void pauseGame() {
         currentGame.startGame();
     }
-    
+
     public void goToFrame(int number) {
         currentGame.goToFrame(number);
     }
-    
-    public List<TeamDTO> getCurrentGameTeams() {  
+
+    public List<TeamDTO> getCurrentGameTeams() {
         List<TeamDTO> returnData = new ArrayList<>();
         List<Team> teams = currentGame.getSport().getTeams();
         List<Integer> playersOnBoard = currentGame.getPlayersOnBoard();
-        
+
         for (Team team : teams) {
             TeamDTO teamDTO = new TeamDTO(team);
-            
+
             // Setting isOnBoard values
             for (PlayerDTO playerDTO : teamDTO.players) {
                 if (playersOnBoard.contains(playerDTO.id)) {
@@ -103,7 +103,7 @@ public class VisuaLigueController implements Serializable {
     public void deleteObstacle(int obstacleId) {
         ressources.deleteObstacle(obstacleId);
     }
-    
+
     public int createNewGame(String name, int sportId) {
         Game newGame = new Game(name, ressources.getSport(sportId));
         ressources.addGame(newGame);
@@ -181,35 +181,35 @@ public class VisuaLigueController implements Serializable {
     }
 
     public List<SportDTO> getAvailableSports() {
-        List<SportDTO> returnData = new ArrayList<SportDTO>();
+        List<SportDTO> returnData = new ArrayList<>();
         List<Sport> sports = ressources.getAvailableSports();
-        
+
         sports.stream().forEach((sport) -> {
             returnData.add(new SportDTO(sport));
         });
-        
+
         return returnData;
     }
 
     public List<ObstacleDTO> getAvailableObstacles() {
         List<ObstacleDTO> returnData = new ArrayList<ObstacleDTO>();
         List<Obstacle> obstacles = ressources.getAvailableObstacles();
-        
+
         obstacles.stream().forEach((obstacle) -> {
             returnData.add(new ObstacleDTO(obstacle));
         });
-        
+
         return returnData;
     }
-    
+
     public List<GameDTO> getAvailableGames() {
         List<Game> games = ressources.getGames();
         List<GameDTO> returnData = new ArrayList<GameDTO>();
-        
+
         games.stream().forEach((game) -> {
             returnData.add(new GameDTO(game));
         });
-        
+
         return returnData;
     }
 
@@ -230,7 +230,7 @@ public class VisuaLigueController implements Serializable {
     }
 
     public Dimension getFieldDimension() {
-        if (currentGame == null) {
+        if (!hasOpenedGame()) {
             throw new NoCurrentGameException("There is no current game defined!");
         }
         return new Dimension(currentGame.getSport().getFieldDimension());
@@ -241,12 +241,12 @@ public class VisuaLigueController implements Serializable {
     }
 
     public List<PositionDTO> getActualPositions() {
-        if (currentGame == null) {
+        if (!hasOpenedGame()) {
             throw new NoCurrentGameException("There is no current game defined!");
         }
         List<PositionDTO> returnData = new ArrayList<>();
         Map<Integer, Position> currentPositions = currentGame.getCurrentPositions();
-        
+
         for (Map.Entry<Integer, Position> entry : currentPositions.entrySet()) {
             int id = entry.getKey();
             Position pos = entry.getValue();
@@ -255,14 +255,14 @@ public class VisuaLigueController implements Serializable {
         }
         return returnData;
     }
-    
+
     public List<PositionDTO> getLastPositions() {
-        if (currentGame == null) {
+        if (!hasOpenedGame()) {
             throw new NoCurrentGameException("There is no current game defined!");
         }
         List<PositionDTO> returnData = new ArrayList<>();
         Map<Integer, Position> lastPositions = currentGame.getLastPositions();
-        
+
         for (Map.Entry<Integer, Position> entry : lastPositions.entrySet()) {
             int id = entry.getKey();
             Position pos = entry.getValue();
@@ -292,19 +292,19 @@ public class VisuaLigueController implements Serializable {
     public void close() {
         this.serializer.saveToFile();
     }
-    
+
     public void newFrame() {
         currentGame.newFrame();
     }
-    
+
     public void deleteCurrentFrame() {
         currentGame.deleteCurrentFrame();
     }
-    
+
     public void nextFrame() {
         currentGame.nextFrame();
     }
-    
+
     public void previousFrame() {
         currentGame.previousFrame();
     }
@@ -332,5 +332,9 @@ public class VisuaLigueController implements Serializable {
 
     public void moveCurrentEntityTo(Coords coords) {
         currentGame.moveCurrentEntityTo(coords);
+    }
+
+    public boolean hasOpenedGame() {
+        return currentGame != null;
     }
 }

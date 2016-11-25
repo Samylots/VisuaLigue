@@ -6,12 +6,17 @@
 package visualigue.gui.javafx.fxcontrollers;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.Node;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import visualigue.domain.VisuaLigueController;
+import visualigue.dto.SportDTO;
+import visualigue.gui.javafx.fxcontrollers.items.SportListItemController;
+import visualigue.gui.javafx.fxlayouts.FXLoader;
 
 /**
  * FXML Controller class
@@ -23,9 +28,10 @@ public class GameListController implements Initializable {
     @FXML
     private VBox root;
     @FXML
-    private Button addSport;
-    @FXML
     private VBox sportList;
+
+    private Stage stage;
+    private VisuaLigueController domain;
 
     /**
      * Initializes the controller class.
@@ -35,8 +41,31 @@ public class GameListController implements Initializable {
         // TODO
     }
 
-    @FXML
-    private void addNewSport(ActionEvent event) {
+    public void init(VisuaLigueController domain, Stage stage) {
+        this.stage = stage;
+        this.domain = domain;
+    }
+
+    public void refreshSports() {
+        sportList.getChildren().clear();
+        addSportListItems(domain.getAvailableSports());
+    }
+
+    private void addSportListItems(List<SportDTO> sports) {
+        sports.stream().forEach((sport) -> {
+            addSportListItem(sport);
+        });
+    }
+
+    private void addSportListItem(SportDTO sport) {
+        Node node = FXLoader.getInstance().load("sportListItem.fxml");
+        SportListItemController itemController = FXLoader.getInstance().getLastController();
+        try {
+            //itemController.init(this, sport.getPic(), sport.getName(), sport.getSportId());
+        } catch (Exception e) {
+            //no pic then...
+        }
+        sportList.getChildren().add(node);
     }
 
 }

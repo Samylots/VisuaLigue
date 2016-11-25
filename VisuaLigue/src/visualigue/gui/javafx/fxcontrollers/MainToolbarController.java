@@ -21,7 +21,7 @@ import javafx.scene.control.ToolBar;
  */
 public class MainToolbarController implements Initializable {
 
-    enum EditMode {
+    public enum EditMode {
 
         CURSOR,
         ADD_PLAYER,
@@ -30,6 +30,8 @@ public class MainToolbarController implements Initializable {
     }
 
     private EditMode mode;
+
+    private MainWindowController paretnController;
 
     @FXML
     private ToolBar toolbar;
@@ -44,16 +46,24 @@ public class MainToolbarController implements Initializable {
         // TODO
     }
 
+    public void init(MainWindowController paretnController) {
+        this.paretnController = paretnController;
+    }
+
     @FXML
     private void cursorMode(ActionEvent event) {
         untoggleOthers(event.getSource());
         mode = EditMode.CURSOR;
+        paretnController.showDefaultToolbar();
     }
 
     @FXML
     private void addPlayerMode(ActionEvent event) {
-        untoggleOthers(event.getSource());
-        mode = EditMode.ADD_PLAYER;
+        if (mode != EditMode.ADD_PLAYER) {
+            untoggleOthers(event.getSource());
+            mode = EditMode.ADD_PLAYER;
+            paretnController.showTeamList();
+        }
     }
 
     @FXML

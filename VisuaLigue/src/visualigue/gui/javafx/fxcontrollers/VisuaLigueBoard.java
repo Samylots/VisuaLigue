@@ -17,8 +17,8 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import visualigue.VisuaLigue;
 import visualigue.utils.Converter;
-import visualigue.domain.VisuaLigueController;
 import visualigue.utils.Coords;
 import visualigue.gui.javafx.fxdrawers.GameDrawer;
 import visualigue.utils.Dimension;
@@ -34,8 +34,6 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
     private static final double MINIMAP_MAX_WIDTH = 100;
     private static final double MINIMAP_MAX_HEIGHT = 60;
 
-    private final MainWindowController parentController;
-
     private boolean isOnBoard = false;
 
     private final GraphicsContext gc = getGraphicsContext2D(); //Quicker access to it's graphic context
@@ -43,22 +41,20 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
     private double zoomFactor;
     private final Converter converter;
     private final GameDrawer drawer;
-    private final VisuaLigueController domain;
-    //TODO change it to be the sport's game field picture (on ini, getting it from domain)
-    private Image fieldPicture;//= new Image(getClass().getResource("/visualigue/gui/javafx/fxlayouts/icons/accessory.png").toString(), 500, 300, false, true);
+
+    private Image fieldPicture;
+    private String actualFieldPictureURL = "";
 
     private Coords oldMousePos; //Previous recorded mouse position
     private final DoubleProperty mouseX = new SimpleDoubleProperty(); //Actual mouse X position
     private final DoubleProperty mouseY = new SimpleDoubleProperty(); //Actual mouse Y position
 
-    VisuaLigueBoard(VisuaLigueController domainController, MainWindowController parentController) {
+    VisuaLigueBoard() {
         super(500, 300);
         zoomFactor = 1;
         origin = new Coords();
-        domain = domainController;
-        this.parentController = parentController;
-        drawer = new GameDrawer(this, domain);
-        converter = new Converter(domainController);
+        drawer = new GameDrawer(this);
+        converter = new Converter();
         setOnScroll((ScrollEvent event) -> {
             if (event.getDeltaY() > 0) {
                 zoom(ZOOM_DELTA);
@@ -157,7 +153,6 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
      * Clearing the board to draw again on a clean board
      */
     private void clear() {
-        gc.setFill(Color.WHITE);
         gc.clearRect(0 - origin.getX(), 0 - origin.getY(), this.getWidth(), this.getHeight());
     }
 
@@ -166,40 +161,38 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
      */
     private void drawAll() {
         clear();
-        fieldPicture = new Image(domain.getFieldPicPath());
+        String fieldPic = VisuaLigue.domain.getFieldPicPath();
+        if (!actualFieldPictureURL.equals(fieldPic)) {
+            actualFieldPictureURL = fieldPic;
+            fieldPicture = new Image(fieldPic);
+        }
         drawField();
         drawer.drawGame();
-        if (domain.isShowingRoles()) {
+        if (VisuaLigue.domain.isShowingRoles()) {
             drawPos();
         }
         drawMiniMap();
     }
 
     private void drawField() {
-        gc.setFill(Color.CYAN);
-        gc.fillRect(0, 0, getActualFieldWidth(), getActualFieldHeight());
         gc.drawImage(fieldPicture, 0, 0, getActualFieldWidth(), getActualFieldHeight());
-        gc.setStroke(Color.RED);
-        gc.setLineWidth(2);
-        gc.strokeRect(0, 0, getActualFieldWidth(), getActualFieldHeight());
     }
 
     /**
-     * Drawing mouse position info on board
+     * Drawing mouse position info on board in real proportions
      */
     private void drawPos() {
-        
-        
+
         gc.setTextAlign(TextAlignment.LEFT);
         gc.setTextBaseline(VPos.BOTTOM);
-        
+
         gc.setFont(Font.font(20));
         gc.setLineWidth(3);
         gc.setStroke(Color.BLACK);
         Coords realCoords = converter.pixelToMeter(getMousePosition(), getActualFieldPixelDimension());
-        gc.strokeText("X: " + realCoords.getX() + " m, Y: " + realCoords.getY() + " m", - origin.getX(), getHeight() - origin.getY());
+        gc.strokeText("X: " + realCoords.getX() + " m, Y: " + realCoords.getY() + " m", -origin.getX(), getHeight() - origin.getY());
         gc.setFill(Color.WHITE);
-        gc.fillText("X: " + realCoords.getX() + " m, Y: " + realCoords.getY() + " m", - origin.getX(), getHeight() - origin.getY());
+        gc.fillText("X: " + realCoords.getX() + " m, Y: " + realCoords.getY() + " m", -origin.getX(), getHeight() - origin.getY());
     }
 
     /**

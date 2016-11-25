@@ -6,15 +6,9 @@
 package visualigue.gui.javafx.fxdrawers;
 
 import java.util.List;
-import java.util.Map;
 import javafx.scene.image.Image;
-import visualigue.domain.VisuaLigueController;
-import visualigue.domain.game.entities.Entity;
-import visualigue.domain.game.entities.Obstacle;
-import visualigue.domain.game.entities.Player;
-import visualigue.domain.game.Position;
+import visualigue.VisuaLigue;
 import visualigue.utils.Coords;
-import visualigue.utils.Dimension;
 import visualigue.gui.javafx.fxcontrollers.VisuaLigueBoard;
 import visualigue.events.DrawListener;
 import visualigue.dto.*;
@@ -26,21 +20,20 @@ import visualigue.dto.*;
 public class GameDrawer implements DrawListener {
 
     private final VisuaLigueBoard canvas;
-    private final VisuaLigueController domain;
 
-    public GameDrawer(VisuaLigueBoard canvas, VisuaLigueController domain) {
+    public GameDrawer(VisuaLigueBoard canvas) {
         this.canvas = canvas;
-        this.domain = domain;
-        
-        domain.addEventListener("draw", this);
+
+        VisuaLigue.domain.addEventListener("draw", this);
     }
-    
+
+    @Override
     public void redraw() {
         drawGame();
     }
 
     public void drawGame() {
-        List<PositionDTO> positions = domain.getActualPositions();
+        List<PositionDTO> positions = VisuaLigue.domain.getActualPositions();
 
         for (PositionDTO position : positions) {
             if (position.entity instanceof PlayerDTO) {
@@ -57,7 +50,7 @@ public class GameDrawer implements DrawListener {
 
     private void drawPlayer(PositionDTO position) {
         canvas.getGraphicsContext2D().drawImage(new Image(position.entity.picturePath), position.coords.getX(), position.coords.getY(), position.entity.dimension.getWidth(), position.entity.dimension.getHeight());
-        if (domain.isShowingRoles()) {
+        if (VisuaLigue.domain.isShowingRoles()) {
             //TODO draw roles/names etc.
         }
     }

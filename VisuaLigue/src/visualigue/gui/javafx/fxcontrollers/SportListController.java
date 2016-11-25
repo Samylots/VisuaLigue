@@ -15,12 +15,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import visualigue.domain.VisuaLigueController;
+import visualigue.VisuaLigue;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
-import visualigue.gui.javafx.models.ModelFactory;
 import visualigue.dto.*;
 
 /**
@@ -38,7 +38,6 @@ public class SportListController implements Initializable, Serializable {
     private VBox sportList;
 
     private int selectedId;
-    private VisuaLigueController domain;
     private Stage stage;
 
     /**
@@ -51,27 +50,26 @@ public class SportListController implements Initializable, Serializable {
     public void initialize(URL url, ResourceBundle rb) {
     }
 
-    public void init(VisuaLigueController domain, Stage stage) {
+    public void init(Stage stage) {
         this.stage = stage;
-        this.domain = domain;
     }
 
     public void refreshSports() {
         sportList.getChildren().clear();
-        addSportListItems(domain.getAvailableSports());
+        addSportListItems(VisuaLigue.domain.getAvailableSports());
     }
 
     private void addSportListItems(List<SportDTO> sports) {
         sports.stream().forEach((sport) -> {
-            addSportListItem(ModelFactory.createSport(sport));
+            addSportListItem(sport);
         });
     }
 
-    private void addSportListItem(visualigue.gui.javafx.models.Sport sport) {
+    private void addSportListItem(SportDTO sport) {
         Node node = FXLoader.getInstance().load("sportListItem.fxml");
         SportListItemController itemController = FXLoader.getInstance().getLastController();
         try {
-            itemController.init(this, sport.getPic(), sport.getName(), sport.getSportId());
+            itemController.init(this, new Image(sport.fieldPicturePath), sport.name, sport.id);
         } catch (Exception e) {
             //no pic then...
         }
@@ -93,13 +91,13 @@ public class SportListController implements Initializable, Serializable {
     }
 
     public void addSportToDomain(AddSportController sport) {
-        int sportId = domain.createNewSport(sport.getSportName(), sport.getFieldPath(), (double) sport.getFieldWidth(), (double) sport.getFieldHeight(),
+        int sportId = VisuaLigue.domain.createNewSport(sport.getSportName(), sport.getFieldPath(), (double) sport.getFieldWidth(), (double) sport.getFieldHeight(),
                 sport.getAccessoryPath(), sport.getAccessoryWidth(), sport.getAccessoryHeight());
         sport.getTeamsData().stream().forEach((team) -> {
-            domain.addTeamToSport(team.getName(), team.getColor(), sportId);
+            VisuaLigue.domain.addTeamToSport(team.getName(), team.getColor(), sportId);
         });
         sport.getPlayersData().stream().forEach((player) -> {
-            domain.addPlayerToSportTeam(player.getName(), player.getRole(), player.getTeam(), sportId);
+            VisuaLigue.domain.addPlayerToSportTeam(player.getName(), player.getRole(), player.getTeam(), sportId);
         });
     }
 

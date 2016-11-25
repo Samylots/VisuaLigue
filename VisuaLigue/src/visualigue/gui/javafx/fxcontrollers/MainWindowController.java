@@ -15,13 +15,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
-import visualigue.domain.VisuaLigueController;
+import visualigue.VisuaLigue;
 import visualigue.gui.javafx.helpers.UIMode;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.Dialog;
@@ -41,31 +42,33 @@ public class MainWindowController implements Initializable, Serializable {
     private StackPane fieldLayer;
 
     private ToolBar mainToolbar;
-    private HBox addPlayerToolBar;
+
+    private ScrollPane teamsPlayerToolbar;
+    private PlayerChooserController playerChooserController;
+
+    private HBox addPlayerToolbar;
     private MainToolbarController mainToolbarController;
 
     private VisuaLigueBoard board;
-
-    private VisuaLigueController domainController;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }
-
-    public void init(VisuaLigueController domainController) {
-        this.domainController = domainController;
-
         mainToolbar = (ToolBar) FXLoader.getInstance().load("mainToolbar.fxml");
         mainToolbarController = FXLoader.getInstance().getLastController();
+        mainToolbarController.init(this);
 
-        addPlayerToolBar = new HBox(mainToolbar);
-        
-        board = new VisuaLigueBoard(domainController, this);
-        board.widthProperty().bind(root.widthProperty().subtract(mainToolbar.widthProperty()));
+        teamsPlayerToolbar = (ScrollPane) FXLoader.getInstance().load("playerChooser.fxml");
+        playerChooserController = FXLoader.getInstance().getLastController();
+        addPlayerToolbar = new HBox();
+        addPlayerToolbar.getChildren().add(teamsPlayerToolbar);
+        addPlayerToolbar.setPrefWidth(HBox.USE_COMPUTED_SIZE);
+        addPlayerToolbar.setPrefHeight(HBox.USE_COMPUTED_SIZE);
+        teamsPlayerToolbar.setMaxHeight(Double.MAX_VALUE);
+
+        board = new VisuaLigueBoard();
         board.heightProperty().bind(root.heightProperty());
 
         StackPane node = new StackPane();
@@ -75,32 +78,28 @@ public class MainWindowController implements Initializable, Serializable {
 
     @FXML
     private void newGame(ActionEvent event) {
-        //open sport selection first
-        //boardController.setSport () etc.
-
         int sportId = chooseSport();
         if (sportId != 0) {
             InputDialog input = new InputDialog("New game", "Please name your new game", root);
-            int gameId = domainController.createNewGame(input.getInput(), sportId);
-            domainController.loadGame(gameId);
+            int gameId = VisuaLigue.domain.createNewGame(input.getInput(), sportId);
+            VisuaLigue.domain.loadGame(gameId);
             initLayout();
         } else {
             Dialog popup = new Dialog("Game creation error", "Please, choose a sport to create a new game.", root);
         }
     }
-    
-    private void initLayout(){
-            root.setCenter(board);
-            changeViewTo(UIMode.FRAME_BY_FRAME);
-            
-            root.setLeft(mainToolbar);
+
+    private void initLayout() {
+        root.setCenter(board);
+        changeViewTo(UIMode.FRAME_BY_FRAME);
+        showDefaultToolbar();
     }
 
     private int chooseSport() {
         Node node = FXLoader.getInstance().load("sportList.fxml");
         SportListController controller = FXLoader.getInstance().getLastController();
         CustomWindow window = new CustomWindow(root, (Parent) node);
-        controller.init(domainController, window);
+        controller.init(window);
         controller.refreshSports();
         window.setTitle("Choose game sport");
         window.showAndWait();
@@ -131,7 +130,7 @@ public class MainWindowController implements Initializable, Serializable {
         Node node = FXLoader.getInstance().load("sportList.fxml");
         SportListController controller = FXLoader.getInstance().getLastController();
         CustomWindow window = new CustomWindow(root, (Parent) node);
-        controller.init(domainController, window);
+        controller.init(window);
         controller.refreshSports();
         window.setTitle("Sport List");
         window.showAndWait();
@@ -164,7 +163,7 @@ public class MainWindowController implements Initializable, Serializable {
 
     @FXML
     private void toggleRoles(ActionEvent event) {
-        domainController.toggleRoles();
+        VisuaLigue.domain.toggleRoles();
     }
 
     @FXML
@@ -174,7 +173,7 @@ public class MainWindowController implements Initializable, Serializable {
     }
 
     public void changeViewTo(UIMode state) {
-        domainController.changeMode(state.getMode()); //Telling domain that we changed mode
+        VisuaLigue.domain.changeMode(state.getMode()); //Telling domain that we changed mode
         TitledPane nodeView = (TitledPane) state.getNode();
         root.setBottom(nodeView);
         Platform.runLater(() -> nodeView.requestLayout()); //Node height bug fixing
@@ -195,6 +194,21 @@ public class MainWindowController implements Initializable, Serializable {
 
     public boolean isInCursorMode() {
         return mainToolbarController.getEditMode() == MainToolbarController.EditMode.CURSOR;
+    }
+
+    public void showDefaultToolbar() {
+        board.widthProperty().bind(root.widthProperty().subtract(mainToolbar.widthProperty()));
+        root.setLeft(mainToolbar);
+    }
+
+    public void showTeamList() {
+        playerChooserController.refreshTeams();
+        if (!addPlayerToolbar.getChildren().contains(mainToolbar)) {
+            addPlayerToolbar.getChildren().add(0, mainToolbar);
+        }
+        root.setLeft(addPlayerToolbar);
+        board.widthProperty().bind(root.widthProperty().subtract(addPlayerToolbar.widthProperty()));
+        Platform.runLater(() -> addPlayerToolbar.requestLayout()); //Node width bug fixing
     }
 
 }

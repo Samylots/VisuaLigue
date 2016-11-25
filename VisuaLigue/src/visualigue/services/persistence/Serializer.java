@@ -5,17 +5,13 @@
  */
 package visualigue.services.persistence;
 
-import java.util.ArrayList;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.IOException;
 import java.io.File;
-import java.io.NotSerializableException;
 import visualigue.domain.VisuaLigueController;
-import java.lang.reflect.Field;
-import java.util.List;
 import java.util.LinkedList;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
@@ -25,35 +21,34 @@ import java.io.ByteArrayInputStream;
  * @author Bruno L.L.
  */
 public class Serializer {
-    
+
     private final String saveFileName = "save.ser";
     private final int historyMaxSize = 100;
-    
+
     private LinkedList<byte[]> history = new LinkedList<byte[]>();
     private VisuaLigueController controller;
     private int historyPointer = 0;
-    
+
     public Serializer(VisuaLigueController controller) {
         this.controller = controller;
     }
-    
+
     public void saveToHistory() {
-        try {   
+        try {
             ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
             ObjectOutputStream out = new ObjectOutputStream(byteArrayOut);
             out.writeObject(controller);
             out.close();
 
             int size = history.size();
-            if (size > historyMaxSize-1)
-                history.remove(size-1);
-            
+            if (size > historyMaxSize - 1) {
+                history.remove(size - 1);
+            }
+
             history.addFirst(byteArrayOut.toByteArray());
             historyPointer = 0;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            return;
         }
     }
 
@@ -61,77 +56,68 @@ public class Serializer {
         try {
             File file = new File(this.saveFileName);
             file.createNewFile();
-                 
+
             FileOutputStream fileOut = new FileOutputStream(this.saveFileName);
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(controller);
             out.close();
             fileOut.close();
-        } 
-        catch(IOException e) {
-           e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-    
+
     public void loadFromFile() {
         File file = new File(this.saveFileName);
-   
-        if (file.exists()) { 
-            try {   
+
+        if (file.exists()) {
+            try {
                 FileInputStream fileIn = new FileInputStream("save.ser");
                 ObjectInputStream in = new ObjectInputStream(fileIn);
-                VisuaLigueController unserializedObj = (VisuaLigueController)in.readObject();
-                
+                VisuaLigueController unserializedObj = (VisuaLigueController) in.readObject();
+
                 this.restoreController(unserializedObj);
-                
+
                 in.close();
                 fileIn.close();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
-                return;
-            }
-            catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
-                return;
             }
         }
     }
-    
+
     public void undo() {
-        if (historyPointer < history.size()-1) {
+        if (historyPointer < history.size() - 1) {
             historyPointer++;
             gotoHistory(historyPointer);
         }
     }
-    
+
     public void redo() {
         if (historyPointer > 0) {
             historyPointer--;
             gotoHistory(historyPointer);
         }
     }
-    
+
     private void gotoHistory(int pointer) {
-        try {   
+        try {
             ByteArrayInputStream byteArrIn = new ByteArrayInputStream(this.history.get(pointer));
             ObjectInputStream in = new ObjectInputStream(byteArrIn);
-            VisuaLigueController unserializedObj = (VisuaLigueController)in.readObject();
+            VisuaLigueController unserializedObj = (VisuaLigueController) in.readObject();
             in.close();
             byteArrIn.close();
-            
+
             this.restoreController(unserializedObj);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-            return;
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
-            return;
         }
     }
-    
+
     private void restoreController(VisuaLigueController controllerToRestore) {
         controller.copy(controllerToRestore);
     }

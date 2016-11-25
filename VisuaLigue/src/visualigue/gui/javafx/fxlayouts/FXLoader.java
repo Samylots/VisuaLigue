@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import visualigue.exceptions.CantFindSpecifiedFXMLFile;
 
 /**
  *
@@ -36,13 +37,12 @@ public class FXLoader {
 
     public Parent load(String name) {
         try {
-            //C'est ici que le lien dans "getResource(#####)" ne marche pas....
             fxmlLoader = new FXMLLoader(getClass().getResource(name));
             return fxmlLoader.load();
         } catch (IOException ex) {
             Logger.getLogger(FXLoader.class.getName()).log(Level.SEVERE, null, ex.getMessage());
         }
-        return null; //BAD!!!!!
+        throw new CantFindSpecifiedFXMLFile("File in error: '" + name);
     }
 
     public <T> T getLastController() {

@@ -157,7 +157,8 @@ public class AddSportController implements Initializable, Serializable {
     @FXML
     private void addNewTeam(ActionEvent event) {
         if (!newTeamName.getText().equals("")) {
-            teamsData.add(new TeamTableItem(newTeamName.getText(), newTeamColor.getValue().toString()));
+            String colorHex = Integer.toHexString(newTeamColor.getValue().hashCode());
+            teamsData.add(new TeamTableItem(newTeamName.getText(), "#" + colorHex.substring(0, Math.min(colorHex.length(), 6))));
             newTeamName.clear();
             teamUpdate();
             deleteTeamButton.setDisable(false);
