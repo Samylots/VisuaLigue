@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeMap;
 
 /**
  *
@@ -231,6 +232,14 @@ Accessory copy = new Accessory(accessory);
 
     public Map<Integer, Position> getCurrentPositions() {
         return currentFrame.getPositions();
+    }
+    
+    public Map<Integer, Position> getLastPositions() {
+        if (currentFrame.getBack() != null) {
+            return currentFrame.getBack().getPositions();
+        } else {
+            return new TreeMap<Integer, Position>();
+        }
     }
     
     public void newFrame() {

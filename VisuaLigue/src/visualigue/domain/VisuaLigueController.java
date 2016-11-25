@@ -255,6 +255,22 @@ public class VisuaLigueController implements Serializable {
         }
         return returnData;
     }
+    
+    public List<PositionDTO> getLastPositions() {
+        if (currentGame == null) {
+            throw new NoCurrentGameException("There is no current game defined!");
+        }
+        List<PositionDTO> returnData = new ArrayList<>();
+        Map<Integer, Position> lastPositions = currentGame.getLastPositions();
+        
+        for (Map.Entry<Integer, Position> entry : lastPositions.entrySet()) {
+            int id = entry.getKey();
+            Position pos = entry.getValue();
+
+            returnData.add(new PositionDTO(pos));
+        }
+        return returnData;
+    }
 
     public void addPlayerAt(Coords coords, int playerId) {
         currentGame.addPlayerAt(coords, playerId);
