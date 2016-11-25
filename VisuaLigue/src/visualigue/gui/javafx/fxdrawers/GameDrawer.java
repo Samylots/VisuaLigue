@@ -12,55 +12,42 @@ import visualigue.utils.Coords;
 import visualigue.gui.javafx.fxcontrollers.VisuaLigueBoard;
 import visualigue.events.DrawListener;
 import visualigue.dto.*;
+import visualigue.utils.Dimension;
 
 /**
  *
  * @author Samuel
  */
-public class GameDrawer implements DrawListener {
+public class GameDrawer {
 
     private final VisuaLigueBoard canvas;
 
     public GameDrawer(VisuaLigueBoard canvas) {
         this.canvas = canvas;
-
-        VisuaLigue.domain.addEventListener("draw", this);
-    }
-
-    @Override
-    public void redraw() {
-        drawGame();
     }
 
     public void drawGame() {
         List<PositionDTO> positions = VisuaLigue.domain.getActualPositions();
 
-        for (PositionDTO position : positions) {
+        positions.stream().forEach((position) -> {
             if (position.entity instanceof PlayerDTO) {
-                drawPlayer(position);
+                drawEntity(getPixelPosition(position.coords), position.entity);
+                if (VisuaLigue.domain.isShowingRoles()) {
+                    //TODO draw roles/names etc.
+                }
             } else if (position.entity instanceof ObstacleDTO) {
-                drawObstacle(position);
+                drawEntity(getPixelPosition(position.coords), position.entity);
             } else if (position.entity instanceof AccessoryDTO) {
-                drawEntity(position);
+                drawEntity(getPixelPosition(position.coords), position.entity);
             } else {
                 //error or not?
             }
-        };
+        });
     }
 
-    private void drawPlayer(PositionDTO position) {
-        canvas.getGraphicsContext2D().drawImage(new Image(position.entity.picturePath), position.coords.getX(), position.coords.getY(), position.entity.dimension.getWidth(), position.entity.dimension.getHeight());
-        if (VisuaLigue.domain.isShowingRoles()) {
-            //TODO draw roles/names etc.
-        }
-    }
-
-    private void drawObstacle(PositionDTO position) {
-        canvas.getGraphicsContext2D().drawImage(new Image(position.entity.picturePath), position.coords.getX(), position.coords.getY(), position.entity.dimension.getWidth(), position.entity.dimension.getHeight());
-    }
-
-    private void drawEntity(PositionDTO position) {
-        canvas.getGraphicsContext2D().drawImage(new Image(position.entity.picturePath), position.coords.getX(), position.coords.getY(), position.entity.dimension.getWidth(), position.entity.dimension.getHeight());
+    private void drawEntity(Coords coords, EntityDTO entity) {
+        Dimension dim = canvas.getConverter().meterToPixel(entity.dimension, canvas.getActualFieldPixelDimension());
+        canvas.getGraphicsContext2D().drawImage(new Image(entity.picturePath), coords.getX(), coords.getY(), dim.getWidth(), dim.getHeight());
     }
 
     private Coords getPixelPosition(Coords domainCoords) {

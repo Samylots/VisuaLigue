@@ -5,7 +5,6 @@
  */
 package visualigue.dto;
 
-import visualigue.dto.*;
 import visualigue.domain.game.Position;
 import visualigue.utils.Coords;
 
@@ -14,14 +13,14 @@ import visualigue.utils.Coords;
  * @author Bruno L.L.
  */
 public class PositionDTO {
-    
+
     public Coords coords;
     public EntityDTO entity;
     public boolean isMoved;
-    
+
     public PositionDTO(Position position) {
         this.coords = position.getCoords();
-        this.entity = new EntityDTO(position.getEntity());
+        this.entity = EntityDTOFactory.create(position.getEntity());
         this.isMoved = position.getIsMoved();
     }
 }

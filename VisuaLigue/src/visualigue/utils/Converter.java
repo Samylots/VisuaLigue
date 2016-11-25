@@ -27,12 +27,31 @@ public class Converter {
         return new Coords(round(x), round(y));
     }
 
+    public Dimension pixelToMeter(Dimension currentPos, Dimension uiDimension) {
+        Dimension realDimension = VisuaLigue.domain.getFieldDimension();
+        double x = currentPos.getWidth();
+        double y = currentPos.getHeight();
+        x /= uiDimension.getWidth();
+        x *= realDimension.getWidth();
+        y /= uiDimension.getHeight();
+        y *= realDimension.getHeight();
+        return new Dimension(round(x), round(y));
+    }
+
     public Coords meterToPixel(Coords currentPos, Dimension uiDimension) {
         Dimension realDimension = VisuaLigue.domain.getFieldDimension();
         double x = currentPos.getX(), y = currentPos.getY();
         x = x / realDimension.getWidth() * uiDimension.getWidth();
         y = y / realDimension.getHeight() * uiDimension.getHeight();
         return new Coords(round(x), round(y));
+    }
+
+    public Dimension meterToPixel(Dimension currentPos, Dimension uiDimension) {
+        Dimension realDimension = VisuaLigue.domain.getFieldDimension();
+        double x = currentPos.getWidth(), y = currentPos.getHeight();
+        x = x / realDimension.getWidth() * uiDimension.getWidth();
+        y = y / realDimension.getHeight() * uiDimension.getHeight();
+        return new Dimension(round(x), round(y));
     }
 
     private double round(double value) {

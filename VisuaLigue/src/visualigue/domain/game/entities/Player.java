@@ -6,10 +6,6 @@
 package visualigue.domain.game.entities;
 
 import java.io.Serializable;
-import java.util.List;
-import visualigue.utils.Coords;
-import visualigue.domain.game.Team;
-import visualigue.domain.game.entities.Entity;
 import visualigue.utils.Dimension;
 
 /**
@@ -20,13 +16,13 @@ public class Player extends Entity implements Serializable {
 
     private String role;
     private String name;
-    
+
     public Player(Dimension dimension, String picturePath, String role, String name) {
         super(dimension, picturePath);
         this.role = role;
         this.name = name;
     }
-    
+
     public Player(Player player) {
         super(player);
         this.role = player.getRole();

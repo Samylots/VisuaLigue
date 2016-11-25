@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import visualigue.VisuaLigue;
+import visualigue.events.DrawListener;
 import visualigue.utils.Converter;
 import visualigue.utils.Coords;
 import visualigue.gui.javafx.fxdrawers.GameDrawer;
@@ -28,7 +29,7 @@ import visualigue.utils.Dimension;
  *
  * @author samap
  */
-public class VisuaLigueBoard extends Canvas implements Serializable {
+public class VisuaLigueBoard extends Canvas implements Serializable, DrawListener {
 
     private static final double ZOOM_DELTA = 1.15;
     private static final double MINIMAP_MAX_WIDTH = 100;
@@ -137,6 +138,10 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
         return new Coords(mouseX.doubleValue(), mouseY.doubleValue());
     }
 
+    public Coords getConvertedMousePosition() {
+        return converter.pixelToMeter(getMousePosition(), getActualFieldPixelDimension());
+    }
+
     /**
      * This let us to change board's origin in MainWindow
      *
@@ -156,6 +161,11 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
         gc.clearRect(0 - origin.getX(), 0 - origin.getY(), this.getWidth(), this.getHeight());
     }
 
+    @Override
+    public void redraw() {
+        drawAll();
+    }
+
     /**
      * Drawing all elements on board
      */
@@ -169,6 +179,7 @@ public class VisuaLigueBoard extends Canvas implements Serializable {
         drawField();
         drawer.drawGame();
         if (VisuaLigue.domain.isShowingRoles()) {
+            //TODO hide only roles
             drawPos();
         }
         drawMiniMap();

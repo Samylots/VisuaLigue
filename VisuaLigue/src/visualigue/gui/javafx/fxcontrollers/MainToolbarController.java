@@ -31,7 +31,7 @@ public class MainToolbarController implements Initializable {
 
     private EditMode mode;
 
-    private MainWindowController paretnController;
+    private MainWindowController parentController;
 
     @FXML
     private ToolBar toolbar;
@@ -47,14 +47,14 @@ public class MainToolbarController implements Initializable {
     }
 
     public void init(MainWindowController paretnController) {
-        this.paretnController = paretnController;
+        this.parentController = paretnController;
     }
 
     @FXML
     private void cursorMode(ActionEvent event) {
         untoggleOthers(event.getSource());
         mode = EditMode.CURSOR;
-        paretnController.showDefaultToolbar();
+        parentController.showDefaultToolbar();
     }
 
     @FXML
@@ -62,7 +62,7 @@ public class MainToolbarController implements Initializable {
         if (mode != EditMode.ADD_PLAYER) {
             untoggleOthers(event.getSource());
             mode = EditMode.ADD_PLAYER;
-            paretnController.showTeamList();
+            parentController.showTeamList();
         }
     }
 

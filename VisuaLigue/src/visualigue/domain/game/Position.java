@@ -31,7 +31,7 @@ public class Position implements Serializable {
         this.entity = entity;
         this.owner = owner;
     }
-    
+
     public void setLocation(Coords coords) {
         this.coords = coords;
     }
@@ -43,18 +43,21 @@ public class Position implements Serializable {
         double thisY = this.coords.getY();
         double width = entity.getDimension().getWidth();
         double height = entity.getDimension().getHeight();
-        
-        if (x >= thisX - width/2 
-            && x <= thisX + width/2
-            && y >= thisY - height/2
-            && y <= thisY + height/2) {
+
+        if (x >= thisX - width / 2
+                && x <= thisX + width / 2
+                && y >= thisY - height / 2
+                && y <= thisY + height / 2) {
 
             return true;
         }
         return false;
     }
-    
+
     public boolean collidesWith(Entity entity, Coords coords) {
+        if (entity == this.entity) {
+            return false;
+        }
         double thisX = this.coords.getX();
         double thisY = this.coords.getY();
         double thisWidth = this.entity.getDimension().getWidth();
@@ -64,26 +67,23 @@ public class Position implements Serializable {
         double y = coords.getY();
         double width = entity.getDimension().getWidth();
         double height = entity.getDimension().getHeight();
-        
-        if ((x - width/2 >= thisX - thisWidth/2 
-            && x - width/2 <= thisX + thisWidth/2
-            && y + height/2 >= thisY - thisHeight/2
-            && y + height/2 <= thisY + thisHeight/2)
-            ||
-            (x + width/2 >= thisX - thisWidth/2 
-            && x + width/2 <= thisX + thisWidth/2
-            && y + height/2 >= thisY - thisHeight/2
-            && y + height/2 <= thisY + thisHeight/2)
-            ||    
-            (x - width/2 >= thisX - thisWidth/2 
-            && x - width/2 <= thisX + thisWidth/2
-            && y - height/2 >= thisY - thisHeight/2
-            && y - height/2 <= thisY + thisHeight/2)
-            ||    
-            (x + width/2 >= thisX - thisWidth/2 
-            && x + width/2 <= thisX + thisWidth/2
-            && y - height/2 >= thisY - thisHeight/2
-            && y - height/2 <= thisY + thisHeight/2)){
+
+        if ((x - width / 2 >= thisX - thisWidth / 2
+                && x - width / 2 <= thisX + thisWidth / 2
+                && y + height / 2 >= thisY - thisHeight / 2
+                && y + height / 2 <= thisY + thisHeight / 2)
+                || (x + width / 2 >= thisX - thisWidth / 2
+                && x + width / 2 <= thisX + thisWidth / 2
+                && y + height / 2 >= thisY - thisHeight / 2
+                && y + height / 2 <= thisY + thisHeight / 2)
+                || (x - width / 2 >= thisX - thisWidth / 2
+                && x - width / 2 <= thisX + thisWidth / 2
+                && y - height / 2 >= thisY - thisHeight / 2
+                && y - height / 2 <= thisY + thisHeight / 2)
+                || (x + width / 2 >= thisX - thisWidth / 2
+                && x + width / 2 <= thisX + thisWidth / 2
+                && y - height / 2 >= thisY - thisHeight / 2
+                && y - height / 2 <= thisY + thisHeight / 2)) {
 
             return true;
         }
@@ -105,7 +105,7 @@ public class Position implements Serializable {
     public Player getOwner() {
         return owner;
     }
-    
+
     public void setOwner(Player owner) {
         this.owner = owner;
     }
@@ -113,9 +113,9 @@ public class Position implements Serializable {
     public boolean getIsMoved() {
         return this.isMoved;
     }
-    
+
     public void setIsMoved(boolean isMoved) {
         this.isMoved = isMoved;
     }
-    
+
 }

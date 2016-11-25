@@ -280,7 +280,9 @@ public class VisuaLigueController implements Serializable {
     }
 
     public void addPlayerAt(Coords coords, int playerId) {
-        currentGame.addPlayerAt(coords, playerId);
+        if (playerId > 0) {
+            currentGame.addPlayerAt(coords, playerId);
+        }
     }
 
     public void addTeamToSport(String teamName, String teamColor, int sportId) {
@@ -351,5 +353,9 @@ public class VisuaLigueController implements Serializable {
 
     public void restoreIdGeneration() {
         IdGenerator.getInstance().restoreId(idGenetation);
+    }
+
+    public boolean hasCurrentEntity() {
+        return currentGame.hasCurrentEntity();
     }
 }

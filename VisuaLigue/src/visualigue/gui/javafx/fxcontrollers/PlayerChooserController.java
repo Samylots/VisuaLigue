@@ -8,8 +8,12 @@ package visualigue.gui.javafx.fxcontrollers;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -37,7 +41,9 @@ public class PlayerChooserController implements Initializable, Serializable {
     private Accordion teams;
 
     //private Map<Integer, PlayerDTO> players;
-    private List<Button> buttons = new ArrayList<>();
+    private Map<Integer, Button> buttons = new HashMap<>();
+
+    private int seletedPlayer = 0;
 
     /**
      * Initializes the controller class.
@@ -61,13 +67,14 @@ public class PlayerChooserController implements Initializable, Serializable {
             scrollPane.setFitToHeight(true);
             scrollPane.setContent(box);
             TitledPane teamPane = new TitledPane(team.name, scrollPane);
-            team.players.stream().forEach((player) -> {
+            for (PlayerDTO player : team.players) {
                 box.getChildren().add(createPlayerButton(team.color, player));
-            });
+            }
             teams.getPanes().add(teamPane);
             panes.add(teamPane);
         });
         teams.setExpandedPane(panes.get(0));
+        selectNext();
     }
 
     public Button createPlayerButton(String teamColor, PlayerDTO player) {
@@ -76,8 +83,35 @@ public class PlayerChooserController implements Initializable, Serializable {
         playerButton.setTooltip(tool);
         playerButton.setStyle("-fx-base: " + teamColor + ";");
         playerButton.setMaxWidth(Double.MAX_VALUE);
-        buttons.add(playerButton);
+        playerButton.setOnAction((ActionEvent e) -> {
+            seletedPlayer = player.id;
+        });
+        playerButton.setDisable(player.isOnBoard);
+
+        buttons.put(player.id, playerButton);
         return playerButton;
+    }
+
+    public void disableSelectedPlayer() {
+        buttons.get(seletedPlayer).setDisable(true);
+        selectNext();
+    }
+
+    public int getSelectedPlayer() {
+        return seletedPlayer;
+    }
+
+    private void selectNext() {
+        Iterator it = buttons.entrySet().iterator();
+        seletedPlayer = 0;
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            if (!((Button) pair.getValue()).isDisabled()) {
+                seletedPlayer = (int) pair.getKey();
+                ((Button) pair.getValue()).requestFocus();
+
+            }
+        }
     }
 
 }

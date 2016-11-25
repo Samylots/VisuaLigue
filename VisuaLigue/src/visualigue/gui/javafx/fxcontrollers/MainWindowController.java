@@ -18,6 +18,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToolBar;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -70,6 +72,10 @@ public class MainWindowController implements Initializable, Serializable {
 
         board = new VisuaLigueBoard();
         board.heightProperty().bind(root.heightProperty());
+        board.setOnMouseClicked((MouseEvent e) -> handleBoardClick(e));
+        board.addEventHandler(MouseEvent.MOUSE_DRAGGED, (e) -> handleBoardMouseDrag(e));
+
+        VisuaLigue.domain.addEventListener("draw", board);
 
         StackPane node = new StackPane();
         node.getChildren().add(new Label("No Game To Show\nClick on File -> New Game To Start!"));
@@ -237,6 +243,24 @@ public class MainWindowController implements Initializable, Serializable {
     public void loadGame(int gameId) {
         VisuaLigue.domain.loadGame(gameId);
         initLayout();
+    }
+
+    private void handleBoardClick(MouseEvent e) {
+        if (isAddingPlayer() && e.getButton() == MouseButton.PRIMARY) {
+            int playerId = playerChooserController.getSelectedPlayer();
+            VisuaLigue.domain.addPlayerAt(board.getConvertedMousePosition(), playerId);
+            playerChooserController.disableSelectedPlayer();
+        }
+        if (isInCursorMode() && e.getButton() == MouseButton.PRIMARY) {
+            VisuaLigue.domain.selectEntityAt(board.getConvertedMousePosition());
+            System.out.println("Seleting??");
+        }
+    }
+
+    private void handleBoardMouseDrag(MouseEvent e) {
+        if (isInCursorMode() && e.getButton() == MouseButton.PRIMARY && VisuaLigue.domain.hasCurrentEntity()) {
+            VisuaLigue.domain.moveCurrentEntityTo(board.getConvertedMousePosition());
+        }
     }
 
 }

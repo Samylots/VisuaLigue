@@ -202,6 +202,9 @@ public class Game implements Serializable {
     }
 
     public void moveCurrentEntityTo(Coords coords) {
+        if (currentEntity == null) {
+
+        }
         Position collidesWithPosition = currentFrame.findCollisionAt(currentEntity, coords);
 
         if (collidesWithPosition == null) {
@@ -299,5 +302,9 @@ public class Game implements Serializable {
 
     public List<Accessory> getAccessories() {
         return accessories;
+    }
+
+    public boolean hasCurrentEntity() {
+        return currentEntity != null;
     }
 }
