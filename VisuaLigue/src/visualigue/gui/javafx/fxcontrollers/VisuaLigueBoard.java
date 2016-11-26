@@ -165,7 +165,7 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
     }
 
     @Override
-    public void redraw() {
+    public synchronized void redraw() {
         drawAll();
     }
 
@@ -181,10 +181,7 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
         }
         drawField();
         drawer.drawGame();
-        if (VisuaLigue.domain.isShowingRoles()) {
-            //TODO hide only roles
-            drawPos();
-        }
+        drawPos();
         drawMiniMap();
     }
 

@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
+import javafx.application.Platform;
 import visualigue.dto.AccessoryDTO;
 import visualigue.dto.ObstacleDTO;
 import visualigue.dto.PlayerDTO;
@@ -46,7 +47,9 @@ public class Game implements Serializable {
     private int id;
     private String name;
 
-    private final int frameTimeEquiv = 2 * 1000;
+    private transient boolean isTimerRunning = false;
+
+    private final int frameTimeEquiv = 2 * 100;
 
     public Game(String name, Sport sport) {
         this.id = IdGenerator.getInstance().generateId();
@@ -93,16 +96,33 @@ public class Game implements Serializable {
     }
 
     public void startGame() {
-        playbackTimer.scheduleAtFixedRate(new TimerTask() {
+        if (currentFrame == lastFrame) {
+            currentFrame = firstFrame;
+        }
+        if (playbackTimer == null) {
+            playbackTimer = new Timer();
+        }
+        playbackTimer.cancel(); //allow another start
+        playbackTimer = new Timer();
+        playbackTimer.schedule(new TimerTask() {
             public void run() {
-                if (currentFrame != lastFrame) {
-                    currentFrame = currentFrame.getNext();
-                    triggerReDraw();
-                } else {
-                    playbackTimer.cancel();
-                }
+                runVisualisation();
             }
-        }, frameTimeEquiv, frameTimeEquiv);
+        }, 0, frameTimeEquiv);
+        isTimerRunning = true;
+    }
+
+    private void runVisualisation() {
+        if (currentFrame != lastFrame) {
+            Platform.runLater(() -> {
+                currentFrame = currentFrame.getNext();
+                triggerReDraw();
+                triggerFrameUpdate();
+            });
+        } else {
+            isTimerRunning = false;
+            playbackTimer.cancel(); //allow another start
+        }
     }
 
     public List<Integer> getPlayersOnBoard() {
@@ -119,7 +139,10 @@ public class Game implements Serializable {
     }
 
     public void pauseGame() {
-        playbackTimer.cancel();
+        if (isTimerRunning) {
+            playbackTimer.cancel();
+            triggerFrameUpdate();
+        }
     }
 
     public void goToFrame(int number) {
@@ -134,9 +157,11 @@ public class Game implements Serializable {
             frameIt = frameIt.getNext();
             ++i;
         } while (frameIt != lastFrame);
+        triggerReDraw();
+        triggerFrameUpdate();
     }
 
-    public void addPlayerAt(Coords coords, int playerId) {
+    public void addPlayerAt(Coords coords, int playerId) throws CollisionDetectedException {
         if (currentFrame.hasEntity(playerId)) {
             throw new PlayerAlreadyOnFieldException("This player is already on the field");
         } else {
@@ -269,21 +294,28 @@ public class Game implements Serializable {
     }
 
     public void newFrame() throws MustPlaceAllPlayersOnFieldException {
-        if (currentFrame == firstFrame && totalFrames == 1) {
-            Map<Integer, Position> positions = currentFrame.getPositions();
+        /*if (currentFrame == firstFrame && totalFrames == 1) {
+         Map<Integer, Position> positions = currentFrame.getPositions();
 
-            for (Player player : sport.getPlayers()) {
-                if (!positions.containsKey(player.getId())) {
-                    throw new MustPlaceAllPlayersOnFieldException("You have to place all players on the field before creating a new image");
-                }
-            }
-        }
+         for (Player player : sport.getPlayers()) {
+         if (!positions.containsKey(player.getId())) {
+         throw new MustPlaceAllPlayersOnFieldException("You have to place all players on the field before creating a new image");
+         }
+         }
+         }*/
         totalFrames++;
         Frame newFrame = new Frame(currentFrame);
-        newFrame.setNext(currentFrame.getNext());
+        if (currentFrame.getNext() != null) {
+            newFrame.setNext(currentFrame.getNext());
+            currentFrame.getNext().setBack(newFrame);
+            lastFrame = currentFrame.getNext();
+        } else {
+            lastFrame = newFrame;
+        }
         currentFrame.setNext(newFrame);
+        newFrame.setBack(currentFrame);
         currentFrame = newFrame;
- 
+
         triggerReDraw();
         triggerFrameUpdate();
     }

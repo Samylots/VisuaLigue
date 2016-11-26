@@ -22,7 +22,7 @@ public class Position implements Serializable {
     private Coords coords;
     private Entity entity;
     private Player owner;
-    private boolean isMoved = false;
+    private boolean isMoved = true;
 
     public Position(Coords location, Entity entity) {
         this.coords = location;

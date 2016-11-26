@@ -30,11 +30,13 @@ import visualigue.dto.ObstacleDTO;
 import visualigue.dto.PlayerDTO;
 import visualigue.events.FramesListener;
 import visualigue.events.SelectionListener;
+import visualigue.exceptions.CollisionDetectedException;
 import visualigue.gui.javafx.helpers.UIMode;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.Dialog;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 import visualigue.gui.javafx.fxlayouts.InputDialog;
+import visualigue.utils.Mode;
 
 /**
  * FXML Controller class
@@ -134,7 +136,6 @@ public class MainWindowController implements Initializable, Serializable, Select
 
     private void initLayout() {
         root.setCenter(board);
-        changeViewTo(UIMode.FRAME_BY_FRAME);
         showDefaultToolbar();
     }
 
@@ -265,6 +266,7 @@ public class MainWindowController implements Initializable, Serializable, Select
     }
 
     public void showDefaultToolbar() {
+        changeViewTo(UIMode.FRAME_BY_FRAME);
         board.widthProperty().bind(root.widthProperty().subtract(mainToolbar.widthProperty()));
         root.setLeft(mainToolbar);
     }
@@ -300,19 +302,24 @@ public class MainWindowController implements Initializable, Serializable, Select
     }
 
     private void handleBoardClick(MouseEvent e) {
-        if (isAddingPlayer() && e.getButton() == MouseButton.PRIMARY) {
-            int playerId = playerChooserController.getSelectedPlayer();
-            VisuaLigue.domain.addPlayerAt(board.getConvertedMousePosition(), playerId);
-            playerChooserController.disableSelectedPlayer();
-        } else if (isAddingObstacle() && e.getButton() == MouseButton.PRIMARY) {
-            int obstacleId = addObstacleList.getSelectedObstacle();
-            if (obstacleId > 0) {
-                VisuaLigue.domain.addObstacleAt(board.getConvertedMousePosition(), obstacleId);
+        if (VisuaLigue.domain.getCurrentMode() != Mode.VISUALISATION) {
+            if (isAddingPlayer() && e.getButton() == MouseButton.PRIMARY) {
+                int playerId = playerChooserController.getSelectedPlayer();
+                try {
+                    VisuaLigue.domain.addPlayerAt(board.getConvertedMousePosition(), playerId);
+                    playerChooserController.disableSelectedPlayer();
+                } catch (CollisionDetectedException ex) {
+                    Dialog popup = new Dialog("Error", "This player can't be placed here. Please try another place!", root);
+                }
+            } else if (isAddingObstacle() && e.getButton() == MouseButton.PRIMARY) {
+                int obstacleId = addObstacleList.getSelectedObstacle();
+                if (obstacleId > 0) {
+                    VisuaLigue.domain.addObstacleAt(board.getConvertedMousePosition(), obstacleId);
+                }
+            } else if (isAddingAccessory() && e.getButton() == MouseButton.PRIMARY) {
+                VisuaLigue.domain.addAccessoryAt(board.getConvertedMousePosition());
             }
-        } else if (isAddingAccessory() && e.getButton() == MouseButton.PRIMARY) {
-            VisuaLigue.domain.addAccessoryAt(board.getConvertedMousePosition());
         }
-        //trySelecting(e);
     }
 
     private void trySelecting(MouseEvent e) {

@@ -42,34 +42,51 @@ public class VisualizationBoardController implements Initializable, FramesListen
     public void initialize(URL url, ResourceBundle rb) {
         timeSlider.setMin(1);
         timeSlider.setDisable(true);
+        timeConfig.setText("5");
     }
 
     @FXML
     private void backwardStep(ActionEvent event) {
+        VisuaLigue.domain.goToFrame(-(getStepNumber()));
+    }
+
+    private int getStepNumber() {
+        try {
+            return Integer.parseInt(timeConfig.getText());
+        } catch (Exception e) {
+            return 1;
+        }
     }
 
     @FXML
     private void backward(ActionEvent event) {
+        VisuaLigue.domain.goToFrame(-1);
     }
 
     @FXML
     private void play(ActionEvent event) {
+        VisuaLigue.domain.startGame();
     }
 
     @FXML
     private void pause(ActionEvent event) {
+        VisuaLigue.domain.pauseGame();
     }
 
     @FXML
     private void foward(ActionEvent event) {
+        VisuaLigue.domain.goToFrame(1);
     }
 
     @FXML
     private void fowardStep(ActionEvent event) {
+        VisuaLigue.domain.goToFrame(getStepNumber());
     }
 
     @FXML
     private void stop(ActionEvent event) {
+        VisuaLigue.domain.pauseGame();
+        VisuaLigue.domain.goToFrame(-((int) VisuaLigue.domain.getTotalFrame()));
     }
 
     @Override

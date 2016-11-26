@@ -26,6 +26,7 @@ import java.util.Map;
 import visualigue.dto.*;
 import visualigue.events.*;
 import visualigue.exceptions.CantDeleteFrameException;
+import visualigue.exceptions.CollisionDetectedException;
 import visualigue.exceptions.MustPlaceAllPlayersOnFieldException;
 import visualigue.utils.IdGenerator;
 
@@ -82,15 +83,23 @@ public class VisuaLigueController implements Serializable {
     }
 
     public void startGame() {
-        currentGame.pauseGame();
-    }
-
-    public void pauseGame() {
         currentGame.startGame();
     }
 
+    public void pauseGame() {
+        currentGame.pauseGame();
+    }
+
     public void goToFrame(int number) {
-        currentGame.goToFrame(number);
+        int currentFrame = currentGame.getActualFrameNumber();
+        int maxFrame = currentGame.getTotalFrames();
+        if (currentFrame + number <= 0) {
+            currentGame.goToFrame(1);
+        } else if (currentFrame + number > maxFrame) {
+            currentGame.goToFrame(maxFrame);
+        } else {
+            currentGame.goToFrame(currentFrame + number);
+        }
     }
 
     public List<TeamDTO> getCurrentGameTeams() {
@@ -152,22 +161,6 @@ public class VisuaLigueController implements Serializable {
         String type = path;
         exporter = GameExporterFactory.getExporter(type);
         exporter.export(new File(path));
-    }
-
-    public void foward() {
-
-    }
-
-    public void backward() {
-
-    }
-
-    public void stepFoward() {
-
-    }
-
-    public void stepBackward() {
-
     }
 
     public void changeMode(Mode mode) {
@@ -294,7 +287,7 @@ public class VisuaLigueController implements Serializable {
         return returnData;
     }
 
-    public void addPlayerAt(Coords coords, int playerId) {
+    public void addPlayerAt(Coords coords, int playerId) throws CollisionDetectedException {
         if (playerId > 0) {
             currentGame.addPlayerAt(coords, playerId);
         }
@@ -355,7 +348,9 @@ public class VisuaLigueController implements Serializable {
     }
 
     public void moveCurrentEntityTo(Coords coords) {
-        currentGame.moveCurrentEntityTo(coords);
+        if (currentMode != Mode.VISUALISATION) { //can't edit on visualization
+            currentGame.moveCurrentEntityTo(coords);
+        }
     }
 
     public boolean hasOpenedGame() {
