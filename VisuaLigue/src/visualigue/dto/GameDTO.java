@@ -5,7 +5,7 @@
  */
 package visualigue.dto;
 
-import visualigue.domain.game.Game;
+import visualigue.domain.main.Game;
 
 /**
  *

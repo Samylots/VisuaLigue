@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package visualigue.domain.game;
+package visualigue.domain.main;
 
 import visualigue.domain.game.entities.Obstacle;
 import visualigue.domain.game.entities.Player;
@@ -41,6 +41,7 @@ public class Game implements Serializable {
     private Frame currentFrame;
     private static SelectionListener selectionListener;
     private static List<DrawListener> drawListeners = new ArrayList<>();
+    private static FramesListener frameListener;
     private transient Timer playbackTimer = new Timer();
     private int id;
     private String name;
@@ -65,11 +66,29 @@ public class Game implements Serializable {
         return this.name;
     }
 
+    public int getActualFrameNumber() {
+        int frame = 1;
+        Frame frameIndex = firstFrame;
+        while (frameIndex.getNext() != null && frameIndex != currentFrame) {
+            frame++;
+            frameIndex = frameIndex.getNext();
+        }
+        return frame;
+    }
+
+    public int getTotalFrames() {
+        return totalFrames;
+    }
+
     public static void addDrawListener(DrawListener listener) {
         drawListeners.add(listener);
     }
 
-    public static void addSelectionListener(SelectionListener listener) {
+    public static void setFrameListener(FramesListener listener) {
+        frameListener = listener;
+    }
+
+    public static void setSelectionListener(SelectionListener listener) {
         selectionListener = listener;
     }
 
@@ -213,6 +232,7 @@ public class Game implements Serializable {
 
         if (collidesWithPosition == null) {
             currentFrame.movePosition(currentEntity.getId(), coords);
+
         } else {
             Entity collidedWithEntity = collidesWithPosition.getEntity();
 
@@ -244,11 +264,11 @@ public class Game implements Serializable {
         if (currentFrame.getBack() != null) {
             return currentFrame.getBack().getPositions();
         } else {
-            return new TreeMap<Integer, Position>();
+            return new TreeMap<>();
         }
     }
 
-    public void newFrame() {
+    public void newFrame() throws MustPlaceAllPlayersOnFieldException {
         if (currentFrame == firstFrame && totalFrames == 1) {
             Map<Integer, Position> positions = currentFrame.getPositions();
 
@@ -258,17 +278,18 @@ public class Game implements Serializable {
                 }
             }
         }
-        ++totalFrames;
+        totalFrames++;
         Frame newFrame = new Frame(lastFrame);
-        Frame lastFrameTmp = lastFrame;
         lastFrame.setNext(newFrame);
+        newFrame.setBack(lastFrame);
         lastFrame = newFrame;
         currentFrame = newFrame;
 
         triggerReDraw();
+        triggerFrameUpdate();
     }
 
-    public void deleteCurrentFrame() {
+    public void deleteCurrentFrame() throws CantDeleteFrameException {
         if (currentFrame == firstFrame && totalFrames == 1) {
             throw new CantDeleteFrameException("Can't delete frame if there's only one");
         }
@@ -288,22 +309,33 @@ public class Game implements Serializable {
             currentFrame = currentFrame.getNext();
         }
         triggerReDraw();
+        triggerFrameUpdate();
     }
 
-    public void nextFrame() {
-        currentFrame = currentFrame.getNext();
-        triggerReDraw();
+    public void nextFrame() throws MustPlaceAllPlayersOnFieldException {
+        if (currentFrame.getNext() != null) {
+            currentFrame = currentFrame.getNext();
+            triggerReDraw();
+            triggerFrameUpdate();
+        } else {
+            newFrame();
+        }
     }
 
     public void previousFrame() {
-        currentFrame = currentFrame.getBack();
-        triggerReDraw();
+        if (currentFrame.getBack() != null) {
+            currentFrame = currentFrame.getBack();
+            triggerReDraw();
+            triggerFrameUpdate();
+        }
     }
 
     private void triggerReDraw() {
-        for (DrawListener listener : drawListeners) {
-            listener.redraw();
-        }
+        drawListeners.stream().forEach((listener) -> listener.redraw());
+    }
+
+    private void triggerFrameUpdate() {
+        frameListener.updateFrames();
     }
 
     public List<Accessory> getAccessories() {

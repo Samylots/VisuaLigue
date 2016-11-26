@@ -10,21 +10,23 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import visualigue.utils.Dimension;
-import visualigue.domain.game.Game;
+import visualigue.domain.main.Game;
 import visualigue.domain.game.entities.Obstacle;
-import visualigue.domain.game.Sport;
+import visualigue.domain.main.Sport;
 import visualigue.utils.Coords;
 import visualigue.domain.game.entities.Accessory;
-import visualigue.domain.game.Position;
-import visualigue.domain.game.Team;
+import visualigue.domain.main.Position;
+import visualigue.domain.main.Team;
 import visualigue.utils.Mode;
 import visualigue.exceptions.NoCurrentGameException;
-import visualigue.services.exporters.GameExporter;
-import visualigue.services.exporters.GameExporterFactory;
-import visualigue.services.persistence.Serializer;
+import visualigue.domain.exporters.GameExporter;
+import visualigue.domain.exporters.GameExporterFactory;
+import visualigue.domain.persistence.Serializer;
 import java.util.Map;
 import visualigue.dto.*;
 import visualigue.events.*;
+import visualigue.exceptions.CantDeleteFrameException;
+import visualigue.exceptions.MustPlaceAllPlayersOnFieldException;
 import visualigue.utils.IdGenerator;
 
 /**
@@ -37,7 +39,6 @@ public class VisuaLigueController implements Serializable {
     private Game currentGame;
     private final transient Serializer serializer;
     private Ressources ressources = new Ressources();
-    private double actualTime;
     private double frameTimeEquiv;
     private GameExporter exporter;
     private Mode currentMode;
@@ -58,7 +59,6 @@ public class VisuaLigueController implements Serializable {
         this.folder = controller.folder;
         //this.currentGame = controller.currentGame; //On loading we don't want a game opened
         this.ressources = controller.ressources;
-        this.actualTime = controller.actualTime;
         this.frameTimeEquiv = controller.frameTimeEquiv;
         this.exporter = controller.exporter;
         this.currentMode = controller.currentMode;
@@ -67,10 +67,17 @@ public class VisuaLigueController implements Serializable {
     }
 
     public void addEventListener(String event, Listener listener) {
-        if (event.equals("draw")) {
-            Game.addDrawListener((DrawListener) listener);
-        } else if (event.equals("select")) {
-            Game.addSelectionListener((SelectionListener) listener);
+        switch (event) {
+            case "draw":
+                Game.addDrawListener((DrawListener) listener);
+                break;
+            case "select":
+                Game.setSelectionListener((SelectionListener) listener);
+                break;
+            case "frame":
+                Game.setFrameListener((FramesListener) listener);
+                ((FramesListener) listener).updateFrames(); //init
+                break;
         }
     }
 
@@ -224,8 +231,12 @@ public class VisuaLigueController implements Serializable {
         return returnData;
     }
 
-    public double getActualTime() {
-        return actualTime;
+    public double getActualFrame() {
+        return currentGame.getActualFrameNumber();
+    }
+
+    public double getTotalFrame() {
+        return currentGame.getTotalFrames();
     }
 
     public Mode getCurrentMode() {
@@ -306,11 +317,11 @@ public class VisuaLigueController implements Serializable {
         this.serializer.saveToFile();
     }
 
-    public void newFrame() {
+    public void newFrame() throws MustPlaceAllPlayersOnFieldException {
         currentGame.newFrame();
     }
 
-    public void deleteCurrentFrame() {
+    public void deleteCurrentFrame() throws CantDeleteFrameException {
         currentGame.deleteCurrentFrame();
     }
 
@@ -370,11 +381,11 @@ public class VisuaLigueController implements Serializable {
     public void deleteGame(int id) {
         ressources.deleteGame(id);
     }
-    
+
     public void deleteSport(int id) {
         ressources.deleteSport(id);
     }
-    
+
     public void deleteObstacle(int id) {
         ressources.deleteObstacle(id);
     }

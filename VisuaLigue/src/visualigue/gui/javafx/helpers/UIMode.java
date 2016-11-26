@@ -39,8 +39,7 @@ public enum UIMode implements Serializable {
     }
 
     public <T> T getController() {
-        Node node = FXLoader.getInstance().load(fxmlFile);
-        ObstacleListController controller = FXLoader.getInstance().getLastController();
-        return (T) controller;
+        T controller = FXLoader.getInstance().getLastController();
+        return controller;
     }
 }

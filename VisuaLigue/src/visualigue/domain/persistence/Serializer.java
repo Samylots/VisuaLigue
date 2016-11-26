@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package visualigue.services.persistence;
+package visualigue.domain.persistence;
 
 import java.io.FileOutputStream;
 import java.io.FileInputStream;

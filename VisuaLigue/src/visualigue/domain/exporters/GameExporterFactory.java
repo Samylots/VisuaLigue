@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package visualigue.services.exporters;
+package visualigue.domain.exporters;
 
 import visualigue.exceptions.InvalidGameExporterTypeException;
 

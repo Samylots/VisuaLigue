@@ -15,7 +15,9 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import visualigue.VisuaLigue;
 import visualigue.gui.javafx.fxcontrollers.GameListController;
+import visualigue.gui.javafx.fxlayouts.Dialog;
 
 /**
  * FXML Controller class
@@ -67,6 +69,15 @@ public class GameListItemController implements Initializable {
     @FXML
     private void selectGame(ActionEvent event) {
         parentController.select(id);
+    }
+
+    @FXML
+    private void deleteGame(ActionEvent event) {
+        Dialog popup = new Dialog("Deleting Game", "Are you sure you want to delete this game?\nThis process can't be reversed!", gameItem);
+        if (popup.isConfirmed()) {
+            VisuaLigue.domain.deleteGame(id);
+            parentController.refreshGames();
+        }
     }
 
 }

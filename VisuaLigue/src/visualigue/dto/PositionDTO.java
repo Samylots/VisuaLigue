@@ -5,7 +5,7 @@
  */
 package visualigue.dto;
 
-import visualigue.domain.game.Position;
+import visualigue.domain.main.Position;
 import visualigue.utils.Coords;
 
 /**

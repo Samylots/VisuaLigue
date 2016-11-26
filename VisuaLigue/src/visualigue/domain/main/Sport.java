@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package visualigue.domain.game;
+package visualigue.domain.main;
 
 import visualigue.domain.game.entities.Player;
 import visualigue.domain.game.entities.Entity;

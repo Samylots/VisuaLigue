@@ -71,6 +71,7 @@ public class MainToolbarController implements Initializable {
         if (mode != EditMode.ADD_ACCESSORY) {
             untoggleOthers(event.getSource());
             mode = EditMode.ADD_ACCESSORY;
+            parentController.showDefaultToolbar();
         }
     }
 

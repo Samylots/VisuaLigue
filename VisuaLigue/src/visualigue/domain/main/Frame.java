@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package visualigue.domain.game;
+package visualigue.domain.main;
 
 import visualigue.domain.game.entities.Entity;
 import java.io.Serializable;
@@ -22,19 +22,16 @@ public class Frame implements Serializable {
     private Frame next;
     private Frame back;
     //Index of TreeMap is entity Id
-    private Map<Integer, Position> positions = new TreeMap<Integer, Position>();
+    private Map<Integer, Position> positions = new TreeMap<>();
 
     public Frame() {
     }
 
     public Frame(Frame backFrame) {
         this.back = backFrame;
-        this.positions = back.positions;
-
-        for (Map.Entry<Integer, Position> entry : positions.entrySet()) {
-            Position pos = entry.getValue();
-            pos.setIsMoved(false);
-        }
+        back.positions.entrySet().stream().forEach((entry) -> {
+            this.positions.put(entry.getKey(), new Position(entry.getValue())); //copy them, not the reference!
+        });
     }
 
     public Frame getNext() {
@@ -105,5 +102,9 @@ public class Frame implements Serializable {
 
     public void setOwner(int idEntity, Player owner) {
         positions.get(idEntity).setOwner(owner);
+    }
+
+    public boolean hasOwner(int idEntity) {
+        return positions.get(idEntity).hasOwner();
     }
 }

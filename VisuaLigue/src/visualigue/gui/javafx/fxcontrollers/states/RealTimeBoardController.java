@@ -9,15 +9,23 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import visualigue.VisuaLigue;
+import visualigue.events.FramesListener;
 
 /**
  * FXML Controller class
  *
  * @author Samuel
  */
-public class RealTimeBoardController implements Initializable {
+public class RealTimeBoardController implements Initializable, FramesListener {
+
+    @Override
+    public void init(Parent parent) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     @FXML
     private Label frameLabel;
@@ -30,6 +38,14 @@ public class RealTimeBoardController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        frameSlider.setMin(1);
+    }
+
+    @Override
+    public void updateFrames() {
+        frameSlider.setMax(VisuaLigue.domain.getTotalFrame());
+        frameLabel.setText(String.valueOf(VisuaLigue.domain.getActualFrame()) + " / " + String.valueOf(VisuaLigue.domain.getTotalFrame()));
+        frameSlider.setValue(VisuaLigue.domain.getActualFrame());
     }
 
 }

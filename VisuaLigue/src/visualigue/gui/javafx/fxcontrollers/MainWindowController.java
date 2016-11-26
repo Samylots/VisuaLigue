@@ -28,6 +28,7 @@ import visualigue.VisuaLigue;
 import visualigue.dto.AccessoryDTO;
 import visualigue.dto.ObstacleDTO;
 import visualigue.dto.PlayerDTO;
+import visualigue.events.FramesListener;
 import visualigue.events.SelectionListener;
 import visualigue.gui.javafx.helpers.UIMode;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
@@ -83,10 +84,15 @@ public class MainWindowController implements Initializable, Serializable, Select
 
         VisuaLigue.domain.addEventListener("draw", board);
         VisuaLigue.domain.addEventListener("select", this);
+        resetLayout();
+    }
 
+    private void resetLayout() {
         StackPane node = new StackPane();
         node.getChildren().add(new Label("No Game To Show\nClick on File -> New Game To Start!"));
         root.setCenter(node);
+        root.setLeft(null);
+        root.setBottom(null);
     }
 
     private void initToolbars() {
@@ -198,17 +204,26 @@ public class MainWindowController implements Initializable, Serializable, Select
 
     @FXML
     private void setToMode1(ActionEvent event) {
-        changeViewTo(UIMode.FRAME_BY_FRAME);
+        if (VisuaLigue.domain.hasOpenedGame()) {
+            changeViewTo(UIMode.FRAME_BY_FRAME);
+            showDefaultToolbar();
+        }
     }
 
     @FXML
     private void setToMode2(ActionEvent event) {
-        changeViewTo(UIMode.REAL_TIME);
+        if (VisuaLigue.domain.hasOpenedGame()) {
+            changeViewTo(UIMode.REAL_TIME);
+            showDefaultToolbar();
+        }
     }
 
     @FXML
     private void visualize(ActionEvent event) {
-        changeViewTo(UIMode.VISUALISATION);
+        if (VisuaLigue.domain.hasOpenedGame()) {
+            changeViewTo(UIMode.VISUALISATION);
+            hideToolbars();
+        }
     }
 
     @FXML
@@ -225,6 +240,9 @@ public class MainWindowController implements Initializable, Serializable, Select
     public void changeViewTo(UIMode state) {
         VisuaLigue.domain.changeMode(state.getMode()); //Telling domain that we changed mode
         TitledPane nodeView = (TitledPane) state.getNode();
+        FramesListener listenerController = state.getController();
+        listenerController.init(root);
+        VisuaLigue.domain.addEventListener("frame", listenerController);
         root.setBottom(nodeView);
         Platform.runLater(() -> nodeView.requestLayout()); //Node height bug fixing
         board.heightProperty().bind(root.heightProperty().subtract(nodeView.heightProperty()).subtract(30));
@@ -271,6 +289,11 @@ public class MainWindowController implements Initializable, Serializable, Select
         Platform.runLater(() -> addObstacleList.requestLayout()); //Node width bug fixing
     }
 
+    public void hideToolbars() {
+        root.setLeft(null);
+        board.widthProperty().bind(root.widthProperty());
+    }
+
     public void loadGame(int gameId) {
         VisuaLigue.domain.loadGame(gameId);
         initLayout();
@@ -283,7 +306,11 @@ public class MainWindowController implements Initializable, Serializable, Select
             playerChooserController.disableSelectedPlayer();
         } else if (isAddingObstacle() && e.getButton() == MouseButton.PRIMARY) {
             int obstacleId = addObstacleList.getSelectedObstacle();
-            VisuaLigue.domain.addObstacleAt(board.getConvertedMousePosition(), obstacleId);
+            if (obstacleId > 0) {
+                VisuaLigue.domain.addObstacleAt(board.getConvertedMousePosition(), obstacleId);
+            }
+        } else if (isAddingAccessory() && e.getButton() == MouseButton.PRIMARY) {
+            VisuaLigue.domain.addAccessoryAt(board.getConvertedMousePosition());
         }
         //trySelecting(e);
     }

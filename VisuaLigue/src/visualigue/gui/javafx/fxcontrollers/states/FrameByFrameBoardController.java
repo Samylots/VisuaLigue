@@ -10,20 +10,28 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import visualigue.VisuaLigue;
+import visualigue.events.FramesListener;
+import visualigue.exceptions.CantDeleteFrameException;
+import visualigue.exceptions.MustPlaceAllPlayersOnFieldException;
+import visualigue.gui.javafx.fxlayouts.Dialog;
 
 /**
  * FXML Controller class
  *
  * @author Samuel
  */
-public class FrameByFrameBoardController implements Initializable {
+public class FrameByFrameBoardController implements Initializable, FramesListener {
 
     @FXML
     private Label frameLabel;
     @FXML
     private Slider frameSlider;
+
+    private Parent parent;
 
     /**
      * Initializes the controller class.
@@ -31,22 +39,51 @@ public class FrameByFrameBoardController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        frameSlider.setMin(1);
+    }
+
+    @Override
+    public void init(Parent parent) {
+        this.parent = parent;
     }
 
     @FXML
     private void deleteFrame(ActionEvent event) {
+        try {
+            VisuaLigue.domain.deleteCurrentFrame();
+        } catch (CantDeleteFrameException e) {
+            Dialog popup = new Dialog("Error", e.getMessage(), parent);
+        }
     }
 
     @FXML
     private void previous(ActionEvent event) {
+        VisuaLigue.domain.previousFrame();
     }
 
     @FXML
     private void next(ActionEvent event) {
+        try {
+            VisuaLigue.domain.nextFrame();
+        } catch (MustPlaceAllPlayersOnFieldException e) {
+            Dialog popup = new Dialog("Error", e.getMessage(), parent);
+        }
     }
 
     @FXML
     private void addFrame(ActionEvent event) {
+        try {
+            VisuaLigue.domain.newFrame();
+        } catch (MustPlaceAllPlayersOnFieldException e) {
+            Dialog popup = new Dialog("Error", e.getMessage(), parent);
+        }
+    }
+
+    @Override
+    public void updateFrames() {
+        frameSlider.setMax(VisuaLigue.domain.getTotalFrame());
+        frameLabel.setText(String.valueOf(VisuaLigue.domain.getActualFrame()) + " / " + String.valueOf(VisuaLigue.domain.getTotalFrame()));
+        frameSlider.setValue(VisuaLigue.domain.getActualFrame());
     }
 
 }

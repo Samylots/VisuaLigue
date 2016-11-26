@@ -5,7 +5,6 @@
  */
 package visualigue.gui.javafx.fxcontrollers;
 
-import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +23,6 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import visualigue.VisuaLigue;
-import visualigue.domain.VisuaLigueController;
 import visualigue.dto.PlayerDTO;
 import visualigue.dto.TeamDTO;
 
@@ -113,7 +111,7 @@ public class PlayerChooserController implements Initializable {
             if (!((Button) pair.getValue()).isDisabled()) {
                 seletedPlayer = (int) pair.getKey();
                 ((Button) pair.getValue()).requestFocus();
-
+                break;
             }
         }
     }

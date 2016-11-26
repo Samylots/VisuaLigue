@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package visualigue.domain.game;
+package visualigue.domain.main;
 
 import java.awt.Rectangle;
 import visualigue.domain.game.entities.Player;
@@ -35,6 +35,13 @@ public class Position implements Serializable {
         this.entity = entity;
         this.owner = owner;
         centerIt();
+    }
+
+    public Position(Position pos) {
+        this.coords = new Coords(pos.coords);
+        this.entity = pos.entity; //same entity ref
+        this.owner = pos.owner; //same ref
+        this.isMoved = false; //default
     }
 
     public void setLocation(Coords coords) {

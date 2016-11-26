@@ -40,6 +40,7 @@
                                     <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="ALWAYS">
                                        <children>
                                           <TextField fx:id="accessoryWidth" prefWidth="100.0" promptText="Width" />
+                                          <Label text="meters" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -47,6 +48,7 @@
                               <VBox alignment="CENTER">
                                  <children>
                                     <TextField fx:id="accessoryHeight" prefWidth="50.0" promptText="Height" />
+                                    <Label text="meters" />
                                  </children>
                               </VBox>
                            </children>
@@ -60,6 +62,7 @@
                                     <HBox alignment="CENTER" spacing="10.0" VBox.vgrow="ALWAYS">
                                        <children>
                                           <TextField fx:id="fieldWidth" prefWidth="100.0" promptText="Width" />
+                                          <Label text="meters" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -67,6 +70,7 @@
                               <VBox alignment="CENTER">
                                  <children>
                                     <TextField fx:id="fieldHeigth" prefWidth="50.0" promptText="Height" />
+                                    <Label text="meters" />
                                  </children>
                               </VBox>
                            </children>

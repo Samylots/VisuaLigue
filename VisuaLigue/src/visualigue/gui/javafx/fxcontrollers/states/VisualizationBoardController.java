@@ -10,15 +10,23 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import visualigue.VisuaLigue;
+import visualigue.events.FramesListener;
 
 /**
  * FXML Controller class
  *
  * @author Samuel
  */
-public class VisualizationBoardController implements Initializable {
+public class VisualizationBoardController implements Initializable, FramesListener {
+
+    @Override
+    public void init(Parent parent) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     @FXML
     private Slider timeSlider;
@@ -30,11 +38,11 @@ public class VisualizationBoardController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        timeSlider.setMin(1);
     }
 
     @FXML
-    private void backwrdStep(ActionEvent event) {
+    private void backwardStep(ActionEvent event) {
     }
 
     @FXML
@@ -55,6 +63,16 @@ public class VisualizationBoardController implements Initializable {
 
     @FXML
     private void fowardStep(ActionEvent event) {
+    }
+
+    @FXML
+    private void stop(ActionEvent event) {
+    }
+
+    @Override
+    public void updateFrames() {
+        timeSlider.setMax(VisuaLigue.domain.getTotalFrame());
+        timeSlider.setValue(VisuaLigue.domain.getActualFrame());
     }
 
 }

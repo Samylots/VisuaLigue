@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -17,7 +18,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import visualigue.VisuaLigue;
 import visualigue.gui.javafx.fxcontrollers.SportListController;
+import visualigue.gui.javafx.fxlayouts.Dialog;
 
 /**
  * FXML Controller class
@@ -53,7 +56,8 @@ public class SportListItemController implements Initializable, Serializable {
     /**
      * Initializes the item
      *
-     * @param picUrl
+     * @param controller
+     * @param pic
      * @param sportName
      * @param domainId
      */
@@ -88,5 +92,17 @@ public class SportListItemController implements Initializable, Serializable {
 
     public void setSelectable(boolean selectable) {
         selectButton.setDisable(!selectable);
+    }
+
+    @FXML
+    private void deleteSport(ActionEvent event) {
+        Dialog popup = new Dialog("Deleting Sport", "Are you sure you want to "
+                + "delete this sport?\nBy deleting this sport, you will be "
+                + "deleting all games based on this sport|\nThis process can't "
+                + "be reversed!", sportItem);
+        if (popup.isConfirmed()) {
+            VisuaLigue.domain.deleteGame(id);
+            parentController.refreshSports();
+        }
     }
 }
