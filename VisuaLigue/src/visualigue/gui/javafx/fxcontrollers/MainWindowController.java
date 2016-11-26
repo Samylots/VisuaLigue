@@ -25,18 +25,18 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import visualigue.VisuaLigue;
-import visualigue.dto.AccessoryDTO;
-import visualigue.dto.ObstacleDTO;
-import visualigue.dto.PlayerDTO;
-import visualigue.events.FramesListener;
-import visualigue.events.SelectionListener;
-import visualigue.exceptions.CollisionDetectedException;
+import visualigue.inter.dto.AccessoryDTO;
+import visualigue.inter.dto.ObstacleDTO;
+import visualigue.inter.dto.PlayerDTO;
+import visualigue.domain.events.FramesListener;
+import visualigue.domain.events.SelectionListener;
+import visualigue.inter.utils.exceptions.CollisionDetectedException;
 import visualigue.gui.javafx.helpers.UIMode;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.Dialog;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 import visualigue.gui.javafx.fxlayouts.InputDialog;
-import visualigue.utils.Mode;
+import visualigue.inter.utils.Mode;
 
 /**
  * FXML Controller class

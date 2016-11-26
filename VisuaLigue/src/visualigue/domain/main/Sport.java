@@ -11,9 +11,9 @@ import visualigue.domain.main.entities.Accessory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import visualigue.utils.Dimension;
-import visualigue.exceptions.NoSuchIdException;
-import visualigue.utils.IdGenerator;
+import visualigue.inter.utils.Dimension;
+import visualigue.inter.utils.exceptions.NoSuchIdException;
+import visualigue.inter.utils.IdGenerator;
 
 /**
  *

@@ -5,6 +5,7 @@
  */
 package visualigue.gui.javafx.fxcontrollers;
 
+import visualigue.inter.dto.SportDTO;
 import visualigue.gui.javafx.fxcontrollers.items.SportListItemController;
 import java.io.Serializable;
 import java.net.URL;
@@ -21,7 +22,6 @@ import javafx.stage.Stage;
 import visualigue.VisuaLigue;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
-import visualigue.dto.*;
 
 /**
  * FXML Controller class

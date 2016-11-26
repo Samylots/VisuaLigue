@@ -5,9 +5,9 @@
  */
 package visualigue.domain.main.entities;
 
-import visualigue.utils.Dimension;
+import visualigue.inter.utils.Dimension;
 import java.io.Serializable;
-import visualigue.utils.IdGenerator;
+import visualigue.inter.utils.IdGenerator;
 
 /**
  *

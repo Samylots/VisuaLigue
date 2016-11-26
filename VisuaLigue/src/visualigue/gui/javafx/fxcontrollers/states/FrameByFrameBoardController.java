@@ -14,9 +14,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import visualigue.VisuaLigue;
-import visualigue.events.FramesListener;
-import visualigue.exceptions.CantDeleteFrameException;
-import visualigue.exceptions.MustPlaceAllPlayersOnFieldException;
+import visualigue.domain.events.FramesListener;
+import visualigue.inter.utils.exceptions.CantDeleteFrameException;
+import visualigue.inter.utils.exceptions.MustPlaceAllPlayersOnFieldException;
 import visualigue.gui.javafx.fxlayouts.Dialog;
 
 /**

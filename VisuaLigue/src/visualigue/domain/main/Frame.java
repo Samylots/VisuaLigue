@@ -5,12 +5,12 @@
  */
 package visualigue.domain.main;
 
+import visualigue.inter.utils.exceptions.NoSuchIdException;
 import visualigue.domain.main.entities.Entity;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
-import visualigue.utils.Coords;
-import visualigue.exceptions.*;
+import visualigue.inter.utils.Coords;
 import visualigue.domain.main.entities.Player;
 
 /**

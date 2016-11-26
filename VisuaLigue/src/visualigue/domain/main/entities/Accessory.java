@@ -6,7 +6,7 @@
 package visualigue.domain.main.entities;
 
 import java.io.Serializable;
-import visualigue.utils.Dimension;
+import visualigue.inter.utils.Dimension;
 
 /**
  *

@@ -18,11 +18,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import visualigue.VisuaLigue;
-import visualigue.events.DrawListener;
-import visualigue.utils.Converter;
-import visualigue.utils.Coords;
+import visualigue.domain.events.DrawListener;
+import visualigue.inter.utils.Converter;
+import visualigue.inter.utils.Coords;
 import visualigue.gui.javafx.fxdrawers.GameDrawer;
-import visualigue.utils.Dimension;
+import visualigue.inter.utils.Dimension;
 
 /**
  * FXML Controller class

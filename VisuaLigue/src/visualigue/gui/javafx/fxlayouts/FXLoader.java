@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import visualigue.exceptions.CantFindSpecifiedFXMLFile;
+import visualigue.inter.utils.exceptions.CantFindSpecifiedFXMLFile;
 
 /**
  *

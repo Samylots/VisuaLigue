@@ -23,8 +23,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import visualigue.VisuaLigue;
-import visualigue.dto.GameDTO;
-import visualigue.dto.SportDTO;
+import visualigue.inter.dto.GameDTO;
+import visualigue.inter.dto.SportDTO;
 import visualigue.gui.javafx.fxcontrollers.items.GameListItemController;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 

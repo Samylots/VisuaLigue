@@ -14,7 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import visualigue.VisuaLigue;
-import visualigue.events.FramesListener;
+import visualigue.domain.events.FramesListener;
 
 /**
  * FXML Controller class

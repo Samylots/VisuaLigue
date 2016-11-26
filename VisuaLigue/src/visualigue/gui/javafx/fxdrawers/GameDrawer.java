@@ -5,19 +5,23 @@
  */
 package visualigue.gui.javafx.fxdrawers;
 
+import visualigue.inter.dto.ObstacleDTO;
+import visualigue.inter.dto.PlayerDTO;
+import visualigue.inter.dto.PositionDTO;
+import visualigue.inter.dto.AccessoryDTO;
+import visualigue.inter.dto.EntityDTO;
 import java.util.List;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import visualigue.VisuaLigue;
-import visualigue.utils.Coords;
+import visualigue.inter.utils.Coords;
 import visualigue.gui.javafx.fxcontrollers.VisuaLigueBoard;
-import visualigue.dto.*;
-import visualigue.utils.Dimension;
+import visualigue.inter.utils.Dimension;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import visualigue.utils.Mode;
+import visualigue.inter.utils.Mode;
 
 /**
  *

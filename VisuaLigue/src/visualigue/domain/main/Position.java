@@ -9,7 +9,7 @@ import java.awt.Rectangle;
 import visualigue.domain.main.entities.Player;
 import visualigue.domain.main.entities.Entity;
 import java.io.Serializable;
-import visualigue.utils.Coords;
+import visualigue.inter.utils.Coords;
 
 /**
  *

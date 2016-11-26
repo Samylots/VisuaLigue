@@ -17,7 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import visualigue.VisuaLigue;
-import visualigue.dto.ObstacleDTO;
+import visualigue.inter.dto.ObstacleDTO;
 import visualigue.gui.javafx.fxcontrollers.items.ObstacleListItemController;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.FXLoader;

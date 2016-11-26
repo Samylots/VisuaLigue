@@ -5,25 +5,31 @@
  */
 package visualigue.domain.main;
 
+import visualigue.inter.utils.exceptions.CollisionDetectedException;
+import visualigue.inter.utils.exceptions.CantDeleteFrameException;
+import visualigue.inter.utils.exceptions.MustPlaceAllPlayersOnFieldException;
+import visualigue.inter.utils.exceptions.PlayerAlreadyOnFieldException;
+import visualigue.inter.utils.exceptions.NoEntityAtLocationException;
+import visualigue.domain.events.FramesListener;
+import visualigue.domain.events.SelectionListener;
+import visualigue.domain.events.DrawListener;
 import visualigue.domain.main.entities.Obstacle;
 import visualigue.domain.main.entities.Player;
 import visualigue.domain.main.entities.Accessory;
 import visualigue.domain.main.entities.Entity;
 import java.io.Serializable;
 import java.util.List;
-import visualigue.utils.Coords;
-import visualigue.exceptions.*;
-import visualigue.events.*;
+import visualigue.inter.utils.Coords;
 import java.util.Map;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 import javafx.application.Platform;
-import visualigue.dto.AccessoryDTO;
-import visualigue.dto.ObstacleDTO;
-import visualigue.dto.PlayerDTO;
-import visualigue.utils.IdGenerator;
+import visualigue.inter.dto.AccessoryDTO;
+import visualigue.inter.dto.ObstacleDTO;
+import visualigue.inter.dto.PlayerDTO;
+import visualigue.inter.utils.IdGenerator;
 
 /**
  *

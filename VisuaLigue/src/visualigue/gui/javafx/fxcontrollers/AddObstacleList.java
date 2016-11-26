@@ -18,7 +18,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import visualigue.VisuaLigue;
-import visualigue.dto.ObstacleDTO;
+import visualigue.inter.dto.ObstacleDTO;
 
 /**
  *

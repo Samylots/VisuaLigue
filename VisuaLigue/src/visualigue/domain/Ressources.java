@@ -10,7 +10,7 @@ import java.util.List;
 import visualigue.domain.main.Game;
 import visualigue.domain.main.entities.Obstacle;
 import visualigue.domain.main.Sport;
-import visualigue.exceptions.NoSuchIdException;
+import visualigue.inter.utils.exceptions.NoSuchIdException;
 import java.io.Serializable;
 
 /**

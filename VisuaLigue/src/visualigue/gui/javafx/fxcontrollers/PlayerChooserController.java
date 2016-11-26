@@ -23,8 +23,8 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
 import visualigue.VisuaLigue;
-import visualigue.dto.PlayerDTO;
-import visualigue.dto.TeamDTO;
+import visualigue.inter.dto.PlayerDTO;
+import visualigue.inter.dto.TeamDTO;
 
 /**
  * FXML Controller class
