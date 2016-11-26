@@ -93,8 +93,10 @@ public class PlayerChooserController implements Initializable, Serializable {
     }
 
     public void disableSelectedPlayer() {
-        buttons.get(seletedPlayer).setDisable(true);
-        selectNext();
+        if (seletedPlayer > 0) {
+            buttons.get(seletedPlayer).setDisable(true);
+            selectNext();
+        }
     }
 
     public int getSelectedPlayer() {

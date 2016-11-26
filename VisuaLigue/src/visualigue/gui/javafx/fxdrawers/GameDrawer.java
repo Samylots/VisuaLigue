@@ -10,7 +10,6 @@ import javafx.scene.image.Image;
 import visualigue.VisuaLigue;
 import visualigue.utils.Coords;
 import visualigue.gui.javafx.fxcontrollers.VisuaLigueBoard;
-import visualigue.events.DrawListener;
 import visualigue.dto.*;
 import visualigue.utils.Dimension;
 

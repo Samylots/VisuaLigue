@@ -5,12 +5,11 @@
  */
 package visualigue.events;
 
-import visualigue.events.Listener;
-
 /**
  *
  * @author Bruno L.L.
  */
 public interface DrawListener extends Listener {
+
     public void redraw();
 }

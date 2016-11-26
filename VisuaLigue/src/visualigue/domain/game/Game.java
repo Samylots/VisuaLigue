@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
+import visualigue.dto.AccessoryDTO;
+import visualigue.dto.ObstacleDTO;
+import visualigue.dto.PlayerDTO;
 import visualigue.utils.IdGenerator;
 
 /**
@@ -36,7 +39,8 @@ public class Game implements Serializable {
     private int totalFrames;
     private Entity currentEntity;
     private Frame currentFrame;
-    private static List<DrawListener> drawListeners = new ArrayList<DrawListener>();
+    private static SelectionListener selectionListener;
+    private static List<DrawListener> drawListeners = new ArrayList<>();
     private transient Timer playbackTimer = new Timer();
     private int id;
     private String name;
@@ -63,6 +67,10 @@ public class Game implements Serializable {
 
     public static void addDrawListener(DrawListener listener) {
         drawListeners.add(listener);
+    }
+
+    public static void addSelectionListener(SelectionListener listener) {
+        selectionListener = listener;
     }
 
     public void startGame() {
@@ -163,12 +171,8 @@ public class Game implements Serializable {
 
     public void selectEntityAt(Coords coords) {
         Entity entity = currentFrame.findEntityAt(coords);
-
-        if (entity != null) {
-            currentEntity = entity;
-        } else {
-            throw new NoEntityAtLocationException("There is no entity at this location");
-        }
+        currentEntity = entity; //can be null and it's ok
+        triggerSelection();
     }
 
     public void addAccessoryAt(Coords coords) {
@@ -203,7 +207,7 @@ public class Game implements Serializable {
 
     public void moveCurrentEntityTo(Coords coords) {
         if (currentEntity == null) {
-
+            //Exception?
         }
         Position collidesWithPosition = currentFrame.findCollisionAt(currentEntity, coords);
 
@@ -221,7 +225,9 @@ public class Game implements Serializable {
                 currentFrame.movePosition(collidedWithEntity.getId(), coords);
                 currentFrame.setOwner(collidedWithEntity.getId(), (Player) currentEntity);
             }
-            throw new CollisionDetectedException("Collided with: " + collidesWithPosition.getEntity().getId());
+            //throw new CollisionDetectedException("Collided with: " + collidesWithPosition.getEntity().getId());
+            currentEntity = null; //Deselect it if collision?
+            triggerSelection();
         }
         triggerReDraw();
     }
@@ -306,5 +312,23 @@ public class Game implements Serializable {
 
     public boolean hasCurrentEntity() {
         return currentEntity != null;
+    }
+
+    public boolean isCurrentEntity(int id) {
+        return currentEntity.getId() == id;
+    }
+
+    private void triggerSelection() {
+        if (selectionListener != null) {
+            if (currentEntity == null) {
+                selectionListener.selectNothing();
+            } else if (currentEntity instanceof Player) {
+                selectionListener.selectPlayer(new PlayerDTO((Player) currentEntity));
+            } else if (currentEntity instanceof Obstacle) {
+                selectionListener.selectObstacle(new ObstacleDTO((Obstacle) currentEntity));
+            } else if (currentEntity instanceof Accessory) {
+                selectionListener.selectAccessory(new AccessoryDTO((Accessory) currentEntity));
+            }
+        }
     }
 }

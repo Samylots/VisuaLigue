@@ -7,13 +7,9 @@ package visualigue.domain.game;
 
 import visualigue.domain.game.entities.Entity;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import visualigue.domain.game.Position;
 import java.util.TreeMap;
 import visualigue.utils.Coords;
-import visualigue.utils.Dimension;
 import visualigue.exceptions.*;
 import visualigue.domain.game.entities.Player;
 
@@ -27,13 +23,14 @@ public class Frame implements Serializable {
     private Frame back;
     //Index of TreeMap is entity Id
     private Map<Integer, Position> positions = new TreeMap<Integer, Position>();
-    
-    public Frame() {}
-    
+
+    public Frame() {
+    }
+
     public Frame(Frame backFrame) {
         this.back = backFrame;
         this.positions = back.positions;
-        
+
         for (Map.Entry<Integer, Position> entry : positions.entrySet()) {
             Position pos = entry.getValue();
             pos.setIsMoved(false);
@@ -47,11 +44,11 @@ public class Frame implements Serializable {
     public Frame getBack() {
         return back;
     }
-    
+
     public void setNext(Frame frame) {
         this.next = frame;
     }
-    
+
     public void setBack(Frame frame) {
         this.back = frame;
     }
@@ -59,7 +56,7 @@ public class Frame implements Serializable {
     public void addEntityAt(Entity entity, Coords coords) {
         positions.put(entity.getId(), new Position(coords, entity));
     }
-    
+
     public void addEntityAt(Entity entity, Coords coords, Player player) {
         positions.put(entity.getId(), new Position(coords, entity, player));
     }
@@ -67,17 +64,17 @@ public class Frame implements Serializable {
     public Map<Integer, Position> getPositions() {
         return positions;
     }
-    
+
     public boolean hasEntity(int id) {
         return positions.containsKey(id);
     }
-    
+
     public void removeEntity(int id) {
         if (positions.remove(id) == null) {
             throw new NoSuchIdException();
         }
     }
-    
+
     public Entity findEntityAt(Coords coords) {
         for (Map.Entry<Integer, Position> entry : positions.entrySet()) {
             Position pos = entry.getValue();
@@ -88,7 +85,7 @@ public class Frame implements Serializable {
         }
         return null;
     }
-    
+
     public Position findCollisionAt(Entity entity, Coords coords) {
         for (Map.Entry<Integer, Position> entry : positions.entrySet()) {
             Position pos = entry.getValue();
@@ -99,7 +96,7 @@ public class Frame implements Serializable {
         }
         return null;
     }
-    
+
     public void movePosition(int id, Coords coords) {
         Position position = positions.get(id);
         position.setLocation(coords);

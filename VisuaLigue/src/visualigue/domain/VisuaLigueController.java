@@ -69,6 +69,8 @@ public class VisuaLigueController implements Serializable {
     public void addEventListener(String event, Listener listener) {
         if (event.equals("draw")) {
             Game.addDrawListener((DrawListener) listener);
+        } else if (event.equals("select")) {
+            Game.addSelectionListener((SelectionListener) listener);
         }
     }
 
@@ -357,5 +359,9 @@ public class VisuaLigueController implements Serializable {
 
     public boolean hasCurrentEntity() {
         return currentGame.hasCurrentEntity();
+    }
+
+    public boolean isCurrentEntity(int id) {
+        return currentGame.isCurrentEntity(id);
     }
 }

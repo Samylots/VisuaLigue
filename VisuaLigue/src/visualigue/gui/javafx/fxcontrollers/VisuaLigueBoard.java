@@ -67,10 +67,9 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
 
         setOnMouseDragged((MouseEvent event) -> {
             if (event.isSecondaryButtonDown() && isOnBoard) {
-                updateMousePos(event.getX(), event.getY());
+                updateMouse(event);
                 Coords newMousePos = getMousePosition();
                 translate(newMousePos.getX() - oldMousePos.getX(), newMousePos.getY() - oldMousePos.getY());
-                drawAll();
             }
         });
         setOnMouseEntered((MouseEvent e) -> {
@@ -108,6 +107,10 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
         oldMousePos = getMousePosition();
         mouseX.set(event.getX() - origin.getX());
         mouseY.set(event.getY() - origin.getY());
+    }
+
+    public void updateMouse(MouseEvent e) {
+        updateMousePos(e.getX(), e.getY());
     }
 
     private void updateMousePos(double x, double y) {
@@ -200,10 +203,11 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
         gc.setFont(Font.font(20));
         gc.setLineWidth(3);
         gc.setStroke(Color.BLACK);
-        Coords realCoords = converter.pixelToMeter(getMousePosition(), getActualFieldPixelDimension());
-        gc.strokeText("X: " + realCoords.getX() + " m, Y: " + realCoords.getY() + " m", -origin.getX(), getHeight() - origin.getY());
+        //Coords coords = getConvertedMousePosition();
+        Coords coords = getMousePosition();
+        gc.strokeText("X: " + coords.getX() + " m, Y: " + coords.getY() + " m", -origin.getX(), getHeight() - origin.getY());
         gc.setFill(Color.WHITE);
-        gc.fillText("X: " + realCoords.getX() + " m, Y: " + realCoords.getY() + " m", -origin.getX(), getHeight() - origin.getY());
+        gc.fillText("X: " + coords.getX() + " m, Y: " + coords.getY() + " m", -origin.getX(), getHeight() - origin.getY());
     }
 
     /**

@@ -25,6 +25,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import visualigue.VisuaLigue;
+import visualigue.dto.AccessoryDTO;
+import visualigue.dto.ObstacleDTO;
+import visualigue.dto.PlayerDTO;
+import visualigue.events.SelectionListener;
 import visualigue.gui.javafx.helpers.UIMode;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.Dialog;
@@ -36,7 +40,7 @@ import visualigue.gui.javafx.fxlayouts.InputDialog;
  *
  * @author Samuel
  */
-public class MainWindowController implements Initializable, Serializable {
+public class MainWindowController implements Initializable, Serializable, SelectionListener {
 
     @FXML
     private BorderPane root;
@@ -73,9 +77,12 @@ public class MainWindowController implements Initializable, Serializable {
         board = new VisuaLigueBoard();
         board.heightProperty().bind(root.heightProperty());
         board.setOnMouseClicked((MouseEvent e) -> handleBoardClick(e));
+        board.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> trySelecting(e));
         board.addEventHandler(MouseEvent.MOUSE_DRAGGED, (e) -> handleBoardMouseDrag(e));
+        board.addEventHandler(MouseEvent.MOUSE_DRAGGED, (e) -> board.redraw());
 
         VisuaLigue.domain.addEventListener("draw", board);
+        VisuaLigue.domain.addEventListener("select", this);
 
         StackPane node = new StackPane();
         node.getChildren().add(new Label("No Game To Show\nClick on File -> New Game To Start!"));
@@ -251,16 +258,46 @@ public class MainWindowController implements Initializable, Serializable {
             VisuaLigue.domain.addPlayerAt(board.getConvertedMousePosition(), playerId);
             playerChooserController.disableSelectedPlayer();
         }
+        trySelecting(e);
+    }
+
+    private void trySelecting(MouseEvent e) {
         if (isInCursorMode() && e.getButton() == MouseButton.PRIMARY) {
             VisuaLigue.domain.selectEntityAt(board.getConvertedMousePosition());
-            System.out.println("Seleting??");
         }
     }
 
     private void handleBoardMouseDrag(MouseEvent e) {
-        if (isInCursorMode() && e.getButton() == MouseButton.PRIMARY && VisuaLigue.domain.hasCurrentEntity()) {
-            VisuaLigue.domain.moveCurrentEntityTo(board.getConvertedMousePosition());
+        if (isInCursorMode() && e.getButton() == MouseButton.PRIMARY) {
+            //VisuaLigue.domain.selectEntityAt(board.getConvertedMousePosition());
+            board.updateMouse(e);
+            if (VisuaLigue.domain.hasCurrentEntity()) {
+                VisuaLigue.domain.moveCurrentEntityTo(board.getConvertedMousePosition());
+            }
         }
+    }
+
+    @Override
+    public void selectNothing() {
+        showDefaultToolbar();
+    }
+
+    @Override
+    public void selectPlayer(PlayerDTO player) {
+        System.out.println("Selected Player #" + player.id);
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void selectObstacle(ObstacleDTO obstacle) {
+        System.out.println("Selected Obstacle #" + obstacle.id);
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void selectAccessory(AccessoryDTO accessory) {
+        System.out.println("Selected accessory #" + accessory.id);
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
