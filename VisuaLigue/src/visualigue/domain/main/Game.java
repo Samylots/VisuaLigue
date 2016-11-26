@@ -279,12 +279,11 @@ public class Game implements Serializable {
             }
         }
         totalFrames++;
-        Frame newFrame = new Frame(lastFrame);
-        lastFrame.setNext(newFrame);
-        newFrame.setBack(lastFrame);
-        lastFrame = newFrame;
+        Frame newFrame = new Frame(currentFrame);
+        newFrame.setNext(currentFrame.getNext());
+        currentFrame.setNext(newFrame);
         currentFrame = newFrame;
-
+ 
         triggerReDraw();
         triggerFrameUpdate();
     }
