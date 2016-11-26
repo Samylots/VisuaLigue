@@ -74,31 +74,39 @@ public class Ressources implements Serializable {
         throw new NoSuchIdException("There is no such id '" + id + "' in available obstacles.");
     }
 
-    public void deleteObstacle(int obstacleId) {
-        Obstacle obstalceToDelete = null;
+    public void deleteObstacle(int id) {
         for (Obstacle obstacle : availableObstacles) {
-            if (obstacle.getId() == obstacleId) {
-                obstalceToDelete = obstacle;
+            if (obstacle.getId() == id) {
+                availableObstacles.remove(obstacle);
+                break;
             }
         }
-        availableObstacles.remove(obstalceToDelete);
     }
 
-    public void deleteSport(int sportId) {
+    public void deleteSport(int id) {
+        List<Game> toDelete = new ArrayList<Game>();
         for (Sport sport : availableSports) {
-            if (sport.getId() == sportId) {
+            if (sport.getId() == id) {
                 for (Game game : games) {
-                    if (game.getSport().getId() == sportId) {
-                        games.remove(game);
+                    if (game.getSport().getId() == id) {
+                        toDelete.add(game);
                     }
                 }
+                for (Game game : toDelete) {
+                    games.remove(game);
+                }
                 availableSports.remove(sport);
+                break;
             }
         }
     }
 
-    public void deleteGame(Game currentGame) {
-        games.remove(currentGame);
+    public void deleteGame(int id) {
+        for (Game game : games) {
+            if (game.getId() == id) {
+                games.remove(game);
+                break;
+            }
+        }
     }
-
 }

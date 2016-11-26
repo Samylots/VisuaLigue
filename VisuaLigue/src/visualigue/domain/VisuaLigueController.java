@@ -105,10 +105,6 @@ public class VisuaLigueController implements Serializable {
         return returnData;
     }
 
-    public void deleteObstacle(int obstacleId) {
-        ressources.deleteObstacle(obstacleId);
-    }
-
     public int createNewGame(String name, int sportId) {
         Game newGame = new Game(name, ressources.getSport(sportId));
         ressources.addGame(newGame);
@@ -369,5 +365,17 @@ public class VisuaLigueController implements Serializable {
 
     public boolean isCurrentEntity(int id) {
         return currentGame.isCurrentEntity(id);
+    }
+
+    public void deleteGame(int id) {
+        ressources.deleteGame(id);
+    }
+    
+    public void deleteSport(int id) {
+        ressources.deleteSport(id);
+    }
+    
+    public void deleteObstacle(int id) {
+        ressources.deleteObstacle(id);
     }
 }
