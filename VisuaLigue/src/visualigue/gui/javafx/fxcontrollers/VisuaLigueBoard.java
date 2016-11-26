@@ -203,8 +203,8 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
         gc.setFont(Font.font(20));
         gc.setLineWidth(3);
         gc.setStroke(Color.BLACK);
-        //Coords coords = getConvertedMousePosition();
-        Coords coords = getMousePosition();
+        Coords coords = getConvertedMousePosition();
+        //Coords coords = getMousePosition();
         gc.strokeText("X: " + coords.getX() + " m, Y: " + coords.getY() + " m", -origin.getX(), getHeight() - origin.getY());
         gc.setFill(Color.WHITE);
         gc.fillText("X: " + coords.getX() + " m, Y: " + coords.getY() + " m", -origin.getX(), getHeight() - origin.getY());

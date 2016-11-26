@@ -11,11 +11,14 @@ import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import visualigue.gui.javafx.fxlayouts.Dialog;
+import visualigue.gui.javafx.helpers.Utils;
 
 /**
  * FXML Controller class
@@ -31,7 +34,12 @@ public class AddObstacleController implements Initializable {
 
     private boolean state = false;
     private Stage owner;
+    private Parent parent;
     private StringBuilder path = new StringBuilder();
+    @FXML
+    private TextField obstacleWidth;
+    @FXML
+    private TextField obstacleHeight;
 
     /**
      * Initializes the controller class.
@@ -41,8 +49,9 @@ public class AddObstacleController implements Initializable {
         // TODO
     }
 
-    public void init(Stage owner) {
+    public void init(Stage owner, Parent parent) {
         this.owner = owner;
+        this.parent = parent;
     }
 
     @FXML
@@ -69,12 +78,27 @@ public class AddObstacleController implements Initializable {
 
     @FXML
     private void confirm(ActionEvent event) {
-        state = true;
-        owner.close();
+        if (isValid()) {
+            state = true;
+            owner.close();
+        } else {
+            Dialog popup = new Dialog("New Obstacle Error", "Please verify to fill all field before creating a new sport.", parent);
+        }
     }
 
     public boolean isConfirmed() {
         return state;
+    }
+
+    private boolean isValid() {
+        boolean isValid = true;
+        isValid &= !name.getText().equals("");
+        isValid &= !path.toString().equals("");
+        isValid &= !obstacleWidth.getText().equals("");
+        isValid &= !obstacleHeight.getText().equals("");
+        isValid &= Utils.isNumeric(obstacleWidth.getText());
+        isValid &= Utils.isNumeric(obstacleHeight.getText());
+        return isValid;
     }
 
     public String getName() {
@@ -83,5 +107,13 @@ public class AddObstacleController implements Initializable {
 
     public String getPath() {
         return path.toString();
+    }
+
+    public double getWidth() {
+        return Double.parseDouble(obstacleWidth.getText());
+    }
+
+    public double getHeight() {
+        return Double.parseDouble(obstacleHeight.getText());
     }
 }

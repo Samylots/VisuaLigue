@@ -52,7 +52,10 @@ public class MainWindowController implements Initializable, Serializable, Select
     private ScrollPane teamsPlayerToolbar;
     private PlayerChooserController playerChooserController;
 
+    private AddObstacleList addObstacleList = new AddObstacleList();
+
     private HBox addPlayerToolbar;
+    private HBox addObstacleToolbar;
     private MainToolbarController mainToolbarController;
 
     private VisuaLigueBoard board;
@@ -68,11 +71,8 @@ public class MainWindowController implements Initializable, Serializable, Select
 
         teamsPlayerToolbar = (ScrollPane) FXLoader.getInstance().load("playerChooser.fxml");
         playerChooserController = FXLoader.getInstance().getLastController();
-        addPlayerToolbar = new HBox();
-        addPlayerToolbar.getChildren().add(teamsPlayerToolbar);
-        addPlayerToolbar.setPrefWidth(HBox.USE_COMPUTED_SIZE);
-        addPlayerToolbar.setPrefHeight(HBox.USE_COMPUTED_SIZE);
-        teamsPlayerToolbar.setMaxHeight(Double.MAX_VALUE);
+
+        initToolbars();
 
         board = new VisuaLigueBoard();
         board.heightProperty().bind(root.heightProperty());
@@ -87,6 +87,20 @@ public class MainWindowController implements Initializable, Serializable, Select
         StackPane node = new StackPane();
         node.getChildren().add(new Label("No Game To Show\nClick on File -> New Game To Start!"));
         root.setCenter(node);
+    }
+
+    private void initToolbars() {
+        addPlayerToolbar = new HBox();
+        addPlayerToolbar.getChildren().add(teamsPlayerToolbar);
+        addPlayerToolbar.setPrefWidth(HBox.USE_COMPUTED_SIZE);
+        addPlayerToolbar.setPrefHeight(HBox.USE_COMPUTED_SIZE);
+        addPlayerToolbar.setMaxHeight(Double.MAX_VALUE);
+
+        addObstacleToolbar = new HBox();
+        addObstacleToolbar.getChildren().add(addObstacleList);
+        addObstacleToolbar.setPrefWidth(HBox.USE_COMPUTED_SIZE);
+        addObstacleToolbar.setPrefHeight(HBox.USE_COMPUTED_SIZE);
+        addObstacleToolbar.setMaxHeight(Double.MAX_VALUE);
     }
 
     @FXML
@@ -244,7 +258,17 @@ public class MainWindowController implements Initializable, Serializable, Select
         }
         root.setLeft(addPlayerToolbar);
         board.widthProperty().bind(root.widthProperty().subtract(addPlayerToolbar.widthProperty()));
-        Platform.runLater(() -> addPlayerToolbar.requestLayout()); //Node width bug fixing
+        Platform.runLater(() -> teamsPlayerToolbar.requestLayout()); //Node width bug fixing
+    }
+
+    public void showAddObstacleList() {
+        addObstacleList.refreshObstacles();
+        if (!addObstacleToolbar.getChildren().contains(mainToolbar)) {
+            addObstacleToolbar.getChildren().add(0, mainToolbar);
+        }
+        root.setLeft(addObstacleToolbar);
+        board.widthProperty().bind(root.widthProperty().subtract(addObstacleToolbar.widthProperty()));
+        Platform.runLater(() -> addObstacleList.requestLayout()); //Node width bug fixing
     }
 
     public void loadGame(int gameId) {
@@ -257,8 +281,11 @@ public class MainWindowController implements Initializable, Serializable, Select
             int playerId = playerChooserController.getSelectedPlayer();
             VisuaLigue.domain.addPlayerAt(board.getConvertedMousePosition(), playerId);
             playerChooserController.disableSelectedPlayer();
+        } else if (isAddingObstacle() && e.getButton() == MouseButton.PRIMARY) {
+            int obstacleId = addObstacleList.getSelectedObstacle();
+            VisuaLigue.domain.addObstacleAt(board.getConvertedMousePosition(), obstacleId);
         }
-        trySelecting(e);
+        //trySelecting(e);
     }
 
     private void trySelecting(MouseEvent e) {

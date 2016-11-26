@@ -33,7 +33,7 @@ import visualigue.dto.TeamDTO;
  *
  * @author Samuel
  */
-public class PlayerChooserController implements Initializable, Serializable {
+public class PlayerChooserController implements Initializable {
 
     @FXML
     private ScrollPane root;
@@ -53,6 +53,8 @@ public class PlayerChooserController implements Initializable, Serializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        teams.setMaxHeight(Double.MAX_VALUE);
+        root.setMaxHeight(Double.MAX_VALUE);
     }
 
     public void refreshTeams() {

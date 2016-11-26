@@ -68,14 +68,19 @@ public class MainToolbarController implements Initializable {
 
     @FXML
     private void AddAccessoryMode(ActionEvent event) {
-        untoggleOthers(event.getSource());
-        mode = EditMode.ADD_ACCESSORY;
+        if (mode != EditMode.ADD_ACCESSORY) {
+            untoggleOthers(event.getSource());
+            mode = EditMode.ADD_ACCESSORY;
+        }
     }
 
     @FXML
     private void addObstacleMode(ActionEvent event) {
-        untoggleOthers(event.getSource());
-        mode = EditMode.ADD_OBSTACLE;
+        if (mode != EditMode.ADD_OBSTACLE) {
+            untoggleOthers(event.getSource());
+            mode = EditMode.ADD_OBSTACLE;
+            parentController.showAddObstacleList();
+        }
     }
 
     private void untoggleOthers(Object source) {

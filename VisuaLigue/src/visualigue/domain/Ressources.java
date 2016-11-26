@@ -55,7 +55,7 @@ public class Ressources implements Serializable {
         }
         throw new NoSuchIdException("There is no such id '" + id + "' in available sports.");
     }
-    
+
     public Game getGame(int id) {
         for (Game game : games) {
             if (game.getId() == id) {
@@ -63,6 +63,15 @@ public class Ressources implements Serializable {
             }
         }
         throw new NoSuchIdException("There is no such id '" + id + "' in available games.");
+    }
+
+    public Obstacle getObstacle(int id) {
+        for (Obstacle obstacle : availableObstacles) {
+            if (obstacle.getId() == id) {
+                return obstacle;
+            }
+        }
+        throw new NoSuchIdException("There is no such id '" + id + "' in available obstacles.");
     }
 
     public void deleteObstacle(int obstacleId) {

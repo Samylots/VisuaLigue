@@ -121,6 +121,12 @@ public class VisuaLigueController implements Serializable {
         return newSport.getId();
     }
 
+    public int createNewObstacle(String name, String path, double width, double height) {
+        Obstacle newObstacle = new Obstacle(name, new Dimension(width, height), path);
+        ressources.addObstacle(newObstacle);
+        return newObstacle.getId();
+    }
+
     public void loadGame(int gameId) {
         //TODO check for saving?
         currentGame = ressources.getGame(gameId);
@@ -325,8 +331,8 @@ public class VisuaLigueController implements Serializable {
         currentGame.deleteAccessoryAt(coords);
     }
 
-    public void addObstacleAt(Obstacle obstacle, Coords coords) {
-        currentGame.addObstacleAt(obstacle, coords);
+    public void addObstacleAt(Coords coords, int obstacleId) {
+        currentGame.addObstacleAt(ressources.getObstacle(obstacleId), coords);
     }
 
     public void deleteObstacleAt(Coords coords) {
