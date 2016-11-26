@@ -5,7 +5,10 @@
  */
 package visualigue.dto;
 
-import visualigue.domain.game.entities.*;
+import visualigue.domain.main.entities.Entity;
+import visualigue.domain.main.entities.Accessory;
+import visualigue.domain.main.entities.Obstacle;
+import visualigue.domain.main.entities.Player;
 import visualigue.exceptions.NotAValidEntity;
 
 /**

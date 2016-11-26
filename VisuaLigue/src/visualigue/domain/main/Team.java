@@ -5,7 +5,7 @@
  */
 package visualigue.domain.main;
 
-import visualigue.domain.game.entities.Player;
+import visualigue.domain.main.entities.Player;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

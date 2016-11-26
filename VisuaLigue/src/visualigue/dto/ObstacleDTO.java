@@ -5,7 +5,7 @@
  */
 package visualigue.dto;
 
-import visualigue.domain.game.entities.Obstacle;
+import visualigue.domain.main.entities.Obstacle;
 import visualigue.utils.Dimension;
 import visualigue.dto.EntityDTO;
 

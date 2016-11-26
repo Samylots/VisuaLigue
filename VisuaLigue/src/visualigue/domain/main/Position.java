@@ -6,8 +6,8 @@
 package visualigue.domain.main;
 
 import java.awt.Rectangle;
-import visualigue.domain.game.entities.Player;
-import visualigue.domain.game.entities.Entity;
+import visualigue.domain.main.entities.Player;
+import visualigue.domain.main.entities.Entity;
 import java.io.Serializable;
 import visualigue.utils.Coords;
 

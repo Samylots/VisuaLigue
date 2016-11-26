@@ -40,6 +40,7 @@ public class FrameByFrameBoardController implements Initializable, FramesListene
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         frameSlider.setMin(1);
+        frameSlider.setDisable(true);
     }
 
     @Override

@@ -23,9 +23,11 @@ import visualigue.events.FramesListener;
  */
 public class VisualizationBoardController implements Initializable, FramesListener {
 
+    private Parent parent;
+
     @Override
     public void init(Parent parent) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.parent = parent;
     }
 
     @FXML
@@ -39,6 +41,7 @@ public class VisualizationBoardController implements Initializable, FramesListen
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         timeSlider.setMin(1);
+        timeSlider.setDisable(true);
     }
 
     @FXML

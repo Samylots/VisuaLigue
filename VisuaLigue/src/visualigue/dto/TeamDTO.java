@@ -7,7 +7,7 @@ package visualigue.dto;
 
 import java.util.ArrayList;
 import java.util.List;
-import visualigue.domain.game.entities.Player;
+import visualigue.domain.main.entities.Player;
 import visualigue.domain.main.Team;
 
 /**

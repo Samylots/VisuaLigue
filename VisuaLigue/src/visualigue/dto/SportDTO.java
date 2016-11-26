@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import visualigue.domain.main.Sport;
 import visualigue.domain.main.Team;
-import visualigue.domain.game.entities.Accessory;
+import visualigue.domain.main.entities.Accessory;
 import visualigue.utils.Dimension;
 
 /**

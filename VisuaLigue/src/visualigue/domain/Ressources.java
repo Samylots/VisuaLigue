@@ -8,7 +8,7 @@ package visualigue.domain;
 import java.util.ArrayList;
 import java.util.List;
 import visualigue.domain.main.Game;
-import visualigue.domain.game.entities.Obstacle;
+import visualigue.domain.main.entities.Obstacle;
 import visualigue.domain.main.Sport;
 import visualigue.exceptions.NoSuchIdException;
 import java.io.Serializable;

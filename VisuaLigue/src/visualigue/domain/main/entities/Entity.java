@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package visualigue.domain.game.entities;
+package visualigue.domain.main.entities;
 
 import visualigue.utils.Dimension;
 import java.io.Serializable;

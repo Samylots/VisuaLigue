@@ -5,13 +5,13 @@
  */
 package visualigue.domain.main;
 
-import visualigue.domain.game.entities.Entity;
+import visualigue.domain.main.entities.Entity;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
 import visualigue.utils.Coords;
 import visualigue.exceptions.*;
-import visualigue.domain.game.entities.Player;
+import visualigue.domain.main.entities.Player;
 
 /**
  *
