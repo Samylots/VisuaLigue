@@ -57,8 +57,4 @@ public class Converter {
     private double round(double value) {
         return Math.round(value * 1000.0) / 1000.0;
     }
-
-    public Dimension pixelToDimension(double width, double height) {
-        return new Dimension(width, height);
-    }
 }

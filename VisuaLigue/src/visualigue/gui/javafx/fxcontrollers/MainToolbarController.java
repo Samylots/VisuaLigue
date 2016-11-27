@@ -38,12 +38,14 @@ public class MainToolbarController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         mode = EditMode.CURSOR;
         ((ToggleButton) toolbar.getItems().get(0)).setSelected(true);
-        // TODO
     }
 
     public void init(MainWindowController paretnController) {
@@ -59,8 +61,8 @@ public class MainToolbarController implements Initializable {
 
     @FXML
     private void addPlayerMode(ActionEvent event) {
+        untoggleOthers(event.getSource());
         if (mode != EditMode.ADD_PLAYER) {
-            untoggleOthers(event.getSource());
             mode = EditMode.ADD_PLAYER;
             parentController.showTeamList();
         }
@@ -68,8 +70,8 @@ public class MainToolbarController implements Initializable {
 
     @FXML
     private void AddAccessoryMode(ActionEvent event) {
+        untoggleOthers(event.getSource());
         if (mode != EditMode.ADD_ACCESSORY) {
-            untoggleOthers(event.getSource());
             mode = EditMode.ADD_ACCESSORY;
             parentController.showDefaultToolbar();
         }
@@ -77,8 +79,8 @@ public class MainToolbarController implements Initializable {
 
     @FXML
     private void addObstacleMode(ActionEvent event) {
+        untoggleOthers(event.getSource());
         if (mode != EditMode.ADD_OBSTACLE) {
-            untoggleOthers(event.getSource());
             mode = EditMode.ADD_OBSTACLE;
             parentController.showAddObstacleList();
         }

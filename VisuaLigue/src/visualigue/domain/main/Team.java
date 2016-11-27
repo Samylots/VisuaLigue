@@ -18,7 +18,7 @@ import visualigue.inter.utils.exceptions.NoPlayerWithSpecifiedIdException;
  */
 public class Team implements Serializable {
 
-    private final static Dimension defaultPlayerDimensions = new Dimension(0.45, 0.6);
+    private final static Dimension defaultPlayerDimensions = new Dimension(0.5, 0.5);
 
     private String name;
     private String color;
@@ -30,7 +30,7 @@ public class Team implements Serializable {
     }
 
     public void addPlayer(String picPath, String name, String role) {
-        players.add(new Player(defaultPlayerDimensions, picPath, role, name));
+        players.add(new Player(defaultPlayerDimensions, picPath, role, name, this.color, players.size() + 1));
     }
 
     public Player getPlayer(int id) {

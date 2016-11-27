@@ -183,15 +183,10 @@ public class Game implements Serializable {
         triggerReDraw();
     }
 
-    public void deletePlayerAt(Coords coords) {
-        Entity entity = currentFrame.findEntityAt(coords);
-
-        if (entity != null) {
-            currentFrame.removeEntity(entity.getId());
-        } else {
-            throw new NoEntityAtLocationException("There is no entity at this location");
-        }
-        triggerReDraw();
+    public void deleteCurrentEntity() {
+        currentFrame.removeEntity(currentEntity.getId());
+        currentEntity = null;
+        triggerSelection();
     }
 
     public void addObstacleAt(Obstacle obstacle, Coords coords) {
@@ -207,21 +202,14 @@ public class Game implements Serializable {
         triggerReDraw();
     }
 
-    public void deleteObstacleAt(Coords coords) {
-        Entity entity = currentFrame.findEntityAt(coords);
-
-        if (entity != null) {
-            currentFrame.removeEntity(entity.getId());
-            obstacles.remove(entity);
-        } else {
-            throw new NoEntityAtLocationException("There is no entity at this location");
-        }
-        triggerReDraw();
-    }
-
     public void selectEntityAt(Coords coords) {
         Entity entity = currentFrame.findEntityAt(coords);
         currentEntity = entity; //can be null and it's ok
+        triggerSelection();
+    }
+
+    public void unSelectCurrentEntity() {
+        currentEntity = null;
         triggerSelection();
     }
 
@@ -243,18 +231,6 @@ public class Game implements Serializable {
         triggerReDraw();
     }
 
-    public void deleteAccessoryAt(Coords coords) {
-        Entity entity = currentFrame.findEntityAt(coords);
-
-        if (entity != null) {
-            currentFrame.removeEntity(entity.getId());
-            accessories.remove(entity);
-        } else {
-            throw new NoEntityAtLocationException("There is no entity at this location");
-        }
-        triggerReDraw();
-    }
-
     public void moveCurrentEntityTo(Coords coords) {
         if (currentEntity == null) {
             //Exception?
@@ -263,7 +239,7 @@ public class Game implements Serializable {
 
         if (collidesWithPosition == null) {
             currentFrame.movePosition(currentEntity.getId(), coords);
-
+            triggerReDraw();
         } else {
             Entity collidedWithEntity = collidesWithPosition.getEntity();
 
@@ -280,7 +256,6 @@ public class Game implements Serializable {
             currentEntity = null; //Deselect it if collision?
             triggerSelection();
         }
-        triggerReDraw();
     }
 
     public Sport getSport() {
@@ -384,7 +359,10 @@ public class Game implements Serializable {
     }
 
     public boolean isCurrentEntity(int id) {
-        return currentEntity.getId() == id;
+        if (currentEntity != null) {
+            return currentEntity.getId() == id;
+        }
+        return false;
     }
 
     private void triggerSelection() {
@@ -399,5 +377,6 @@ public class Game implements Serializable {
                 selectionListener.selectAccessory(new AccessoryDTO((Accessory) currentEntity));
             }
         }
+        triggerReDraw();
     }
 }

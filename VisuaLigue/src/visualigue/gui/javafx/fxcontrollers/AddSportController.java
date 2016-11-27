@@ -30,6 +30,7 @@ import visualigue.gui.javafx.fxlayouts.Dialog;
 import visualigue.gui.javafx.helpers.Utils;
 import visualigue.gui.javafx.models.PlayerTableItem;
 import visualigue.gui.javafx.models.TeamTableItem;
+import visualigue.inter.utils.ColorConverter;
 
 /**
  * FXML Controller class
@@ -157,8 +158,7 @@ public class AddSportController implements Initializable, Serializable {
     @FXML
     private void addNewTeam(ActionEvent event) {
         if (!newTeamName.getText().equals("")) {
-            String colorHex = Integer.toHexString(newTeamColor.getValue().hashCode());
-            teamsData.add(new TeamTableItem(newTeamName.getText(), "#" + colorHex.substring(0, Math.min(colorHex.length(), 6))));
+            teamsData.add(new TeamTableItem(newTeamName.getText(), "#" + ColorConverter.toHex(newTeamColor.getValue())));
             newTeamName.clear();
             teamUpdate();
             deleteTeamButton.setDisable(false);

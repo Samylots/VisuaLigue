@@ -36,7 +36,6 @@ import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.Dialog;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 import visualigue.gui.javafx.fxlayouts.InputDialog;
-import visualigue.inter.utils.Mode;
 
 /**
  * FXML Controller class
@@ -55,7 +54,13 @@ public class MainWindowController implements Initializable, Serializable, Select
     private ScrollPane teamsPlayerToolbar;
     private PlayerChooserController playerChooserController;
 
-    private AddObstacleList addObstacleList = new AddObstacleList();
+    private ToolBar playerToolbar;
+    private PlayerToolbarController playerToolbarController;
+
+    private ToolBar obstacleToolbar;
+    private ToolBar accessoryToolbar;
+
+    private final AddObstacleList addObstacleList = new AddObstacleList();
 
     private HBox addPlayerToolbar;
     private HBox addObstacleToolbar;
@@ -65,16 +70,12 @@ public class MainWindowController implements Initializable, Serializable, Select
 
     /**
      * Initializes the controller class.
+     *
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        mainToolbar = (ToolBar) FXLoader.getInstance().load("mainToolbar.fxml");
-        mainToolbarController = FXLoader.getInstance().getLastController();
-        mainToolbarController.init(this);
-
-        teamsPlayerToolbar = (ScrollPane) FXLoader.getInstance().load("playerChooser.fxml");
-        playerChooserController = FXLoader.getInstance().getLastController();
-
         initToolbars();
 
         board = new VisuaLigueBoard();
@@ -98,6 +99,19 @@ public class MainWindowController implements Initializable, Serializable, Select
     }
 
     private void initToolbars() {
+        mainToolbar = (ToolBar) FXLoader.getInstance().load("mainToolbar.fxml");
+        mainToolbarController = FXLoader.getInstance().getLastController();
+        mainToolbarController.init(this);
+
+        teamsPlayerToolbar = (ScrollPane) FXLoader.getInstance().load("playerChooser.fxml");
+        playerChooserController = FXLoader.getInstance().getLastController();
+
+        playerToolbar = (ToolBar) FXLoader.getInstance().load("playerToolbar.fxml");
+        playerToolbarController = FXLoader.getInstance().getLastController();
+
+        obstacleToolbar = (ToolBar) FXLoader.getInstance().load("obstacleToolbar.fxml");
+        accessoryToolbar = (ToolBar) FXLoader.getInstance().load("accessoryToolbar.fxml");
+
         addPlayerToolbar = new HBox();
         addPlayerToolbar.getChildren().add(teamsPlayerToolbar);
         addPlayerToolbar.setPrefWidth(HBox.USE_COMPUTED_SIZE);
@@ -134,9 +148,10 @@ public class MainWindowController implements Initializable, Serializable, Select
         }
     }
 
-    private void initLayout() {
+    private void defaultLayout() {
         root.setCenter(board);
         showDefaultToolbar();
+        changeViewTo(UIMode.FRAME_BY_FRAME);
     }
 
     private int chooseSport(boolean isSelectable) {
@@ -266,7 +281,6 @@ public class MainWindowController implements Initializable, Serializable, Select
     }
 
     public void showDefaultToolbar() {
-        changeViewTo(UIMode.FRAME_BY_FRAME);
         board.widthProperty().bind(root.widthProperty().subtract(mainToolbar.widthProperty()));
         root.setLeft(mainToolbar);
     }
@@ -298,15 +312,15 @@ public class MainWindowController implements Initializable, Serializable, Select
 
     public void loadGame(int gameId) {
         VisuaLigue.domain.loadGame(gameId);
-        initLayout();
+        defaultLayout();
     }
 
     private void handleBoardClick(MouseEvent e) {
-        if (VisuaLigue.domain.getCurrentMode() != Mode.VISUALISATION) {
+        if (!VisuaLigue.domain.isVisualizing()) {
             if (isAddingPlayer() && e.getButton() == MouseButton.PRIMARY) {
                 int playerId = playerChooserController.getSelectedPlayer();
                 try {
-                    VisuaLigue.domain.addPlayerAt(board.getConvertedMousePosition(), playerId);
+                    VisuaLigue.domain.addPlayerAt(board.getMetersMousePosition(), playerId);
                     playerChooserController.disableSelectedPlayer();
                 } catch (CollisionDetectedException ex) {
                     Dialog popup = new Dialog("Error", "This player can't be placed here. Please try another place!", root);
@@ -314,17 +328,17 @@ public class MainWindowController implements Initializable, Serializable, Select
             } else if (isAddingObstacle() && e.getButton() == MouseButton.PRIMARY) {
                 int obstacleId = addObstacleList.getSelectedObstacle();
                 if (obstacleId > 0) {
-                    VisuaLigue.domain.addObstacleAt(board.getConvertedMousePosition(), obstacleId);
+                    VisuaLigue.domain.addObstacleAt(board.getMetersMousePosition(), obstacleId);
                 }
             } else if (isAddingAccessory() && e.getButton() == MouseButton.PRIMARY) {
-                VisuaLigue.domain.addAccessoryAt(board.getConvertedMousePosition());
+                VisuaLigue.domain.addAccessoryAt(board.getMetersMousePosition());
             }
         }
     }
 
     private void trySelecting(MouseEvent e) {
         if (isInCursorMode() && e.getButton() == MouseButton.PRIMARY) {
-            VisuaLigue.domain.selectEntityAt(board.getConvertedMousePosition());
+            VisuaLigue.domain.selectEntityAt(board.getMetersMousePosition());
         }
     }
 
@@ -333,7 +347,7 @@ public class MainWindowController implements Initializable, Serializable, Select
             //VisuaLigue.domain.selectEntityAt(board.getConvertedMousePosition());
             board.updateMouse(e);
             if (VisuaLigue.domain.hasCurrentEntity()) {
-                VisuaLigue.domain.moveCurrentEntityTo(board.getConvertedMousePosition());
+                VisuaLigue.domain.moveCurrentEntityTo(board.getMetersMousePosition());
             }
         }
     }
@@ -345,20 +359,18 @@ public class MainWindowController implements Initializable, Serializable, Select
 
     @Override
     public void selectPlayer(PlayerDTO player) {
-        System.out.println("Selected Player #" + player.id);
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        playerToolbarController.update(player);
+        root.setLeft(playerToolbar);
     }
 
     @Override
     public void selectObstacle(ObstacleDTO obstacle) {
-        System.out.println("Selected Obstacle #" + obstacle.id);
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        root.setLeft(obstacleToolbar);
     }
 
     @Override
     public void selectAccessory(AccessoryDTO accessory) {
-        System.out.println("Selected accessory #" + accessory.id);
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        root.setLeft(accessoryToolbar);
     }
 
 }

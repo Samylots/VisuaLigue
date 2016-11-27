@@ -5,12 +5,9 @@
  */
 package visualigue.gui.javafx.fxcontrollers;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
-import javafx.fxml.Initializable;
 import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
@@ -76,6 +73,7 @@ public class AddObstacleList extends ScrollPane {
                 button.setSelected(false);
             }
         }
+        source.setSelected(true);
     }
 
     public int getSelectedObstacle() {

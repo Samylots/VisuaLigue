@@ -64,16 +64,16 @@ public class Position implements Serializable {
         if (entity == this.entity) {
             return false;
         }
-        Rectangle rectThis = new Rectangle((int) ((this.coords.getX() + this.entity.getDimension().getWidth() / 2) * COLLISION_PRECISION),
-                (int) ((this.coords.getY() + this.entity.getDimension().getHeight() / 2) * COLLISION_PRECISION),
+        Rectangle rectThis = new Rectangle((int) (this.coords.getX() * COLLISION_PRECISION),
+                (int) (this.coords.getY() * COLLISION_PRECISION),
                 (int) (this.entity.getDimension().getWidth() * COLLISION_PRECISION),
                 (int) (this.entity.getDimension().getHeight() * COLLISION_PRECISION));
-        Rectangle rectOther = new Rectangle((int) (coords.getX() * COLLISION_PRECISION),
-                (int) (coords.getY() * COLLISION_PRECISION),
+        Rectangle rectEntity = new Rectangle((int) ((coords.getX() - entity.getDimension().getWidth() / 2) * COLLISION_PRECISION),
+                (int) ((coords.getY() - entity.getDimension().getHeight() / 2) * COLLISION_PRECISION),
                 (int) (entity.getDimension().getWidth() * COLLISION_PRECISION),
                 (int) (entity.getDimension().getHeight() * COLLISION_PRECISION));
 
-        return rectThis.intersects(rectOther);
+        return rectThis.intersects(rectEntity);
     }
 
     public Coords getCoords() {
