@@ -101,7 +101,7 @@ public class SportListItemController implements Initializable, Serializable {
                 + "deleting all games based on this sport|\nThis process can't "
                 + "be reversed!", sportItem);
         if (popup.isConfirmed()) {
-            VisuaLigue.domain.deleteGame(id);
+            VisuaLigue.domain.deleteSport(id);
             parentController.refreshSports();
         }
     }

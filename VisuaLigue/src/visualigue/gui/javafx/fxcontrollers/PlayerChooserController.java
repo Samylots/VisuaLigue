@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,9 +23,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import visualigue.VisuaLigue;
 import visualigue.inter.dto.PlayerDTO;
 import visualigue.inter.dto.TeamDTO;
+import visualigue.inter.utils.ColorConverter;
 
 /**
  * FXML Controller class
@@ -57,7 +60,6 @@ public class PlayerChooserController implements Initializable {
 
     public void refreshTeams() {
         teams.getPanes().clear();
-        List<TitledPane> panes = new ArrayList<>();
         List<TeamDTO> teamsData = VisuaLigue.domain.getCurrentGameTeams();
         teamsData.stream().forEach((team) -> {
             VBox box = new VBox(5);
@@ -67,14 +69,16 @@ public class PlayerChooserController implements Initializable {
             scrollPane.setFitToHeight(true);
             scrollPane.setContent(box);
             TitledPane teamPane = new TitledPane(team.name, scrollPane);
-            for (PlayerDTO player : team.players) {
+            Color paneColor = Color.web(team.color);
+            teamPane.setStyle("-fx-base: #" + ColorConverter.toHex(paneColor.darker()) + ";");
+            team.players.stream().forEach((player) -> {
                 box.getChildren().add(createPlayerButton(team.color, player));
-            }
+            });
             teams.getPanes().add(teamPane);
-            panes.add(teamPane);
         });
-        teams.setExpandedPane(panes.get(0));
-        selectNext();
+        Platform.runLater(() -> {
+            selectNext();
+        });
     }
 
     public Button createPlayerButton(String teamColor, PlayerDTO player) {
@@ -108,9 +112,17 @@ public class PlayerChooserController implements Initializable {
         seletedPlayer = 0;
         while (it.hasNext()) {
             Map.Entry pair = (Map.Entry) it.next();
-            if (!((Button) pair.getValue()).isDisabled()) {
+            Button button = (Button) pair.getValue();
+            if (!button.isDisabled()) {
                 seletedPlayer = (int) pair.getKey();
-                ((Button) pair.getValue()).requestFocus();
+                try {
+                    teams.setExpandedPane(((TitledPane) button.getParent().getParent().getParent().getParent().getParent().getParent()));
+                } catch (Exception e) {
+                    teams.setExpandedPane(teams.getPanes().get(0));
+                }
+                Platform.runLater(() -> {
+                    button.requestFocus();
+                });
                 break;
             }
         }

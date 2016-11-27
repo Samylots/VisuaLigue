@@ -13,6 +13,9 @@ import visualigue.inter.dto.EntityDTO;
 import java.util.List;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import visualigue.VisuaLigue;
 import visualigue.inter.utils.Coords;
@@ -21,7 +24,6 @@ import visualigue.inter.utils.Dimension;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import visualigue.inter.utils.Mode;
 
 /**
  *
@@ -30,9 +32,11 @@ import visualigue.inter.utils.Mode;
 public class GameDrawer {
 
     private final static double UNMOVED_TRANSPARENCY = 0.3;
+    private final static double SELECTION_OFFSET = 5;
+    private final static Color SELECTION_COLOR = Color.DEEPSKYBLUE;
 
     private final VisuaLigueBoard canvas;
-    private GraphicsContext gc;
+    private final GraphicsContext gc;
 
     private Image playerImage;
     private Image obstacleImage;
@@ -51,9 +55,10 @@ public class GameDrawer {
         gc.setTextBaseline(VPos.TOP);
         gc.setStroke(Color.BLACK);
         gc.setFill(Color.WHITE);
+        gc.save();
         List<PositionDTO> positions = VisuaLigue.domain.getActualPositions();
         drawPositions(positions, 1);
-        if (VisuaLigue.domain.getCurrentMode() != Mode.VISUALISATION) {
+        if (!VisuaLigue.domain.isVisualizing()) {
             positions = VisuaLigue.domain.getLastPositions();
             drawPositions(positions, UNMOVED_TRANSPARENCY);
         }
@@ -62,20 +67,33 @@ public class GameDrawer {
 
     private void drawPositions(List<PositionDTO> positions, double opactity) {
         for (PositionDTO position : positions) {
-            if (!position.isMoved) {
+            if (!position.isMoved && !VisuaLigue.domain.isVisualizing()) {
                 opactity = UNMOVED_TRANSPARENCY;
             }
-
+            if (VisuaLigue.domain.isCurrentEntity(position.entity.id)) {
+                drawSelection(getPixelPosition(position.coords), position.entity);
+            }
             if (position.entity instanceof PlayerDTO) {
-                drawEntity(getPixelPosition(position.coords), position.entity, createPlayerImage(position.entity.picturePath), opactity);
+                PlayerDTO player = (PlayerDTO) position.entity;
+                drawPlayer(getPixelPosition(position.coords), player, opactity);
             } else if (position.entity instanceof ObstacleDTO) {
-                drawEntity(getPixelPosition(position.coords), position.entity, createObstacleImage(position.entity.picturePath), opactity);
+                drawEntity(getPixelPosition(position.coords), position.entity, createObstacleImage(position.entity.picturePath), 1); //Always there even if it don't move
             } else if (position.entity instanceof AccessoryDTO) {
                 drawEntity(getPixelPosition(position.coords), position.entity, createAccessoryImage(position.entity.picturePath), opactity);
             } else {
                 //error or not?
             }
-        };
+        }
+    }
+
+    private void drawSelection(Coords coords, EntityDTO entity) {
+        Dimension dim = getPixelDimension(entity.dimension);
+        gc.setFill(SELECTION_COLOR);
+        gc.fillOval(coords.getX() - SELECTION_OFFSET, coords.getY() - SELECTION_OFFSET, dim.getWidth() + SELECTION_OFFSET * 2, dim.getHeight() + SELECTION_OFFSET * 2);
+    }
+
+    public static double map(double value, double start, double stop, double targetStart, double targetStop) {
+        return targetStart + (targetStop - targetStart) * ((value - start) / (stop - start));
     }
 
     private Image createPlayerImage(String picPath) {
@@ -102,6 +120,32 @@ public class GameDrawer {
         return accessoryImage;
     }
 
+    private void drawPlayer(Coords coords, PlayerDTO entity, double opacity) {
+        Dimension dim = getPixelDimension(entity.dimension);
+        double coordsX = coords.getX();
+        double coordsY = coords.getY();
+        double width = dim.getWidth();
+        double height = dim.getHeight();
+
+        gc.setGlobalAlpha(opacity);
+        gc.setFill(Color.web(entity.color));
+        gc.fillOval(coordsX, coordsY, width, height);
+
+        if (opacity != UNMOVED_TRANSPARENCY) {
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.setTextBaseline(VPos.CENTER);
+            gc.setStroke(Color.BLACK);
+            gc.setFill(Color.WHITE);
+            writeTexte("#" + String.valueOf(entity.number), 16, coordsX + width / 2, coordsY + height / 2);
+        }
+        gc.restore();
+
+        if (VisuaLigue.domain.isShowingRoles() && opacity != UNMOVED_TRANSPARENCY) {
+            writeTexte(entity.role, 16, coordsX + width / 2, coordsY + height);
+            writeTexte(entity.name, 14, coordsX + width / 2, coordsY + height + 16);
+        }
+    }
+
     private void drawEntity(Coords coords, EntityDTO entity, Image img, double opacity) {
         Dimension dim = getPixelDimension(entity.dimension);
         double coordsX = coords.getX();
@@ -109,16 +153,9 @@ public class GameDrawer {
         double width = dim.getWidth();
         double height = dim.getHeight();
 
-        gc.save();
         gc.setGlobalAlpha(opacity);
         gc.drawImage(img, coordsX, coordsY, width, height);
         gc.restore();
-
-        if (entity instanceof PlayerDTO && VisuaLigue.domain.isShowingRoles()) {
-            PlayerDTO player = (PlayerDTO) entity;
-            writeTexte(player.role, 16, coordsX + width / 2, coordsY + height);
-            writeTexte(player.name, 14, coordsX + width / 2, coordsY + height + 16);
-        }
     }
 
     private void writeTexte(String text, double size, double x, double y) {
@@ -128,11 +165,11 @@ public class GameDrawer {
     }
 
     private Coords getPixelPosition(Coords domainCoords) {
-        return canvas.getConverter().meterToPixel(domainCoords, canvas.getActualFieldPixelDimension());
+        return canvas.getPixelCoords(domainCoords);
     }
 
     private Dimension getPixelDimension(Dimension domainDim) {
-        return canvas.getConverter().meterToPixel(domainDim, canvas.getActualFieldPixelDimension());
+        return canvas.getPixelDimension(domainDim);
     }
 
 }

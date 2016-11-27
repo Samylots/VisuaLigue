@@ -35,7 +35,7 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
     private static final double MINIMAP_MAX_WIDTH = 100;
     private static final double MINIMAP_MAX_HEIGHT = 60;
 
-    private boolean isOnBoard = false;
+    private boolean isOnBoard = false; //View dragging bug fix...
 
     private final GraphicsContext gc = getGraphicsContext2D(); //Quicker access to it's graphic context
     private final Coords origin; //Field board's origin on board's space
@@ -56,7 +56,8 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
         origin = new Coords();
         drawer = new GameDrawer(this);
         converter = new Converter();
-        setOnScroll((ScrollEvent event) -> {
+
+        setOnScroll((ScrollEvent event) -> { //zoom feature
             if (event.getDeltaY() > 0) {
                 zoom(ZOOM_DELTA);
             } else {
@@ -65,7 +66,7 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
             drawAll();
         });
 
-        setOnMouseDragged((MouseEvent event) -> {
+        setOnMouseDragged((MouseEvent event) -> { //view drag feature
             if (event.isSecondaryButtonDown() && isOnBoard) {
                 updateMouse(event);
                 Coords newMousePos = getMousePosition();
@@ -141,7 +142,12 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
         return new Coords(mouseX.doubleValue(), mouseY.doubleValue());
     }
 
-    public Coords getConvertedMousePosition() {
+    /**
+     * Get last recorded moude position in meters
+     *
+     * @return
+     */
+    public Coords getMetersMousePosition() {
         return converter.pixelToMeter(getMousePosition(), getActualFieldPixelDimension());
     }
 
@@ -164,18 +170,13 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
         gc.clearRect(0 - origin.getX(), 0 - origin.getY(), this.getWidth(), this.getHeight());
     }
 
-    @Override
-    public synchronized void redraw() {
-        drawAll();
-    }
-
     /**
      * Drawing all elements on board
      */
     private void drawAll() {
         clear();
         String fieldPic = VisuaLigue.domain.getFieldPicPath();
-        if (!actualFieldPictureURL.equals(fieldPic)) {
+        if (!actualFieldPictureURL.equals(fieldPic)) { //it's laggy if it create a new Image each times we draw
             actualFieldPictureURL = fieldPic;
             fieldPicture = new Image(fieldPic);
         }
@@ -193,15 +194,14 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
      * Drawing mouse position info on board in real proportions
      */
     private void drawPos() {
-
         gc.setTextAlign(TextAlignment.LEFT);
         gc.setTextBaseline(VPos.BOTTOM);
 
         gc.setFont(Font.font(20));
         gc.setLineWidth(3);
         gc.setStroke(Color.BLACK);
-        Coords coords = getConvertedMousePosition();
-        //Coords coords = getMousePosition();
+        Coords coords = getMetersMousePosition(); //meters
+        //Coords coords = getMousePosition(); //pixel
         gc.strokeText("X: " + coords.getX() + " m, Y: " + coords.getY() + " m", -origin.getX(), getHeight() - origin.getY());
         gc.setFill(Color.WHITE);
         gc.fillText("X: " + coords.getX() + " m, Y: " + coords.getY() + " m", -origin.getX(), getHeight() - origin.getY());
@@ -277,16 +277,21 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
         return fieldPicture.getHeight() * zoomFactor;
     }
 
-    public Dimension getActualFieldPixelDimension() {
-        return converter.pixelToDimension(getActualFieldWidth(), getActualFieldHeight());
+    private Dimension getActualFieldPixelDimension() {
+        return new Dimension(getActualFieldWidth(), getActualFieldHeight());
     }
 
-    public Converter getConverter() {
-        return converter;
+    public Dimension getPixelDimension(Dimension dim) {
+        return converter.meterToPixel(dim, getActualFieldPixelDimension());
     }
 
-    public double getZoomFactor() {
-        return zoomFactor;
+    public Coords getPixelCoords(Coords coords) {
+        return converter.meterToPixel(coords, getActualFieldPixelDimension());
+    }
+
+    @Override
+    public synchronized void redraw() {
+        drawAll();
     }
 
 }

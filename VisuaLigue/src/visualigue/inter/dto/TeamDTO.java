@@ -15,18 +15,18 @@ import visualigue.domain.main.Team;
  * @author Bruno L.L.
  */
 public class TeamDTO {
-    
+
     public String name;
     public String color;
-    public List<PlayerDTO> players = new ArrayList<PlayerDTO>();
-    
+    public List<PlayerDTO> players = new ArrayList<>();
+
     public TeamDTO(Team team) {
         this.name = team.getName();
         this.color = team.getColor();
-        
+
         int i = 1;
         for (Player player : team.getPlayers()) {
-            PlayerDTO playerDTO = new PlayerDTO(player, i);
+            PlayerDTO playerDTO = new PlayerDTO(player);
             players.add(playerDTO);
             i++;
         }

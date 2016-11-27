@@ -193,6 +193,10 @@ public class VisuaLigueController implements Serializable {
         currentGame.selectEntityAt(coord);
     }
 
+    public void unSelectCurrentEntity() {
+        currentGame.unSelectCurrentEntity();
+    }
+
     public String getFolder() {
         return folder;
     }
@@ -244,6 +248,10 @@ public class VisuaLigueController implements Serializable {
 
     public Mode getCurrentMode() {
         return currentMode;
+    }
+
+    public boolean isVisualizing() {
+        return currentMode == Mode.VISUALISATION;
     }
 
     public boolean isShowingRoles() {
@@ -337,24 +345,16 @@ public class VisuaLigueController implements Serializable {
     }
 
     // Remplacer par une seule fonction deleteCurrentEntity?
-    public void deletePlayerAt(Coords coords) {
-        currentGame.deleteAccessoryAt(coords);
+    public void deleteCurrentEntity() {
+        currentGame.deleteCurrentEntity();
     }
 
     public void addObstacleAt(Coords coords, int obstacleId) {
         currentGame.addObstacleAt(ressources.getObstacle(obstacleId), coords);
     }
 
-    public void deleteObstacleAt(Coords coords) {
-        currentGame.deleteObstacleAt(coords);
-    }
-
     public void addAccessoryAt(Coords coords) {
         currentGame.addAccessoryAt(coords);
-    }
-
-    public void deleteAccessoryAt(Coords coords) {
-        currentGame.deleteAccessoryAt(coords);
     }
 
     public void moveCurrentEntityTo(Coords coords) {
