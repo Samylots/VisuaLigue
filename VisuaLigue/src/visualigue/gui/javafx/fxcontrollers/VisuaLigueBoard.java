@@ -182,6 +182,7 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
         }
         drawField();
         drawer.drawGame();
+        gc.restore();
         drawPos();
         drawMiniMap();
     }
