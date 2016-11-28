@@ -368,13 +368,13 @@ public class Game implements Serializable {
     private void triggerSelection() {
         if (selectionListener != null) {
             if (currentEntity == null) {
-                selectionListener.selectNothing();
+                selectionListener.nothingSelected();
             } else if (currentEntity instanceof Player) {
-                selectionListener.selectPlayer(new PlayerDTO((Player) currentEntity));
+                selectionListener.playerSelected(new PlayerDTO((Player) currentEntity));
             } else if (currentEntity instanceof Obstacle) {
-                selectionListener.selectObstacle(new ObstacleDTO((Obstacle) currentEntity));
+                selectionListener.obstacleSelected(new ObstacleDTO((Obstacle) currentEntity));
             } else if (currentEntity instanceof Accessory) {
-                selectionListener.selectAccessory(new AccessoryDTO((Accessory) currentEntity));
+                selectionListener.accessorySelected(new AccessoryDTO((Accessory) currentEntity));
             }
         }
         triggerReDraw();

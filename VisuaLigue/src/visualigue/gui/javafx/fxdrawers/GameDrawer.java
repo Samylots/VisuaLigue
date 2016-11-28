@@ -13,9 +13,6 @@ import visualigue.inter.dto.EntityDTO;
 import java.util.List;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.effect.Blend;
-import javafx.scene.effect.BlendMode;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import visualigue.VisuaLigue;
 import visualigue.inter.utils.Coords;
@@ -92,10 +89,6 @@ public class GameDrawer {
         gc.fillOval(coords.getX() - SELECTION_OFFSET, coords.getY() - SELECTION_OFFSET, dim.getWidth() + SELECTION_OFFSET * 2, dim.getHeight() + SELECTION_OFFSET * 2);
     }
 
-    public static double map(double value, double start, double stop, double targetStart, double targetStop) {
-        return targetStart + (targetStop - targetStart) * ((value - start) / (stop - start));
-    }
-
     private Image createPlayerImage(String picPath) {
         if (!playerPicPath.equals(picPath)) {
             playerPicPath = picPath;
@@ -139,13 +132,13 @@ public class GameDrawer {
             gc.setTextBaseline(VPos.CENTER);
             gc.setStroke(Color.BLACK);
             gc.setFill(Color.WHITE);
-            writeTexte("#" + String.valueOf(entity.number), 16, coordsX + width / 2, coordsY + height / 2);
+            writeText("#" + String.valueOf(entity.number), 16, coordsX + width / 2, coordsY + height / 2);
         }
         gc.restore();
 
         if (VisuaLigue.domain.isShowingRoles() && opacity != UNMOVED_TRANSPARENCY) {
-            writeTexte(entity.role, 16, coordsX + width / 2, coordsY + height);
-            writeTexte(entity.name, 14, coordsX + width / 2, coordsY + height + 16);
+            writeText(entity.role, 16, coordsX + width / 2, coordsY + height);
+            writeText(entity.name, 14, coordsX + width / 2, coordsY + height + 16);
         }
     }
 
@@ -162,7 +155,7 @@ public class GameDrawer {
         gc.restore();
     }
 
-    private void writeTexte(String text, double size, double x, double y) {
+    private void writeText(String text, double size, double x, double y) {
         gc.setFont(Font.font(size));
         gc.strokeText(text, x, y);
         gc.fillText(text, x, y);

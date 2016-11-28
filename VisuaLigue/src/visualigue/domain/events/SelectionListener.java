@@ -15,11 +15,11 @@ import visualigue.inter.dto.PlayerDTO;
  */
 public interface SelectionListener extends Listener {
 
-    public void selectNothing();
+    public void nothingSelected();
 
-    public void selectPlayer(PlayerDTO player);
+    public void playerSelected(PlayerDTO player);
 
-    public void selectObstacle(ObstacleDTO obstacle);
+    public void obstacleSelected(ObstacleDTO obstacle);
 
-    public void selectAccessory(AccessoryDTO accessory);
+    public void accessorySelected(AccessoryDTO accessory);
 }
