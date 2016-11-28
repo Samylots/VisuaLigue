@@ -284,15 +284,11 @@ public class Game implements Serializable {
     }
 
     public void newFrame() throws MustPlaceAllPlayersOnFieldException {
-        /*if (currentFrame == firstFrame && totalFrames == 1) {
-         Map<Integer, Position> positions = currentFrame.getPositions();
-
-         for (Player player : sport.getPlayers()) {
-         if (!positions.containsKey(player.getId())) {
-         throw new MustPlaceAllPlayersOnFieldException("You have to place all players on the field before creating a new image");
-         }
-         }
-         }*/
+        if (currentFrame == firstFrame && totalFrames == 1) {
+            if (currentFrame.getTotalPlayer() < 1) {
+                throw new MustPlaceAllPlayersOnFieldException("You have to place at least one players on the field before creating a new image");
+            }
+        }
         totalFrames++;
         Frame newFrame = new Frame(currentFrame);
         if (currentFrame.getNext() != null) {
@@ -377,13 +373,13 @@ public class Game implements Serializable {
     private void triggerSelection() {
         if (selectionListener != null) {
             if (currentEntity == null) {
-                selectionListener.selectNothing();
+                selectionListener.nothingSelected();
             } else if (currentEntity instanceof Player) {
-                selectionListener.selectPlayer(new PlayerDTO((Player) currentEntity));
+                selectionListener.playerSelected(new PlayerDTO((Player) currentEntity));
             } else if (currentEntity instanceof Obstacle) {
-                selectionListener.selectObstacle(new ObstacleDTO((Obstacle) currentEntity));
+                selectionListener.obstacleSelected(new ObstacleDTO((Obstacle) currentEntity));
             } else if (currentEntity instanceof Accessory) {
-                selectionListener.selectAccessory(new AccessoryDTO((Accessory) currentEntity));
+                selectionListener.accessorySelected(new AccessoryDTO((Accessory) currentEntity));
             }
         }
         triggerReDraw();

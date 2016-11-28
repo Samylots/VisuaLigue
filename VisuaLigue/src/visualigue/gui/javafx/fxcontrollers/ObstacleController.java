@@ -53,7 +53,7 @@ public class ObstacleController implements Initializable {
         this.owner = owner;
         this.parent = parent;
     }
-    
+
     public void initObstacle(ObstacleDTO obstacle) {
         obstacleWidth.setText(String.valueOf(obstacle.dimension.getWidth()));
         obstacleHeight.setText(String.valueOf(obstacle.dimension.getHeight()));
@@ -72,6 +72,7 @@ public class ObstacleController implements Initializable {
         fileChooser.setTitle("Open picture");
         File file = fileChooser.showOpenDialog(owner);
         if (file != null) {
+            path.delete(0, path.length());
             path.append(file.toURI().toString());
             System.out.println(path);
             preview.setImage(new Image(path.toString()));

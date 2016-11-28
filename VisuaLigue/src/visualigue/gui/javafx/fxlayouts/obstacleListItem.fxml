@@ -6,13 +6,12 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
 <BorderPane fx:id="sportItem" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualigue.gui.javafx.fxcontrollers.items.ObstacleListItemController">
    <padding>
       <Insets bottom="5.0" left="8.0" right="8.0" top="5.0" />
    </padding>
    <right>
-      <Button fx:id="selectButton" mnemonicParsing="false" onAction="#selectObstacle" text="Select" BorderPane.alignment="CENTER" />
+      <Button fx:id="editButton" mnemonicParsing="false" onAction="#editObstacle" text="Edit" BorderPane.alignment="CENTER" />
    </right>
    <center>
       <HBox alignment="CENTER_LEFT" spacing="5.0" BorderPane.alignment="CENTER">
