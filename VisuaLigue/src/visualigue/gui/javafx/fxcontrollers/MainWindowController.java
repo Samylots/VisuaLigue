@@ -344,7 +344,6 @@ public class MainWindowController implements Initializable, Serializable, Select
 
     private void handleBoardMouseDrag(MouseEvent e) {
         if (isInCursorMode() && e.getButton() == MouseButton.PRIMARY) {
-            //VisuaLigue.domain.selectEntityAt(board.getConvertedMousePosition());
             board.updateMouse(e);
             if (VisuaLigue.domain.hasCurrentEntity()) {
                 VisuaLigue.domain.moveCurrentEntityTo(board.getMetersMousePosition());
@@ -353,23 +352,23 @@ public class MainWindowController implements Initializable, Serializable, Select
     }
 
     @Override
-    public void selectNothing() {
+    public void nothingSelected() {
         showDefaultToolbar();
     }
 
     @Override
-    public void selectPlayer(PlayerDTO player) {
+    public void playerSelected(PlayerDTO player) {
         playerToolbarController.update(player);
         root.setLeft(playerToolbar);
     }
 
     @Override
-    public void selectObstacle(ObstacleDTO obstacle) {
+    public void obstacleSelected(ObstacleDTO obstacle) {
         root.setLeft(obstacleToolbar);
     }
 
     @Override
-    public void selectAccessory(AccessoryDTO accessory) {
+    public void accessorySelected(AccessoryDTO accessory) {
         root.setLeft(accessoryToolbar);
     }
 
