@@ -127,9 +127,12 @@ public class GameDrawer {
         double width = dim.getWidth();
         double height = dim.getHeight();
 
+        gc.save();
         gc.setGlobalAlpha(opacity);
+        gc.setStroke(Color.BLACK);
         gc.setFill(Color.web(entity.color));
         gc.fillOval(coordsX, coordsY, width, height);
+        gc.strokeOval(coordsX, coordsY, width, height);
 
         if (opacity != UNMOVED_TRANSPARENCY) {
             gc.setTextAlign(TextAlignment.CENTER);
@@ -153,6 +156,7 @@ public class GameDrawer {
         double width = dim.getWidth();
         double height = dim.getHeight();
 
+        gc.save();
         gc.setGlobalAlpha(opacity);
         gc.drawImage(img, coordsX, coordsY, width, height);
         gc.restore();
