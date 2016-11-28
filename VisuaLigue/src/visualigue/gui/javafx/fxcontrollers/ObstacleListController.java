@@ -32,12 +32,7 @@ public class ObstacleListController implements Initializable {
     @FXML
     private VBox root;
     @FXML
-    private Button addObstacle;
-    @FXML
     private VBox obstacleList;
-
-    private int selectedObstacle;
-
     /**
      * Initializes the controller class.
      */
@@ -61,7 +56,7 @@ public class ObstacleListController implements Initializable {
         Node node = FXLoader.getInstance().load("obstacleListItem.fxml");
         ObstacleListItemController itemController = FXLoader.getInstance().getLastController();
         try {
-            itemController.init(obstacle.picturePath, obstacle.name, obstacle.id, this);
+            itemController.init(obstacle, this, root);
         } catch (Exception e) {
             //no pic then...
         }
@@ -69,24 +64,19 @@ public class ObstacleListController implements Initializable {
     }
 
     @FXML
-    private void addNewObstacle(ActionEvent event) {
+    private void addNewObstacle() {
         Node node = FXLoader.getInstance().load("addObstacle.fxml");
-        AddObstacleController controller = FXLoader.getInstance().getLastController();
+        ObstacleController controller = FXLoader.getInstance().getLastController();
         CustomWindow window = new CustomWindow(root, (Parent) node);
         controller.init((Stage) window, (Parent) node);
         window.showAndWait();
         if (controller.isConfirmed()) {
-            addSportToDomain(controller);
+            addObstacleToDomain(controller);
             refreshObstacles();
         }
     }
 
-    public void addSportToDomain(AddObstacleController obstacle) {
+    public void addObstacleToDomain(ObstacleController obstacle) {
         VisuaLigue.domain.createNewObstacle(obstacle.getName(), obstacle.getPath(), (double) obstacle.getWidth(), (double) obstacle.getHeight());
     }
-
-    public void selectObstacle(int id) {
-        selectedObstacle = id;
-    }
-
 }
