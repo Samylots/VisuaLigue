@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.TreeMap;
 import visualigue.inter.utils.Coords;
+import visualigue.domain.main.entities.Accessory;
 import visualigue.domain.main.entities.Player;
 
 /**
@@ -101,10 +102,16 @@ public class Frame implements Serializable {
     }
 
     public void setOwner(int idEntity, Player owner) {
-        positions.get(idEntity).setOwner(owner);
+        Position entityPosition = positions.get(idEntity);
+        entityPosition.setOwner(owner);
+        positions.get(owner).setOwns((Accessory)entityPosition.getEntity());
     }
 
     public boolean hasOwner(int idEntity) {
         return positions.get(idEntity).hasOwner();
+    }
+    
+    public Accessory getOwns(int idEntity) {
+        return positions.get(idEntity).getOwns();
     }
 }

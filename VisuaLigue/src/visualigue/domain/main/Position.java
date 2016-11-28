@@ -10,6 +10,7 @@ import visualigue.domain.main.entities.Player;
 import visualigue.domain.main.entities.Entity;
 import java.io.Serializable;
 import visualigue.inter.utils.Coords;
+import visualigue.domain.main.entities.Accessory;
 
 /**
  *
@@ -22,6 +23,7 @@ public class Position implements Serializable {
     private Coords coords;
     private Entity entity;
     private Player owner;
+    private Accessory owns;
     private boolean isMoved = true;
 
     public Position(Coords location, Entity entity) {
@@ -61,7 +63,7 @@ public class Position implements Serializable {
     }
 
     public boolean collidesWith(Entity entity, Coords coords) {
-        if (entity == this.entity) {
+        if (entity == this.entity || this.owner == entity) {
             return false;
         }
         Rectangle rectThis = new Rectangle((int) (this.coords.getX() * COLLISION_PRECISION),
@@ -91,9 +93,17 @@ public class Position implements Serializable {
     public Player getOwner() {
         return owner;
     }
+    
+    public Accessory getOwns() {
+        return owns;
+    }
 
     public void setOwner(Player owner) {
         this.owner = owner;
+    }
+    
+    public void setOwns(Accessory owns) {
+        this.owns = owns;
     }
 
     public boolean IsMoved() {

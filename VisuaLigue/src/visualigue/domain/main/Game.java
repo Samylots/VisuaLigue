@@ -239,19 +239,28 @@ public class Game implements Serializable {
 
         if (collidesWithPosition == null) {
             currentFrame.movePosition(currentEntity.getId(), coords);
+            
+            if  (currentEntity instanceof Player) {
+                Accessory owns = currentFrame.getOwns(currentEntity.getId());
+                if (owns != null) {
+                    currentFrame.movePosition(owns.getId(), coords);
+                }
+            }
             triggerReDraw();
         } else {
-            Entity collidedWithEntity = collidesWithPosition.getEntity();
 
-            if (currentEntity instanceof Accessory && collidedWithEntity instanceof Player) {
+            Entity collidedWithEntity = collidesWithPosition.getEntity();
+ 
+            if (currentEntity instanceof Accessory && collidedWithEntity instanceof Player && currentFrame.getOwns(collidedWithEntity.getId()) == null) {
                 currentFrame.movePosition(currentEntity.getId(), collidesWithPosition.getCoords());
-                currentFrame.setOwner(currentEntity.getId(), (Player) collidedWithEntity);
+                currentFrame.setOwner(currentEntity.getId(), (Player)collidedWithEntity);
             }
-            if (currentEntity instanceof Player && collidedWithEntity instanceof Accessory) {
+            if (currentEntity instanceof Player && collidedWithEntity instanceof Accessory && currentFrame.getOwns(currentEntity.getId()) == null) {
                 currentFrame.movePosition(currentEntity.getId(), coords);
                 currentFrame.movePosition(collidedWithEntity.getId(), coords);
                 currentFrame.setOwner(collidedWithEntity.getId(), (Player) currentEntity);
             }
+
             //throw new CollisionDetectedException("Collided with: " + collidesWithPosition.getEntity().getId());
             currentEntity = null; //Deselect it if collision?
             triggerSelection();
