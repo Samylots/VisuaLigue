@@ -72,6 +72,16 @@ public class Frame implements Serializable {
         }
     }
 
+    public int getTotalPlayer() {
+        int total = 0;
+        for (Map.Entry<Integer, Position> entry : positions.entrySet()) {
+            if (entry.getValue().getEntity() instanceof Player) {
+                total++;
+            }
+        }
+        return total;
+    }
+
     public Entity findEntityAt(Coords coords) {
         for (Map.Entry<Integer, Position> entry : positions.entrySet()) {
             Position pos = entry.getValue();

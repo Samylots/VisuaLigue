@@ -275,15 +275,11 @@ public class Game implements Serializable {
     }
 
     public void newFrame() throws MustPlaceAllPlayersOnFieldException {
-        /*if (currentFrame == firstFrame && totalFrames == 1) {
-         Map<Integer, Position> positions = currentFrame.getPositions();
-
-         for (Player player : sport.getPlayers()) {
-         if (!positions.containsKey(player.getId())) {
-         throw new MustPlaceAllPlayersOnFieldException("You have to place all players on the field before creating a new image");
-         }
-         }
-         }*/
+        if (currentFrame == firstFrame && totalFrames == 1) {
+            if (currentFrame.getTotalPlayer() < 1) {
+                throw new MustPlaceAllPlayersOnFieldException("You have to place at least one players on the field before creating a new image");
+            }
+        }
         totalFrames++;
         Frame newFrame = new Frame(currentFrame);
         if (currentFrame.getNext() != null) {
