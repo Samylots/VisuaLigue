@@ -114,7 +114,7 @@ public class Frame implements Serializable {
     public void setOwner(int idEntity, Player owner) {
         Position entityPosition = positions.get(idEntity);
         entityPosition.setOwner(owner);
-        positions.get(owner).setOwns((Accessory)entityPosition.getEntity());
+        positions.get(owner.getId()).setOwns((Accessory)entityPosition.getEntity());
     }
 
     public boolean hasOwner(int idEntity) {
@@ -123,5 +123,9 @@ public class Frame implements Serializable {
     
     public Accessory getOwns(int idEntity) {
         return positions.get(idEntity).getOwns();
+    }
+    
+    public Player getOwner(int idEntity) {
+        return positions.get(idEntity).getOwner();
     }
 }

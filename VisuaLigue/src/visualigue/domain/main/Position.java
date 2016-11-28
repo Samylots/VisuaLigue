@@ -63,7 +63,7 @@ public class Position implements Serializable {
     }
 
     public boolean collidesWith(Entity entity, Coords coords) {
-        if (entity == this.entity || this.owner == entity) {
+        if (entity == this.entity || this.owner == entity || this.owns == entity) {
             return false;
         }
         Rectangle rectThis = new Rectangle((int) (this.coords.getX() * COLLISION_PRECISION),

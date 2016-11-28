@@ -245,20 +245,26 @@ public class Game implements Serializable {
                 if (owns != null) {
                     currentFrame.movePosition(owns.getId(), coords);
                 }
+            } else if (currentEntity instanceof Accessory) {
+                Player owner = currentFrame.getOwner(id);
+                if (owner != null) {
+                    currentFrame.movePosition(owner.getId(), coords);
+                }
             }
             triggerReDraw();
         } else {
-
             Entity collidedWithEntity = collidesWithPosition.getEntity();
  
             if (currentEntity instanceof Accessory && collidedWithEntity instanceof Player && currentFrame.getOwns(collidedWithEntity.getId()) == null) {
                 currentFrame.movePosition(currentEntity.getId(), collidesWithPosition.getCoords());
                 currentFrame.setOwner(currentEntity.getId(), (Player)collidedWithEntity);
+                triggerReDraw();
             }
             if (currentEntity instanceof Player && collidedWithEntity instanceof Accessory && currentFrame.getOwns(currentEntity.getId()) == null) {
                 currentFrame.movePosition(currentEntity.getId(), coords);
                 currentFrame.movePosition(collidedWithEntity.getId(), coords);
-                currentFrame.setOwner(collidedWithEntity.getId(), (Player) currentEntity);
+                currentFrame.setOwner(collidedWithEntity.getId(), (Player)currentEntity);
+                triggerReDraw();
             }
 
             //throw new CollisionDetectedException("Collided with: " + collidesWithPosition.getEntity().getId());
