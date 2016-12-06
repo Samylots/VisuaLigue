@@ -9,7 +9,6 @@ import visualigue.inter.utils.exceptions.CollisionDetectedException;
 import visualigue.inter.utils.exceptions.CantDeleteFrameException;
 import visualigue.inter.utils.exceptions.MustPlaceAllPlayersOnFieldException;
 import visualigue.inter.utils.exceptions.PlayerAlreadyOnFieldException;
-import visualigue.inter.utils.exceptions.NoEntityAtLocationException;
 import visualigue.domain.events.FramesListener;
 import visualigue.domain.events.SelectionListener;
 import visualigue.domain.events.DrawListener;
@@ -38,20 +37,21 @@ import visualigue.inter.utils.IdGenerator;
 public class Game implements Serializable {
 
     // Keeping a local list of obstacles in case they are deleted in the future
-    private List<Obstacle> obstacles = new ArrayList<Obstacle>();
-    private List<Accessory> accessories = new ArrayList<Accessory>();
-    private Sport sport;
+    private final List<Obstacle> obstacles = new ArrayList<>();
+    private final List<Accessory> accessories = new ArrayList<>();
+    private final Sport sport;
     private Frame firstFrame;
     private Frame lastFrame;
     private int totalFrames;
     private Entity currentEntity;
     private Frame currentFrame;
     private static SelectionListener selectionListener;
-    private static List<DrawListener> drawListeners = new ArrayList<>();
+    private static final List<DrawListener> drawListeners = new ArrayList<>();
     private static FramesListener frameListener;
     private transient Timer playbackTimer = new Timer();
     private int id;
     private String name;
+    private boolean maxPlayer = true;
 
     private transient boolean isTimerRunning = false;
 
@@ -111,6 +111,7 @@ public class Game implements Serializable {
         playbackTimer.cancel(); //allow another start
         playbackTimer = new Timer();
         playbackTimer.schedule(new TimerTask() {
+            @Override
             public void run() {
                 runVisualisation();
             }
@@ -132,7 +133,7 @@ public class Game implements Serializable {
     }
 
     public List<Integer> getPlayersOnBoard() {
-        List<Integer> returnData = new ArrayList<Integer>();
+        List<Integer> returnData = new ArrayList<>();
 
         for (Map.Entry<Integer, Position> entry : currentFrame.getPositions().entrySet()) {
             Position pos = entry.getValue();
@@ -239,8 +240,8 @@ public class Game implements Serializable {
 
         if (collidesWithPosition == null) {
             currentFrame.movePosition(currentEntity.getId(), coords);
-            
-            if  (currentEntity instanceof Player) {
+
+            if (currentEntity instanceof Player) {
                 Accessory owns = currentFrame.getOwns(currentEntity.getId());
                 if (owns != null) {
                     currentFrame.movePosition(owns.getId(), coords);
@@ -251,34 +252,31 @@ public class Game implements Serializable {
                     currentFrame.movePosition(owner.getId(), coords);
                 }
             }
-            triggerReDraw();
         } else {
             Entity collidedWithEntity = collidesWithPosition.getEntity();
- 
-            if (currentEntity instanceof Accessory 
-                && collidedWithEntity instanceof Player 
-                && currentFrame.getOwns(collidedWithEntity.getId()) == null
-                && currentFrame.getOwner(currentEntity.getId()) == null){
-                
+
+            if (currentEntity instanceof Accessory
+                    && collidedWithEntity instanceof Player
+                    && currentFrame.getOwns(collidedWithEntity.getId()) == null
+                    && currentFrame.getOwner(currentEntity.getId()) == null) {
+
                 currentFrame.movePosition(currentEntity.getId(), collidesWithPosition.getCoords());
-                currentFrame.setOwner(currentEntity.getId(), (Player)collidedWithEntity);
-                triggerReDraw();
+                currentFrame.setOwner(currentEntity.getId(), (Player) collidedWithEntity);
             }
-            if (currentEntity instanceof Player 
-                && collidedWithEntity instanceof Accessory 
-                && currentFrame.getOwns(currentEntity.getId()) == null
-                && currentFrame.getOwner(collidedWithEntity.getId()) == null){
-                
+            if (currentEntity instanceof Player
+                    && collidedWithEntity instanceof Accessory
+                    && currentFrame.getOwns(currentEntity.getId()) == null
+                    && currentFrame.getOwner(collidedWithEntity.getId()) == null) {
+
                 currentFrame.movePosition(currentEntity.getId(), coords);
                 currentFrame.movePosition(collidedWithEntity.getId(), coords);
-                currentFrame.setOwner(collidedWithEntity.getId(), (Player)currentEntity);
+                currentFrame.setOwner(collidedWithEntity.getId(), (Player) currentEntity);
                 triggerReDraw();
             }
-
-            //throw new CollisionDetectedException("Collided with: " + collidesWithPosition.getEntity().getId());
             currentEntity = null; //Deselect it if collision?
             triggerSelection();
         }
+        triggerReDraw();
     }
 
     public Sport getSport() {
@@ -308,7 +306,6 @@ public class Game implements Serializable {
         if (currentFrame.getNext() != null) {
             newFrame.setNext(currentFrame.getNext());
             currentFrame.getNext().setBack(newFrame);
-            lastFrame = currentFrame.getNext();
         } else {
             lastFrame = newFrame;
         }
@@ -397,5 +394,13 @@ public class Game implements Serializable {
             }
         }
         triggerReDraw();
+    }
+
+    public boolean isMaxPlayer() {
+        return maxPlayer;
+    }
+
+    public void toggleMaxPlayer() {
+        this.maxPlayer = !this.maxPlayer;
     }
 }

@@ -185,10 +185,6 @@ public class VisuaLigueController implements Serializable {
         this.serializer.redo();
     }
 
-    public void togglePlayerRoles() {
-        this.showingRoles = !this.showingRoles;
-    }
-
     public void selectEntityAt(Coords coord) {
         currentGame.selectEntityAt(coord);
     }
@@ -260,6 +256,14 @@ public class VisuaLigueController implements Serializable {
 
     public void toggleRoles() {
         showingRoles = !showingRoles;
+    }
+
+    public void toggleMaxPlayer() {
+        currentGame.toggleMaxPlayer();
+    }
+
+    public boolean isMaxPlayer() {
+        return currentGame.isMaxPlayer();
     }
 
     public Dimension getFieldDimension() {

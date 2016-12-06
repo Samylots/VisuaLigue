@@ -6,7 +6,6 @@
 package visualigue.gui.javafx.fxcontrollers;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -41,8 +40,10 @@ public class PlayerChooserController implements Initializable {
     @FXML
     private Accordion teams;
 
+    private Button dummyPlayer;
+
     //private Map<Integer, PlayerDTO> players;
-    private Map<Integer, Button> buttons = new HashMap<>();
+    private final Map<Integer, Button> buttons = new HashMap<>();
 
     private int seletedPlayer = 0;
 
@@ -79,6 +80,10 @@ public class PlayerChooserController implements Initializable {
         Platform.runLater(() -> {
             selectNext();
         });
+    }
+
+    private void initDummyPlayer() {
+        dummyPlayer.setText("Dummy");
     }
 
     public Button createPlayerButton(String teamColor, PlayerDTO player) {

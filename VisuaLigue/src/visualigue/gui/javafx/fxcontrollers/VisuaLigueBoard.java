@@ -87,6 +87,11 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
         });
     }
 
+    private boolean isMouseOnField() {
+        Coords pos = getMousePosition();
+        return (pos.getX() >= 0 && pos.getY() >= 0 && pos.getX() <= getActualFieldWidth() && pos.getY() <= getActualFieldHeight());
+    }
+
     /**
      * Zooming in/ou board in view
      *
@@ -183,7 +188,9 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
         drawField();
         drawer.drawGame();
         gc.restore();
-        drawPos();
+        if (isMouseOnField()) {
+            drawPos();
+        }
         drawMiniMap();
     }
 
