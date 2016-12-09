@@ -7,6 +7,7 @@ package visualigue.gui.javafx.fxcontrollers.states;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -14,6 +15,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import visualigue.VisuaLigue;
 import visualigue.domain.events.FramesListener;
+import visualigue.gui.javafx.fxlayouts.Dialog;
+import visualigue.inter.utils.exceptions.CantDeleteFrameException;
+import visualigue.inter.utils.exceptions.MustPlaceAllPlayersOnFieldException;
 
 /**
  * FXML Controller class
@@ -22,15 +26,17 @@ import visualigue.domain.events.FramesListener;
  */
 public class RealTimeBoardController implements Initializable, FramesListener {
 
-    @Override
-    public void init(Parent parent) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
     @FXML
     private Label frameLabel;
     @FXML
     private Slider frameSlider;
+    
+    private Parent parent;
+    
+    @Override
+    public void init(Parent parent) {
+        this.parent = parent;
+    }
 
     /**
      * Initializes the controller class.
@@ -47,5 +53,4 @@ public class RealTimeBoardController implements Initializable, FramesListener {
         frameLabel.setText(String.valueOf(VisuaLigue.domain.getActualFrame()) + " / " + String.valueOf(VisuaLigue.domain.getTotalFrame()));
         frameSlider.setValue(VisuaLigue.domain.getActualFrame());
     }
-
 }

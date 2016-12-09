@@ -41,13 +41,21 @@ public class Serializer {
             out.writeObject(controller);
             out.close();
 
+            // delete if history if too big
             int size = history.size();
             if (size > historyMaxSize - 1) {
                 history.remove(size - 1);
             }
-
+            // delete inbetween current position and this new one
+            if (historyPointer > 0) {
+                for (int i = historyPointer - 1; i >= 0; i--) {
+                    history.remove(i);
+                }
+            }
             history.addFirst(byteArrayOut.toByteArray());
             historyPointer = 0;
+            
+            System.out.println("save");
         } catch (IOException e) {
             e.printStackTrace();
         }

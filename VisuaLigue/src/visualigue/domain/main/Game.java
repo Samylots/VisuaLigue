@@ -26,10 +26,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 import javafx.application.Platform;
+import visualigue.inter.controller.VisuaLigueController;
 import visualigue.inter.dto.AccessoryDTO;
 import visualigue.inter.dto.ObstacleDTO;
 import visualigue.inter.dto.PlayerDTO;
 import visualigue.inter.utils.IdGenerator;
+import visualigue.inter.utils.Mode;
+import visualigue.domain.services.Serializer;
 
 /**
  *
@@ -50,8 +53,14 @@ public class Game implements Serializable {
     private static List<DrawListener> drawListeners = new ArrayList<>();
     private static FramesListener frameListener;
     private transient Timer playbackTimer = new Timer();
+    private transient Timer recordingTimer;
     private int id;
     private String name;
+    private Mode currentMode;
+    private boolean movementMade;
+    private boolean createNextFrame;
+    private transient Serializer serializer;
+    private Coords lastSelectionPosition;
 
     private transient boolean isTimerRunning = false;
 
@@ -65,6 +74,7 @@ public class Game implements Serializable {
         currentFrame = firstFrame;
         this.name = name;
         this.sport = sport;
+        this.currentMode = Mode.FRAME_BY_FRAME;
     }
 
     public int getId() {
@@ -84,6 +94,14 @@ public class Game implements Serializable {
         }
         return frame;
     }
+    
+    public void changeMode(Mode mode) {
+        this.currentMode = mode;
+    }
+    
+    public Mode getCurrentMode() {
+        return this.currentMode;
+    }
 
     public int getTotalFrames() {
         return totalFrames;
@@ -99,6 +117,16 @@ public class Game implements Serializable {
 
     public static void setSelectionListener(SelectionListener listener) {
         selectionListener = listener;
+    }
+    
+    public void triggerUndoRedo() {
+        triggerReDraw();
+        triggerFrameUpdate();
+        triggerSelection();
+    }
+    
+    public void setSerializer(Serializer serializer) {
+        this.serializer = serializer;
     }
 
     public void startGame() {
@@ -163,6 +191,7 @@ public class Game implements Serializable {
             frameIt = frameIt.getNext();
             ++i;
         } while (frameIt != lastFrame);
+        
         triggerReDraw();
         triggerFrameUpdate();
     }
@@ -184,6 +213,12 @@ public class Game implements Serializable {
     }
 
     public void deleteCurrentEntity() {
+        if (currentEntity instanceof Accessory){
+            currentFrame.setOwner(currentEntity.getId(), null);
+        }
+        if (currentEntity instanceof Player){
+            currentFrame.setOwns(currentEntity.getId(), null);
+        }
         currentFrame.removeEntity(currentEntity.getId());
         currentEntity = null;
         triggerSelection();
@@ -204,12 +239,39 @@ public class Game implements Serializable {
 
     public void selectEntityAt(Coords coords) {
         Entity entity = currentFrame.findEntityAt(coords);
+        
+        int previousEntity = 0;
+        if (currentEntity != null) {
+            previousEntity = currentEntity.getId();
+        }
         currentEntity = entity; //can be null and it's ok
+
+        // entity has changed
+        if ((entity == null && previousEntity != 0) || (entity != null && previousEntity != entity.getId())) {
+            serializer.saveToHistory();
+            
+            if (entity != null) {
+                lastSelectionPosition = currentFrame.getPositions().get(entity.getId()).getCoords();
+            }
+        } else {
+            // if coords have changed, movement was made, so save to history
+            if (entity != null) {
+                Coords currCoords = currentFrame.getPositions().get(entity.getId()).getCoords();
+                if (currCoords.getX() != lastSelectionPosition.getX() && currCoords.getY() != lastSelectionPosition.getY()) {
+                    serializer.saveToHistory();
+                    lastSelectionPosition = currCoords;
+                }
+            }
+        }
         triggerSelection();
     }
 
     public void unSelectCurrentEntity() {
         currentEntity = null;
+        
+        if (this.currentMode == Mode.REAL_TIME) {
+            goToFrame(1);
+        }
         triggerSelection();
     }
 
@@ -232,8 +294,24 @@ public class Game implements Serializable {
     }
 
     public void moveCurrentEntityTo(Coords coords) {
-        if (currentEntity == null) {
-            //Exception?
+        if (this.currentMode == Mode.REAL_TIME) {
+            movementMade = true;
+            
+            if (recordingTimer == null) {
+                recordingTimer = new Timer();
+                
+                recordingTimer.schedule(new TimerTask() {
+                    public void run() {
+                        if (movementMade != false) {
+                            createNextFrame = true;
+                            movementMade = false;
+                        } else {
+                            recordingTimer.cancel();
+                            recordingTimer = null;
+                        }
+                    }
+                }, 0, 500);
+            }
         }
         Position collidesWithPosition = currentFrame.findCollisionAt(currentEntity, coords);
 
@@ -251,34 +329,47 @@ public class Game implements Serializable {
                     currentFrame.movePosition(owner.getId(), coords);
                 }
             }
-            triggerReDraw();
+            if (this.currentMode == Mode.REAL_TIME && createNextFrame) {
+                nextFrame();
+                createNextFrame = false;
+            }
         } else {
             Entity collidedWithEntity = collidesWithPosition.getEntity();
  
             if (currentEntity instanceof Accessory 
                 && collidedWithEntity instanceof Player 
                 && currentFrame.getOwns(collidedWithEntity.getId()) == null
-                && currentFrame.getOwner(currentEntity.getId()) == null){
+                && currentFrame.getOwner(currentEntity.getId()) == null) {
                 
                 currentFrame.movePosition(currentEntity.getId(), collidesWithPosition.getCoords());
                 currentFrame.setOwner(currentEntity.getId(), (Player)collidedWithEntity);
-                triggerReDraw();
+                
+                if (this.currentMode == Mode.REAL_TIME && createNextFrame) {
+                    nextFrame();
+                    createNextFrame = false;
+                }
             }
             if (currentEntity instanceof Player 
                 && collidedWithEntity instanceof Accessory 
                 && currentFrame.getOwns(currentEntity.getId()) == null
-                && currentFrame.getOwner(collidedWithEntity.getId()) == null){
+                && currentFrame.getOwner(collidedWithEntity.getId()) == null) {
                 
                 currentFrame.movePosition(currentEntity.getId(), coords);
                 currentFrame.movePosition(collidedWithEntity.getId(), coords);
                 currentFrame.setOwner(collidedWithEntity.getId(), (Player)currentEntity);
-                triggerReDraw();
+                
+                if (this.currentMode == Mode.REAL_TIME && createNextFrame) {
+                    nextFrame();
+                    createNextFrame = false;
+                }
             }
 
             //throw new CollisionDetectedException("Collided with: " + collidesWithPosition.getEntity().getId());
             currentEntity = null; //Deselect it if collision?
             triggerSelection();
         }
+        
+        triggerReDraw();
     }
 
     public Sport getSport() {
@@ -346,6 +437,7 @@ public class Game implements Serializable {
     public void nextFrame() throws MustPlaceAllPlayersOnFieldException {
         if (currentFrame.getNext() != null) {
             currentFrame = currentFrame.getNext();
+
             triggerReDraw();
             triggerFrameUpdate();
         } else {

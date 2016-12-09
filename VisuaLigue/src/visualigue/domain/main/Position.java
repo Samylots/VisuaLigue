@@ -43,6 +43,7 @@ public class Position implements Serializable {
         this.coords = new Coords(pos.coords);
         this.entity = pos.entity; //same entity ref
         this.owner = pos.owner; //same ref
+        this.owns = pos.owns; //same ref
         this.isMoved = false; //default
     }
 

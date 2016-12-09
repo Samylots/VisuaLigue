@@ -59,35 +59,41 @@ public class GameDrawer {
             positions = VisuaLigue.domain.getLastPositions();
             drawPositions(positions, UNMOVED_TRANSPARENCY);
         }
-
     }
 
-    private void drawPositions(List<PositionDTO> positions, double opactity) {
+    private void drawPositions(List<PositionDTO> positions, double opacity) {
         for (PositionDTO position : positions) {
+            double posOpacity = opacity;
+            
             if (!position.isMoved && !VisuaLigue.domain.isVisualizing()) {
-                opactity = UNMOVED_TRANSPARENCY;
+                posOpacity = UNMOVED_TRANSPARENCY;
             }
             if (VisuaLigue.domain.isCurrentEntity(position.entity.id)) {
-                drawSelection(getPixelPosition(position.coords), position.entity);
+                drawSelection(getPixelPosition(position.coords), position.entity, posOpacity);
             }
             if (position.entity instanceof PlayerDTO) {
                 PlayerDTO player = (PlayerDTO) position.entity;
-                drawPlayer(getPixelPosition(position.coords), player, opactity);
+                drawPlayer(getPixelPosition(position.coords), player, posOpacity);
             } else if (position.entity instanceof ObstacleDTO) {
                 drawEntity(getPixelPosition(position.coords), position.entity, createObstacleImage(position.entity.picturePath), 1); //Always there even if it don't move
             } else if (position.entity instanceof AccessoryDTO) {
-                drawEntity(getPixelPosition(position.coords), position.entity, createAccessoryImage(position.entity.picturePath), opactity);
+                drawEntity(getPixelPosition(position.coords), position.entity, createAccessoryImage(position.entity.picturePath), posOpacity);
             } else {
                 //error or not?
             }
         }
     }
 
-    private void drawSelection(Coords coords, EntityDTO entity) {
+    private void drawSelection(Coords coords, EntityDTO entity, double opacity) {
         Dimension dim = getPixelDimension(entity.dimension);
+        double coordsX = coords.getX();
+        double coordsY = coords.getY();
+        double width = dim.getWidth();
+        double height = dim.getHeight();
+
         gc.setFill(SELECTION_COLOR);
         gc.fillOval(coords.getX() - SELECTION_OFFSET, coords.getY() - SELECTION_OFFSET, dim.getWidth() + SELECTION_OFFSET * 2, dim.getHeight() + SELECTION_OFFSET * 2);
-    }
+   }
 
     private Image createPlayerImage(String picPath) {
         if (!playerPicPath.equals(picPath)) {

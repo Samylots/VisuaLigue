@@ -31,7 +31,9 @@ public class Frame implements Serializable {
     public Frame(Frame backFrame) {
         this.back = backFrame;
         back.positions.entrySet().stream().forEach((entry) -> {
-            this.positions.put(entry.getKey(), new Position(entry.getValue())); //copy them, not the reference!
+            Position newPos = new Position(entry.getValue());
+            newPos.setIsMoved(false);
+            this.positions.put(entry.getKey(), newPos); //copy them, not the reference!
         });
     }
 
@@ -114,7 +116,37 @@ public class Frame implements Serializable {
     public void setOwner(int idEntity, Player owner) {
         Position entityPosition = positions.get(idEntity);
         entityPosition.setOwner(owner);
-        positions.get(owner.getId()).setOwns((Accessory)entityPosition.getEntity());
+        
+        // Removing owner
+        if (owner == null) {
+            this.positions.entrySet().stream().forEach((entry) -> {
+                Position pos = entry.getValue();
+                
+                if (pos.getOwns() != null && pos.getOwns().getId() == idEntity) {
+                    pos.setOwns(null);
+                }
+            });
+        } else {
+            positions.get(owner.getId()).setOwns((Accessory)entityPosition.getEntity());
+        }
+    }
+    
+    public void setOwns(int idEntity, Accessory owns) {
+        Position entityPosition = positions.get(idEntity);
+        entityPosition.setOwns(owns);
+        
+        // Removing owner
+        if (owns == null) {
+            this.positions.entrySet().stream().forEach((entry) -> {
+                Position pos = entry.getValue();
+                
+                if (pos.getOwner() != null && pos.getOwner().getId() == idEntity) {
+                    pos.setOwner(null);
+                }
+            });
+        } else {
+            positions.get(owns.getId()).setOwner((Player)entityPosition.getEntity());
+        }
     }
 
     public boolean hasOwner(int idEntity) {

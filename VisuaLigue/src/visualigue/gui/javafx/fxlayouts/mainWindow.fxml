@@ -18,12 +18,18 @@
                   <MenuItem mnemonicParsing="false" onAction="#ExportGame" text="Export Game" />
                </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Items">
-              <items>
+          <Menu mnemonicParsing="false" text="Edit">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#Undo" text="Undo" />
+                  <MenuItem mnemonicParsing="false" onAction="#Redo" text="Redo" />
+               </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Ressources">
+               <items>
                   <MenuItem mnemonicParsing="false" onAction="#openSportList" text="Sports" />
                   <MenuItem mnemonicParsing="false" onAction="#openObstacleList" text="Obstacles" />
-              </items>
-            </Menu>
+               </items>
+          </Menu>
           <Menu mnemonicParsing="false" text="View">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#setToMode1" text="Creation Mode : Frame By Frame" />

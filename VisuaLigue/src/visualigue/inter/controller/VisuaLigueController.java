@@ -52,27 +52,25 @@ public class VisuaLigueController implements Serializable {
     private Ressources ressources = new Ressources();
     private double frameTimeEquiv;
     private GameExporter exporter;
-    private Mode currentMode;
     private boolean showingRoles;
-
     private int idGenetation;
 
     public VisuaLigueController() {
         this.showingRoles = true;
-        this.currentMode = Mode.FRAME_BY_FRAME;
         //this.folder = folder; //need to keep it on first save
         this.serializer = new Serializer(this);
-
         this.serializer.loadFromFile();
+        this.currentGame = null;
     }
 
     public void copy(VisuaLigueController controller) {
         this.folder = controller.folder;
-        //this.currentGame = controller.currentGame; //On loading we don't want a game opened
+        this.currentGame = controller.currentGame;
+        if (currentGame != null)
+            this.currentGame.setSerializer(serializer);
         this.ressources = controller.ressources;
         this.frameTimeEquiv = controller.frameTimeEquiv;
         this.exporter = controller.exporter;
-        this.currentMode = controller.currentMode;
         this.showingRoles = controller.showingRoles;
         this.idGenetation = controller.idGenetation;
     }
@@ -110,6 +108,7 @@ public class VisuaLigueController implements Serializable {
         } else {
             currentGame.goToFrame(currentFrame + number);
         }
+        serializer.saveToHistory();
     }
 
     public List<TeamDTO> getCurrentGameTeams() {
@@ -152,18 +151,7 @@ public class VisuaLigueController implements Serializable {
     public void loadGame(int gameId) {
         //TODO check for saving?
         currentGame = ressources.getGame(gameId);
-    }
-
-    public void startNewMovement() {
-        //createNewMovement and start recording
-    }
-
-    public void recordMovement(Coords coord) {
-        //createNewMovement and start recording
-    }
-
-    public void stopRecordingMovement() {
-
+        currentGame.setSerializer(serializer);
     }
 
     public void exportGame(String path) {
@@ -174,19 +162,23 @@ public class VisuaLigueController implements Serializable {
     }
 
     public void changeMode(Mode mode) {
-        this.currentMode = mode;
+        currentGame.changeMode(mode);
+        serializer.saveToHistory();
     }
 
     public void undo() {
         this.serializer.undo();
+        currentGame.triggerUndoRedo();
     }
 
     public void redo() {
         this.serializer.redo();
+        currentGame.triggerUndoRedo();
     }
 
     public void togglePlayerRoles() {
         this.showingRoles = !this.showingRoles;
+        serializer.saveToHistory();
     }
 
     public void selectEntityAt(Coords coord) {
@@ -195,6 +187,7 @@ public class VisuaLigueController implements Serializable {
 
     public void unSelectCurrentEntity() {
         currentGame.unSelectCurrentEntity();
+        serializer.saveToHistory();
     }
 
     public String getFolder() {
@@ -247,11 +240,11 @@ public class VisuaLigueController implements Serializable {
     }
 
     public Mode getCurrentMode() {
-        return currentMode;
+        return currentGame.getCurrentMode();
     }
 
     public boolean isVisualizing() {
-        return currentMode == Mode.VISUALISATION;
+        return currentGame.getCurrentMode() == Mode.VISUALISATION;
     }
 
     public boolean isShowingRoles() {
@@ -260,6 +253,7 @@ public class VisuaLigueController implements Serializable {
 
     public void toggleRoles() {
         showingRoles = !showingRoles;
+        serializer.saveToHistory();
     }
 
     public Dimension getFieldDimension() {
@@ -308,6 +302,7 @@ public class VisuaLigueController implements Serializable {
     public void addPlayerAt(Coords coords, int playerId) throws CollisionDetectedException {
         if (playerId > 0) {
             currentGame.addPlayerAt(coords, playerId);
+            serializer.saveToHistory();
         }
     }
 
@@ -330,6 +325,7 @@ public class VisuaLigueController implements Serializable {
 
     public void newFrame() throws MustPlaceAllPlayersOnFieldException {
         currentGame.newFrame();
+        serializer.saveToHistory();
     }
 
     public void deleteCurrentFrame() throws CantDeleteFrameException {
@@ -338,27 +334,36 @@ public class VisuaLigueController implements Serializable {
 
     public void nextFrame() {
         currentGame.nextFrame();
+        serializer.saveToHistory();
     }
 
     public void previousFrame() {
         currentGame.previousFrame();
+        serializer.saveToHistory();
     }
 
     // Remplacer par une seule fonction deleteCurrentEntity?
     public void deleteCurrentEntity() {
         currentGame.deleteCurrentEntity();
+        serializer.saveToHistory();
     }
 
     public void addObstacleAt(Coords coords, int obstacleId) {
         currentGame.addObstacleAt(ressources.getObstacle(obstacleId), coords);
+        serializer.saveToHistory();
     }
 
     public void addAccessoryAt(Coords coords) {
         currentGame.addAccessoryAt(coords);
+        serializer.saveToHistory();
+    }
+    
+    public void movementCompleted() {
+        serializer.saveToHistory();
     }
 
     public void moveCurrentEntityTo(Coords coords) {
-        if (currentMode != Mode.VISUALISATION) { //can't edit on visualization
+        if (currentGame.getCurrentMode() != Mode.VISUALISATION) { //can't edit on visualization
             currentGame.moveCurrentEntityTo(coords);
         }
     }

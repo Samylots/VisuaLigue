@@ -82,6 +82,7 @@ public class MainWindowController implements Initializable, Serializable, Select
         board.heightProperty().bind(root.heightProperty());
         board.setOnMouseClicked((MouseEvent e) -> handleBoardClick(e));
         board.addEventHandler(MouseEvent.MOUSE_PRESSED, (e) -> trySelecting(e));
+        board.addEventHandler(MouseEvent.MOUSE_RELEASED, (e) -> trySelecting(e));
         board.addEventHandler(MouseEvent.MOUSE_DRAGGED, (e) -> handleBoardMouseDrag(e));
         board.addEventHandler(MouseEvent.MOUSE_DRAGGED, (e) -> board.redraw());
 
@@ -146,6 +147,16 @@ public class MainWindowController implements Initializable, Serializable, Select
                 loadGame(gameId);
             }
         }
+    }
+    
+    @FXML
+    private void Undo(ActionEvent event) {
+        VisuaLigue.domain.undo();
+    }
+    
+    @FXML
+    private void Redo(ActionEvent event) {
+        VisuaLigue.domain.redo();
     }
 
     private void defaultLayout() {
