@@ -35,9 +35,14 @@
               <MenuItem mnemonicParsing="false" onAction="#setToMode1" text="Creation Mode : Frame By Frame" />
                   <MenuItem mnemonicParsing="false" onAction="#setToMode2" text="Creation Mode : Real Time" />
                   <MenuItem mnemonicParsing="false" onAction="#visualize" text="Visualization" />
-                  <RadioMenuItem mnemonicParsing="false" onAction="#toggleRoles" text="Hide/Show Roles" />
+                  <RadioMenuItem fx:id="showRoleOption" mnemonicParsing="false" onAction="#toggleRoles" text="Hide/Show Roles" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Options">
+               <items>
+                  <CheckMenuItem fx:id="maxPlayerOption" mnemonicParsing="false" onAction="#toggleMaxPlayer" selected="true" text="Max player" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
    </top>

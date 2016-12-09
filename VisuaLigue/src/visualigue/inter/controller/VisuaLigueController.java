@@ -256,6 +256,14 @@ public class VisuaLigueController implements Serializable {
         serializer.saveToHistory();
     }
 
+    public void toggleMaxPlayer() {
+        currentGame.toggleMaxPlayer();
+    }
+
+    public boolean isMaxPlayer() {
+        return currentGame.isMaxPlayer();
+    }
+
     public Dimension getFieldDimension() {
         if (!hasOpenedGame()) {
             throw new NoCurrentGameException("There is no current game defined!");

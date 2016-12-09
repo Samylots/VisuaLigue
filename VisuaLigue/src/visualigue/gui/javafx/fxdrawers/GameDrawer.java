@@ -53,11 +53,8 @@ public class GameDrawer {
         gc.setStroke(Color.BLACK);
         gc.setFill(Color.WHITE);
         gc.save();
-        List<PositionDTO> positions = VisuaLigue.domain.getActualPositions();
-        drawPositions(positions, 1);
         if (!VisuaLigue.domain.isVisualizing()) {
-            positions = VisuaLigue.domain.getLastPositions();
-            drawPositions(positions, UNMOVED_TRANSPARENCY);
+            drawPositions(VisuaLigue.domain.getLastPositions(), UNMOVED_TRANSPARENCY);
         }
     }
 

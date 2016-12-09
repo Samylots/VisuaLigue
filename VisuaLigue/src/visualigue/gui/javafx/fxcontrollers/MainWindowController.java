@@ -14,7 +14,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.ToolBar;
@@ -67,6 +69,10 @@ public class MainWindowController implements Initializable, Serializable, Select
     private MainToolbarController mainToolbarController;
 
     private VisuaLigueBoard board;
+    @FXML
+    private CheckMenuItem maxPlayerOption;
+    @FXML
+    private RadioMenuItem showRoleOption;
 
     /**
      * Initializes the controller class.
@@ -77,6 +83,10 @@ public class MainWindowController implements Initializable, Serializable, Select
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initToolbars();
+
+        showRoleOption.setText("Show player roles");
+        showRoleOption.setSelected(VisuaLigue.domain.isShowingRoles());
+        maxPlayerOption.setSelected(VisuaLigue.domain.isMaxPlayer());
 
         board = new VisuaLigueBoard();
         board.heightProperty().bind(root.heightProperty());
@@ -258,12 +268,6 @@ public class MainWindowController implements Initializable, Serializable, Select
         VisuaLigue.domain.toggleRoles();
     }
 
-    @FXML
-    private void openOptions(ActionEvent event) {
-        //is there any options??
-        //Hum maybe frames time option?
-    }
-
     public void changeViewTo(UIMode state) {
         VisuaLigue.domain.changeMode(state.getMode()); //Telling domain that we changed mode
         TitledPane nodeView = (TitledPane) state.getNode();
@@ -381,6 +385,14 @@ public class MainWindowController implements Initializable, Serializable, Select
     @Override
     public void accessorySelected(AccessoryDTO accessory) {
         root.setLeft(accessoryToolbar);
+    }
+
+    @FXML
+    private void toggleMaxPlayer(ActionEvent event) {
+        VisuaLigue.domain.toggleMaxPlayer();
+        if (isAddingPlayer()) {
+            showTeamList(); //refresh to show dummy player
+        }
     }
 
 }
