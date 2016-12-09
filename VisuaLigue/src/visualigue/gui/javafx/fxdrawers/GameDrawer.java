@@ -56,12 +56,13 @@ public class GameDrawer {
         if (!VisuaLigue.domain.isVisualizing()) {
             drawPositions(VisuaLigue.domain.getLastPositions(), UNMOVED_TRANSPARENCY);
         }
+        drawPositions(VisuaLigue.domain.getActualPositions(), 1);
     }
 
     private void drawPositions(List<PositionDTO> positions, double opacity) {
         for (PositionDTO position : positions) {
             double posOpacity = opacity;
-            
+
             if (!position.isMoved && !VisuaLigue.domain.isVisualizing()) {
                 posOpacity = UNMOVED_TRANSPARENCY;
             }
@@ -90,7 +91,7 @@ public class GameDrawer {
 
         gc.setFill(SELECTION_COLOR);
         gc.fillOval(coords.getX() - SELECTION_OFFSET, coords.getY() - SELECTION_OFFSET, dim.getWidth() + SELECTION_OFFSET * 2, dim.getHeight() + SELECTION_OFFSET * 2);
-   }
+    }
 
     private Image createPlayerImage(String picPath) {
         if (!playerPicPath.equals(picPath)) {
