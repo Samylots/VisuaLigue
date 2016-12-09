@@ -66,8 +66,9 @@ public class VisuaLigueController implements Serializable {
     public void copy(VisuaLigueController controller) {
         this.folder = controller.folder;
         this.currentGame = controller.currentGame;
-        if (currentGame != null)
+        if (currentGame != null) {
             this.currentGame.setSerializer(serializer);
+        }
         this.ressources = controller.ressources;
         this.frameTimeEquiv = controller.frameTimeEquiv;
         this.exporter = controller.exporter;
@@ -261,7 +262,10 @@ public class VisuaLigueController implements Serializable {
     }
 
     public boolean isMaxPlayer() {
-        return currentGame.isMaxPlayer();
+        if (currentGame != null) {
+            return currentGame.isMaxPlayer();
+        }
+        return true;
     }
 
     public Dimension getFieldDimension() {
@@ -365,7 +369,7 @@ public class VisuaLigueController implements Serializable {
         currentGame.addAccessoryAt(coords);
         serializer.saveToHistory();
     }
-    
+
     public void movementCompleted() {
         serializer.saveToHistory();
     }

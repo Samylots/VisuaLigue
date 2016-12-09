@@ -9,12 +9,12 @@ package visualigue.inter.utils.exceptions;
  *
  * @author Samuel
  */
-public class CantFindSpecifiedFXMLFile extends RuntimeException {
+public class CantOpenSpecifiedFXMLFile extends RuntimeException {
 
-    public CantFindSpecifiedFXMLFile() {
+    public CantOpenSpecifiedFXMLFile() {
     }
 
-    public CantFindSpecifiedFXMLFile(String message) {
+    public CantOpenSpecifiedFXMLFile(String message) {
         super(message);
     }
 

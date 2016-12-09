@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import visualigue.inter.utils.exceptions.CantFindSpecifiedFXMLFile;
+import visualigue.inter.utils.exceptions.CantOpenSpecifiedFXMLFile;
 
 /**
  *
@@ -41,8 +41,9 @@ public class FXLoader {
             return fxmlLoader.load();
         } catch (IOException ex) {
             Logger.getLogger(FXLoader.class.getName()).log(Level.SEVERE, null, ex.getMessage());
+            System.out.println(ex.getMessage());
+            throw new CantOpenSpecifiedFXMLFile("File in error: '" + name + "'\n at : " + getClass().getResource(name));
         }
-        throw new CantFindSpecifiedFXMLFile("File in error: '" + name);
     }
 
     public <T> T getLastController() {
