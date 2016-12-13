@@ -7,6 +7,7 @@ package visualigue.gui.javafx.fxcontrollers.states;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +25,7 @@ import visualigue.domain.events.FramesListener;
 public class VisualizationBoardController implements Initializable, FramesListener {
 
     private Parent parent;
+    private boolean isChangingBySlider = false;
 
     @Override
     public void init(Parent parent) {
@@ -40,9 +42,19 @@ public class VisualizationBoardController implements Initializable, FramesListen
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        timeSlider.setMin(1);
-        timeSlider.setDisable(true);
         timeConfig.setText("5");
+        timeSlider.setMin(1);
+        timeSlider.setShowTickLabels(true);
+        timeSlider.setShowTickMarks(true);
+        timeSlider.setBlockIncrement(1);
+        timeSlider.setMajorTickUnit(5);
+        timeSlider.setMinorTickCount(4);
+        timeSlider.setSnapToTicks(true);
+        timeSlider.valueProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
+            isChangingBySlider = true;
+            VisuaLigue.domain.showFrame(new_val.intValue());
+            isChangingBySlider = false;
+        });
     }
 
     @FXML
@@ -91,8 +103,10 @@ public class VisualizationBoardController implements Initializable, FramesListen
 
     @Override
     public void updateFrames() {
-        timeSlider.setMax(VisuaLigue.domain.getTotalFrame());
-        timeSlider.setValue(VisuaLigue.domain.getActualFrame());
+        if (!isChangingBySlider) {
+            timeSlider.setMax(VisuaLigue.domain.getTotalFrame());
+            timeSlider.setValue(VisuaLigue.domain.getActualFrame());
+        }
     }
 
 }

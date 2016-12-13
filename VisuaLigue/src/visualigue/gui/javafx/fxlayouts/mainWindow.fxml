@@ -18,10 +18,10 @@
                   <MenuItem mnemonicParsing="false" onAction="#ExportGame" text="Export Game" />
                </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
+          <Menu fx:id="editMenu" mnemonicParsing="false" text="Edit">
                <items>
-                  <MenuItem mnemonicParsing="false" onAction="#Undo" text="Undo" />
-                  <MenuItem mnemonicParsing="false" onAction="#Redo" text="Redo" />
+                  <MenuItem fx:id="undoOption" mnemonicParsing="false" onAction="#Undo" text="Undo" />
+                  <MenuItem fx:id="redoOption" mnemonicParsing="false" onAction="#Redo" text="Redo" />
                </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Ressources">
@@ -30,15 +30,18 @@
                   <MenuItem mnemonicParsing="false" onAction="#openObstacleList" text="Obstacles" />
                </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="View">
+          <Menu fx:id="viewMenu" mnemonicParsing="false" text="View">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#setToMode1" text="Creation Mode : Frame By Frame" />
-                  <MenuItem mnemonicParsing="false" onAction="#setToMode2" text="Creation Mode : Real Time" />
-                  <MenuItem mnemonicParsing="false" onAction="#visualize" text="Visualization" />
-                  <RadioMenuItem fx:id="showRoleOption" mnemonicParsing="false" onAction="#toggleRoles" text="Hide/Show Roles" />
+                <RadioMenuItem fx:id="frameByFrameButton" mnemonicParsing="false" onAction="#setToMode1" text="Creation Mode : Frame By Frame">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="mode" />
+                     </toggleGroup></RadioMenuItem>
+                <RadioMenuItem fx:id="realTimeButton" mnemonicParsing="false" onAction="#setToMode2" text="Creation Mode : Real Time" toggleGroup="$mode" />
+                <RadioMenuItem fx:id="visualisationButton" mnemonicParsing="false" onAction="#visualize" text="Visualization" toggleGroup="$mode" />
+                <RadioMenuItem fx:id="showRoleOption" mnemonicParsing="false" onAction="#toggleRoles" text="Hide/Show Roles" />
             </items>
           </Menu>
-            <Menu mnemonicParsing="false" text="Options">
+            <Menu fx:id="optionsMenu" mnemonicParsing="false" text="Options">
                <items>
                   <CheckMenuItem fx:id="maxPlayerOption" mnemonicParsing="false" onAction="#toggleMaxPlayer" selected="true" text="Max player" />
                </items>

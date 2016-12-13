@@ -21,6 +21,9 @@ import javafx.scene.control.ToolBar;
  */
 public class MainToolbarController implements Initializable {
 
+    @FXML
+    private ToggleButton cursorButton;
+
     public enum EditMode {
 
         CURSOR,
@@ -50,6 +53,11 @@ public class MainToolbarController implements Initializable {
 
     public void init(MainWindowController paretnController) {
         this.parentController = paretnController;
+    }
+
+    public void selectCursorMode() {
+        untoggleOthers(cursorButton);
+        mode = EditMode.CURSOR;
     }
 
     @FXML

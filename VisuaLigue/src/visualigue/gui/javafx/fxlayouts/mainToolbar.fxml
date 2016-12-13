@@ -8,7 +8,7 @@
 
 <ToolBar fx:id="toolbar" orientation="VERTICAL" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualigue.gui.javafx.fxcontrollers.MainToolbarController">
    <items>
-      <ToggleButton contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#cursorMode" prefWidth="50.0" text="ToggleButton">
+      <ToggleButton fx:id="cursorButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#cursorMode" prefWidth="50.0" text="ToggleButton">
          <graphic>
             <ImageView fitHeight="42.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
                <image>

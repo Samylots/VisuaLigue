@@ -19,6 +19,7 @@ import visualigue.inter.utils.Coords;
 import visualigue.gui.javafx.fxcontrollers.VisuaLigueBoard;
 import visualigue.inter.utils.Dimension;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
@@ -60,13 +61,16 @@ public class GameDrawer {
     }
 
     private void drawPositions(List<PositionDTO> positions, double opacity) {
+        Paint previousColor = Color.WHITE;
         for (PositionDTO position : positions) {
+            gc.setFill(previousColor);
             double posOpacity = opacity;
 
             if (!position.isMoved && !VisuaLigue.domain.isVisualizing()) {
                 posOpacity = UNMOVED_TRANSPARENCY;
             }
             if (VisuaLigue.domain.isCurrentEntity(position.entity.id)) {
+                previousColor = gc.getFill();
                 drawSelection(getPixelPosition(position.coords), position.entity, posOpacity);
             }
             if (position.entity instanceof PlayerDTO) {
@@ -91,30 +95,6 @@ public class GameDrawer {
 
         gc.setFill(SELECTION_COLOR);
         gc.fillOval(coords.getX() - SELECTION_OFFSET, coords.getY() - SELECTION_OFFSET, dim.getWidth() + SELECTION_OFFSET * 2, dim.getHeight() + SELECTION_OFFSET * 2);
-    }
-
-    private Image createPlayerImage(String picPath) {
-        if (!playerPicPath.equals(picPath)) {
-            playerPicPath = picPath;
-            playerImage = new Image(picPath);
-        }
-        return playerImage;
-    }
-
-    private Image createObstacleImage(String picPath) {
-        if (!obstaclePicPath.equals(picPath)) {
-            obstaclePicPath = picPath;
-            obstacleImage = new Image(picPath);
-        }
-        return obstacleImage;
-    }
-
-    private Image createAccessoryImage(String picPath) {
-        if (!accessoryPicPath.equals(picPath)) {
-            accessoryPicPath = picPath;
-            accessoryImage = new Image(picPath);
-        }
-        return accessoryImage;
     }
 
     private void drawPlayer(Coords coords, PlayerDTO entity, double opacity) {
@@ -163,6 +143,30 @@ public class GameDrawer {
         gc.setFont(Font.font(size));
         gc.strokeText(text, x, y);
         gc.fillText(text, x, y);
+    }
+
+    private Image createPlayerImage(String picPath) {
+        if (!playerPicPath.equals(picPath)) {
+            playerPicPath = picPath;
+            playerImage = new Image(picPath);
+        }
+        return playerImage;
+    }
+
+    private Image createObstacleImage(String picPath) {
+        if (!obstaclePicPath.equals(picPath)) {
+            obstaclePicPath = picPath;
+            obstacleImage = new Image(picPath);
+        }
+        return obstacleImage;
+    }
+
+    private Image createAccessoryImage(String picPath) {
+        if (!accessoryPicPath.equals(picPath)) {
+            accessoryPicPath = picPath;
+            accessoryImage = new Image(picPath);
+        }
+        return accessoryImage;
     }
 
     private Coords getPixelPosition(Coords domainCoords) {

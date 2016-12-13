@@ -54,7 +54,7 @@ public class Serializer {
             }
             history.addFirst(byteArrayOut.toByteArray());
             historyPointer = 0;
-            
+
             System.out.println("save");
         } catch (IOException e) {
             e.printStackTrace();
@@ -99,17 +99,25 @@ public class Serializer {
     }
 
     public void undo() {
-        if (historyPointer < history.size() - 1) {
+        if (canUndo()) {
             historyPointer++;
             gotoHistory(historyPointer);
         }
     }
 
     public void redo() {
-        if (historyPointer > 0) {
+        if (canRedo()) {
             historyPointer--;
             gotoHistory(historyPointer);
         }
+    }
+
+    public boolean canUndo() {
+        return historyPointer < history.size() - 1;
+    }
+
+    public boolean canRedo() {
+        return historyPointer > 0;
     }
 
     private void gotoHistory(int pointer) {

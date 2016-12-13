@@ -16,9 +16,12 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -73,6 +76,24 @@ public class MainWindowController implements Initializable, Serializable, Select
     private CheckMenuItem maxPlayerOption;
     @FXML
     private RadioMenuItem showRoleOption;
+    @FXML
+    private MenuItem undoOption;
+    @FXML
+    private MenuItem redoOption;
+    @FXML
+    private RadioMenuItem frameByFrameButton;
+    @FXML
+    private RadioMenuItem realTimeButton;
+    @FXML
+    private RadioMenuItem visualisationButton;
+    @FXML
+    private Menu editMenu;
+    @FXML
+    private ToggleGroup mode;
+    @FXML
+    private Menu optionsMenu;
+    @FXML
+    private Menu viewMenu;
 
     /**
      * Initializes the controller class.
@@ -102,11 +123,18 @@ public class MainWindowController implements Initializable, Serializable, Select
     }
 
     private void resetLayout() {
+        updateMenus();
+        updateUndoRedoButtons();
         StackPane node = new StackPane();
         node.getChildren().add(new Label("No Game To Show\nClick on File -> New Game To Start!"));
         root.setCenter(node);
         root.setLeft(null);
         root.setBottom(null);
+    }
+
+    private void updateUndoRedoButtons() {
+        undoOption.setDisable(!VisuaLigue.domain.canUndo());
+        redoOption.setDisable(!VisuaLigue.domain.canRedo());
     }
 
     private void initToolbars() {
@@ -155,18 +183,21 @@ public class MainWindowController implements Initializable, Serializable, Select
             if (input.isConfirmed()) {
                 int gameId = VisuaLigue.domain.createNewGame(input.getInput(), sportId);
                 loadGame(gameId);
+                updateUndoRedoButtons();
             }
         }
     }
-    
+
     @FXML
     private void Undo(ActionEvent event) {
         VisuaLigue.domain.undo();
+        updateUndoRedoButtons();
     }
-    
+
     @FXML
     private void Redo(ActionEvent event) {
         VisuaLigue.domain.redo();
+        updateUndoRedoButtons();
     }
 
     private void defaultLayout() {
@@ -207,10 +238,6 @@ public class MainWindowController implements Initializable, Serializable, Select
                 loadGame(gameId);
             }
         }
-
-        //ask if sure to change game etc..
-        /*Dialog popup = new Dialog("Game Loader", "This game has been successfully loaded!", root);
-         newGame(event);*/
     }
 
     @FXML
@@ -233,15 +260,21 @@ public class MainWindowController implements Initializable, Serializable, Select
     private void openObstacleList(ActionEvent event) {
         Node node = FXLoader.getInstance().load("obstacleList.fxml");
         ObstacleListController controller = FXLoader.getInstance().getLastController();
+        controller.init(this);
         controller.refreshObstacles();
         CustomWindow window = new CustomWindow(root, (Parent) node);
         window.setTitle("Obstacle List");
         window.showAndWait();
     }
 
+    public void refreshObstacleList() {
+        addObstacleList.refreshObstacles();
+    }
+
     @FXML
     private void setToMode1(ActionEvent event) {
         if (VisuaLigue.domain.hasOpenedGame()) {
+            frameByFrameButton.setSelected(true);
             changeViewTo(UIMode.FRAME_BY_FRAME);
             showDefaultToolbar();
         }
@@ -250,6 +283,7 @@ public class MainWindowController implements Initializable, Serializable, Select
     @FXML
     private void setToMode2(ActionEvent event) {
         if (VisuaLigue.domain.hasOpenedGame()) {
+            realTimeButton.setSelected(true);
             changeViewTo(UIMode.REAL_TIME);
             showDefaultToolbar();
         }
@@ -258,6 +292,7 @@ public class MainWindowController implements Initializable, Serializable, Select
     @FXML
     private void visualize(ActionEvent event) {
         if (VisuaLigue.domain.hasOpenedGame()) {
+            visualisationButton.setSelected(true);
             changeViewTo(UIMode.VISUALISATION);
             hideToolbars();
         }
@@ -277,6 +312,14 @@ public class MainWindowController implements Initializable, Serializable, Select
         root.setBottom(nodeView);
         Platform.runLater(() -> nodeView.requestLayout()); //Node height bug fixing
         board.heightProperty().bind(root.heightProperty().subtract(nodeView.heightProperty()).subtract(30));
+        updateUndoRedoButtons();
+        updateMenus();
+    }
+
+    private void updateMenus() {
+        editMenu.setVisible(VisuaLigue.domain.hasOpenedGame() && !VisuaLigue.domain.isVisualizing());
+        optionsMenu.setVisible(VisuaLigue.domain.hasOpenedGame() && !VisuaLigue.domain.isVisualizing());
+        viewMenu.setVisible(VisuaLigue.domain.hasOpenedGame());
     }
 
     public boolean isAddingPlayer() {
@@ -296,6 +339,7 @@ public class MainWindowController implements Initializable, Serializable, Select
     }
 
     public void showDefaultToolbar() {
+        mainToolbarController.selectCursorMode();
         board.widthProperty().bind(root.widthProperty().subtract(mainToolbar.widthProperty()));
         root.setLeft(mainToolbar);
     }
@@ -328,6 +372,7 @@ public class MainWindowController implements Initializable, Serializable, Select
     public void loadGame(int gameId) {
         VisuaLigue.domain.loadGame(gameId);
         defaultLayout();
+        setToMode1(null);
     }
 
     private void handleBoardClick(MouseEvent e) {
