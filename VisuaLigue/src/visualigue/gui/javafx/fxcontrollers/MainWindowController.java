@@ -29,12 +29,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import visualigue.VisuaLigue;
 import visualigue.inter.dto.AccessoryDTO;
 import visualigue.inter.dto.ObstacleDTO;
 import visualigue.inter.dto.PlayerDTO;
 import visualigue.domain.events.FramesListener;
 import visualigue.domain.events.SelectionListener;
+import visualigue.gui.javafx.fxcontrollers.states.LoginPaneController;
 import visualigue.inter.utils.exceptions.CollisionDetectedException;
 import visualigue.gui.javafx.helpers.UIMode;
 import visualigue.gui.javafx.fxlayouts.CustomWindow;
@@ -120,6 +122,30 @@ public class MainWindowController implements Initializable, Serializable, Select
         VisuaLigue.domain.addEventListener("draw", board);
         VisuaLigue.domain.addEventListener("select", this);
         resetLayout();
+
+        //force login before anything!
+        Platform.runLater(() -> { //Login form auto open
+            Node node = FXLoader.getInstance().load("loginPane.fxml");
+            LoginPaneController controller = FXLoader.getInstance().getLastController();
+            CustomWindow window = new CustomWindow(root, (Parent) node);
+            window.setTitle("Login");
+            boolean wantToLogin = true;
+            do { //loop if want to login
+                window.showAndWait();
+                if (!controller.isValidLogin()) {
+                    Dialog popup = new Dialog("Login error", "Please login correctly to create a new game.", root);
+                    if (!popup.isConfirmed()) { //close all if not logged
+                        wantToLogin = false;
+                        Platform.runLater(() -> {
+                            VisuaLigue.domain.close();
+                            Stage stage = (Stage) root.getScene().getWindow();
+                            stage.close();
+                        });
+                    }
+                }
+            } while (!controller.isValidLogin() && wantToLogin);
+        });
+
     }
 
     private void resetLayout() {
