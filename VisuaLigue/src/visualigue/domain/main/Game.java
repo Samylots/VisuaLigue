@@ -326,10 +326,10 @@ public class Game implements Serializable {
     public void moveCurrentEntityTo(Coords coords) {
         if (this.currentMode == Mode.REAL_TIME) {
             movementMade = true;
-
+            
             if (recordingTimer == null) {
                 recordingTimer = new Timer();
-
+                
                 recordingTimer.schedule(new TimerTask() {
                     public void run() {
                         if (movementMade != false) {
@@ -359,6 +359,10 @@ public class Game implements Serializable {
                     currentFrame.movePosition(owner.getId(), coords);
                 }
             }
+            if (this.currentMode == Mode.REAL_TIME && createNextFrame) {
+                nextFrame();
+                createNextFrame = false;
+            }
         } else {
             Entity collidedWithEntity = collidesWithPosition.getEntity();
  
@@ -375,25 +379,25 @@ public class Game implements Serializable {
                     createNextFrame = false;
                 }
             }
-            if (currentEntity instanceof Player
-                    && collidedWithEntity instanceof Accessory
-                    && currentFrame.getOwns(currentEntity.getId()) == null
-                    && currentFrame.getOwner(collidedWithEntity.getId()) == null) {
-
+            if (currentEntity instanceof Player 
+                && collidedWithEntity instanceof Accessory 
+                && currentFrame.getOwns(currentEntity.getId()) == null
+                && currentFrame.getOwner(collidedWithEntity.getId()) == null) {
+                
                 currentFrame.movePosition(currentEntity.getId(), coords);
                 currentFrame.movePosition(collidedWithEntity.getId(), coords);
-                currentFrame.setOwner(collidedWithEntity.getId(), (Player) currentEntity);
+                currentFrame.setOwner(collidedWithEntity.getId(), (Player)currentEntity);
+                
+                if (this.currentMode == Mode.REAL_TIME && createNextFrame) {
+                    nextFrame();
+                    createNextFrame = false;
+                }
             }
             currentEntity = null; //Deselect it if collision?
             triggerSelection();
         }
-
-        if (this.currentMode == Mode.REAL_TIME && createNextFrame) {
-            nextFrame();
-            createNextFrame = false;
-        } else { //nextFrame already called triggerReDraw();
-            triggerReDraw();
-        }
+        
+        triggerReDraw();
     }
 
     public Sport getSport() {
