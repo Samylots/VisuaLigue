@@ -187,30 +187,6 @@ public class GameDrawer {
         gc.fillText(text, x, y);
     }
 
-    private Image createPlayerImage(String picPath) {
-        if (!playerPicPath.equals(picPath)) {
-            playerPicPath = picPath;
-            playerImage = new Image(picPath);
-        }
-        return playerImage;
-    }
-
-    private Image createObstacleImage(String picPath) {
-        if (!obstaclePicPath.equals(picPath)) {
-            obstaclePicPath = picPath;
-            obstacleImage = new Image(picPath);
-        }
-        return obstacleImage;
-    }
-
-    private Image createAccessoryImage(String picPath) {
-        if (!accessoryPicPath.equals(picPath)) {
-            accessoryPicPath = picPath;
-            accessoryImage = new Image(picPath);
-        }
-        return accessoryImage;
-    }
-
     private Coords getPixelPosition(Coords domainCoords) {
         return canvas.getPixelCoords(domainCoords);
     }
