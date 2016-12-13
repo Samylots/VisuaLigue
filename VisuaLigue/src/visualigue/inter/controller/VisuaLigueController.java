@@ -113,7 +113,15 @@ public class VisuaLigueController implements Serializable {
         } else {
             currentGame.goToFrame(currentFrame + number);
         }
-        serializer.saveToHistory();
+        if (!isVisualizing()) {
+            serializer.saveToHistory();
+        }
+    }
+
+    public void showFrame(int number) {
+        if (hasOpenedGame()) {
+            currentGame.goToFrame(number);
+        }
     }
 
     public List<TeamDTO> getCurrentGameTeams() {
@@ -174,18 +182,32 @@ public class VisuaLigueController implements Serializable {
     }
 
     public void changeMode(Mode mode) {
-        currentGame.changeMode(mode);
-        serializer.saveToHistory();
+        if (hasOpenedGame()) {
+            currentGame.changeMode(mode);
+            serializer.saveToHistory();
+        }
+    }
+
+    public boolean canUndo() {
+        return hasOpenedGame() && serializer.canUndo();
+    }
+
+    public boolean canRedo() {
+        return hasOpenedGame() && serializer.canRedo();
     }
 
     public void undo() {
-        this.serializer.undo();
-        currentGame.triggerUndoRedo();
+        if (hasOpenedGame()) {
+            this.serializer.undo();
+            currentGame.triggerUndoRedo();
+        }
     }
 
     public void redo() {
-        this.serializer.redo();
-        currentGame.triggerUndoRedo();
+        if (hasOpenedGame()) {
+            this.serializer.redo();
+            currentGame.triggerUndoRedo();
+        }
     }
 
     public void togglePlayerRoles() {
@@ -264,7 +286,7 @@ public class VisuaLigueController implements Serializable {
     }
 
     public boolean isVisualizing() {
-        return currentGame.getCurrentMode() == Mode.VISUALISATION;
+        return hasOpenedGame() && currentGame.getCurrentMode() == Mode.VISUALISATION;
     }
 
     public boolean isShowingRoles() {

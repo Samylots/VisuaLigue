@@ -7,7 +7,6 @@ package visualigue.gui.javafx.fxcontrollers.items;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +18,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import visualigue.VisuaLigue;
 import visualigue.gui.javafx.fxcontrollers.ObstacleController;
@@ -56,7 +54,7 @@ public class ObstacleListItemController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
+
     }
 
     /**
@@ -80,7 +78,7 @@ public class ObstacleListItemController implements Initializable {
     public void setPicture(File file) {
         picture.setImage(new Image(file.toURI().toString()));
     }
-       
+
     @FXML
     private void deleteObstacle(ActionEvent event) {
         VisuaLigue.domain.deleteObstacle(obstacle.id);

@@ -7,6 +7,7 @@ package visualigue.gui.javafx.fxcontrollers.states;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -32,15 +33,25 @@ public class FrameByFrameBoardController implements Initializable, FramesListene
     private Slider frameSlider;
 
     private Parent parent;
+    private boolean isChangingBySlider = false;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
         frameSlider.setMin(1);
-        frameSlider.setDisable(true);
+        frameSlider.setShowTickLabels(true);
+        frameSlider.setShowTickMarks(true);
+        frameSlider.setBlockIncrement(1);
+        frameSlider.setMajorTickUnit(5);
+        frameSlider.setMinorTickCount(4);
+        frameSlider.setSnapToTicks(true);
+        frameSlider.valueProperty().addListener((ObservableValue<? extends Number> ov, Number old_val, Number new_val) -> {
+            isChangingBySlider = true;
+            VisuaLigue.domain.showFrame(new_val.intValue());
+            isChangingBySlider = false;
+        });
     }
 
     @Override
@@ -82,9 +93,11 @@ public class FrameByFrameBoardController implements Initializable, FramesListene
 
     @Override
     public void updateFrames() {
-        frameSlider.setMax(VisuaLigue.domain.getTotalFrame());
-        frameLabel.setText(String.valueOf(VisuaLigue.domain.getActualFrame()) + " / " + String.valueOf(VisuaLigue.domain.getTotalFrame()));
-        frameSlider.setValue(VisuaLigue.domain.getActualFrame());
+        if (!isChangingBySlider) {
+            frameSlider.setMax(VisuaLigue.domain.getTotalFrame());
+            frameLabel.setText(String.valueOf(VisuaLigue.domain.getActualFrame()) + " / " + String.valueOf(VisuaLigue.domain.getTotalFrame()));
+            frameSlider.setValue(VisuaLigue.domain.getActualFrame());
+        }
     }
 
 }

@@ -8,12 +8,10 @@ package visualigue.gui.javafx.fxcontrollers;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import visualigue.VisuaLigue;
@@ -33,6 +31,9 @@ public class ObstacleListController implements Initializable {
     private VBox root;
     @FXML
     private VBox obstacleList;
+
+    private MainWindowController mainController;
+
     /**
      * Initializes the controller class.
      */
@@ -41,9 +42,14 @@ public class ObstacleListController implements Initializable {
         // TODO
     }
 
+    public void init(MainWindowController controller) {
+        this.mainController = controller;
+    }
+
     public void refreshObstacles() {
         obstacleList.getChildren().clear();
         addObstacleListItems(VisuaLigue.domain.getAvailableObstacles());
+        mainController.refreshObstacleList();
     }
 
     private void addObstacleListItems(List<ObstacleDTO> obstacles) {
