@@ -339,7 +339,6 @@ public class MainWindowController implements Initializable, Serializable, Select
     }
 
     public void showDefaultToolbar() {
-        mainToolbarController.selectCursorMode();
         board.widthProperty().bind(root.widthProperty().subtract(mainToolbar.widthProperty()));
         root.setLeft(mainToolbar);
     }
@@ -372,6 +371,7 @@ public class MainWindowController implements Initializable, Serializable, Select
     public void loadGame(int gameId) {
         VisuaLigue.domain.loadGame(gameId);
         defaultLayout();
+        mainToolbarController.selectCursorMode();
         setToMode1(null);
     }
 
@@ -412,13 +412,13 @@ public class MainWindowController implements Initializable, Serializable, Select
     private void handleBoardMouseDrag(MouseEvent e) {
         if (isInCursorMode() && e.getButton() == MouseButton.PRIMARY) {
             board.updateMouse(e);
-            
+
             if (VisuaLigue.domain.hasCurrentEntity()) {
                 VisuaLigue.domain.moveCurrentEntityTo(board.getMetersMousePosition());
             }
         }
         if (isInCursorMode() && e.getButton() == MouseButton.SECONDARY) {
-            
+
             board.updateMouse(e);
             if (VisuaLigue.domain.hasCurrentEntity()) {
                 VisuaLigue.domain.rotateCurrentEntityTo(board.getMetersMousePosition());
