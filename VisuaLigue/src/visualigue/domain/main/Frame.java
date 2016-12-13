@@ -113,6 +113,11 @@ public class Frame implements Serializable {
         position.setIsMoved(true);
     }
 
+    public void rotateCurrentEntityTo(int entityId, Coords coords) {
+        Position entityPos = positions.get(entityId);
+        entityPos.setDirection(coords);
+    }
+
     public void setOwner(int idEntity, Player owner) {
         Position entityPosition = positions.get(idEntity);
         entityPosition.setOwner(owner);

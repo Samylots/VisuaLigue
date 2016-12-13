@@ -336,7 +336,11 @@ public class MainWindowController implements Initializable, Serializable, Select
                 int playerId = playerChooserController.getSelectedPlayer();
                 try {
                     VisuaLigue.domain.addPlayerAt(board.getMetersMousePosition(), playerId);
-                    playerChooserController.disableSelectedPlayer();
+                    boolean maxPlayer = VisuaLigue.domain.getMaxPlayer();
+
+                    if (maxPlayer) {
+                        playerChooserController.disableSelectedPlayer();
+                    }
                 } catch (CollisionDetectedException ex) {
                     Dialog popup = new Dialog("Error", "This player can't be placed here. Please try another place!", root);
                 }
@@ -355,13 +359,24 @@ public class MainWindowController implements Initializable, Serializable, Select
         if (isInCursorMode() && e.getButton() == MouseButton.PRIMARY) {
             VisuaLigue.domain.selectEntityAt(board.getMetersMousePosition());
         }
+        if (isInCursorMode() && e.getButton() == MouseButton.SECONDARY) {
+            VisuaLigue.domain.selectEntityForRotationAt(board.getMetersMousePosition());
+        }
     }
 
     private void handleBoardMouseDrag(MouseEvent e) {
         if (isInCursorMode() && e.getButton() == MouseButton.PRIMARY) {
             board.updateMouse(e);
+            
             if (VisuaLigue.domain.hasCurrentEntity()) {
                 VisuaLigue.domain.moveCurrentEntityTo(board.getMetersMousePosition());
+            }
+        }
+        if (isInCursorMode() && e.getButton() == MouseButton.SECONDARY) {
+            
+            board.updateMouse(e);
+            if (VisuaLigue.domain.hasCurrentEntity()) {
+                VisuaLigue.domain.rotateCurrentEntityTo(board.getMetersMousePosition());
             }
         }
     }

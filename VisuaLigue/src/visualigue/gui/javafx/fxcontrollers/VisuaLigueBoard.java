@@ -69,8 +69,11 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
         setOnMouseDragged((MouseEvent event) -> { //view drag feature
             if (event.isSecondaryButtonDown() && isOnBoard) {
                 updateMouse(event);
-                Coords newMousePos = getMousePosition();
-                translate(newMousePos.getX() - oldMousePos.getX(), newMousePos.getY() - oldMousePos.getY());
+                
+                if (VisuaLigue.domain.getRotationAllowed() == false) {
+                    Coords newMousePos = getMousePosition();
+                    translate(newMousePos.getX() - oldMousePos.getX(), newMousePos.getY() - oldMousePos.getY());
+                }
             }
         });
         setOnMouseEntered((MouseEvent e) -> {
@@ -154,6 +157,10 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
      */
     public Coords getMetersMousePosition() {
         return converter.pixelToMeter(getMousePosition(), getActualFieldPixelDimension());
+    }
+    
+    public Coords getOrigin() {
+        return origin;
     }
 
     /**

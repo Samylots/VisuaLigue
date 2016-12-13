@@ -42,6 +42,7 @@ public class Game implements Serializable {
     // Keeping a local list of obstacles in case they are deleted in the future
     private final List<Obstacle> obstacles = new ArrayList<>();
     private final List<Accessory> accessories = new ArrayList<>();
+    private final List<Player> players = new ArrayList<>();
     private final Sport sport;
     private Frame firstFrame;
     private Frame lastFrame;
@@ -61,12 +62,13 @@ public class Game implements Serializable {
     private boolean createNextFrame;
     private transient Serializer serializer;
     private Coords lastSelectionPosition;
+    private boolean rotationAllowed = false;
 
     private transient boolean isTimerRunning = false;
 
     private final int frameTimeEquiv = 2 * 100;
 
-    public Game(String name, Sport sport) {
+    public Game(String name, Sport sport, boolean maxPlayer) {
         this.id = IdGenerator.getInstance().generateId();
         firstFrame = new Frame();
         lastFrame = firstFrame;
@@ -75,6 +77,7 @@ public class Game implements Serializable {
         this.name = name;
         this.sport = sport;
         this.currentMode = Mode.FRAME_BY_FRAME;
+        this.maxPlayer = maxPlayer;
     }
 
     public int getId() {
@@ -198,19 +201,24 @@ public class Game implements Serializable {
     }
 
     public void addPlayerAt(Coords coords, int playerId) throws CollisionDetectedException {
-        if (currentFrame.hasEntity(playerId)) {
+        if (maxPlayer && currentFrame.hasEntity(playerId)) {
             throw new PlayerAlreadyOnFieldException("This player is already on the field");
         } else {
             Player playerEntity = sport.getPlayer(playerId);
             Position collidesWithPosition = currentFrame.findCollisionAt(playerEntity, coords);
 
             if (collidesWithPosition == null) {
-                currentFrame.addEntityAt(playerEntity, coords);
+                Player copy = new Player(playerEntity);
+                currentFrame.addEntityAt(copy, coords);
             } else {
                 throw new CollisionDetectedException("Collided with: " + collidesWithPosition.getEntity().getId());
             }
         }
         triggerReDraw();
+    }
+    
+    public boolean getMaxPlayer() {
+        return maxPlayer;
     }
 
     public void deleteCurrentEntity() {
@@ -266,6 +274,17 @@ public class Game implements Serializable {
         }
         triggerSelection();
     }
+    
+    public void selectEntityForRotationAt(Coords coords) {
+        Entity entity = currentFrame.findEntityAt(coords);
+        
+        if (entity != null && entity.getId() == currentEntity.getId()) {
+            rotationAllowed = true;
+        } else {
+            rotationAllowed = false;
+            serializer.saveToHistory();
+        }
+    }
 
     public void unSelectCurrentEntity() {
         currentEntity = null;
@@ -292,6 +311,17 @@ public class Game implements Serializable {
             currentFrame.addEntityAt(copy, coords);
         }
         triggerReDraw();
+    }
+    
+    public void rotateCurrentEntityTo(Coords coords) {
+        if (rotationAllowed && currentEntity instanceof Player) {
+            currentFrame.rotateCurrentEntityTo(currentEntity.getId(), coords);
+            triggerReDraw();
+        }
+    }
+    
+    public boolean getRotationAllowed() {
+        return rotationAllowed;
     }
 
     public void moveCurrentEntityTo(Coords coords) {
@@ -342,7 +372,7 @@ public class Game implements Serializable {
                 && currentFrame.getOwns(collidedWithEntity.getId()) == null
                 && currentFrame.getOwner(currentEntity.getId()) == null) {
                 
-                currentFrame.movePosition(currentEntity.getId(), collidesWithPosition.getCoords());
+                currentFrame.movePosition(collidesWithPosition.getEntity().getId(), coords);
                 currentFrame.setOwner(currentEntity.getId(), (Player)collidedWithEntity);
                 
                 if (this.currentMode == Mode.REAL_TIME && createNextFrame) {

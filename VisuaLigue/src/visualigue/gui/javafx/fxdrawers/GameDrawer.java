@@ -21,6 +21,7 @@ import visualigue.inter.utils.Dimension;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.transform.Rotate;
 
 /**
  *
@@ -38,9 +39,11 @@ public class GameDrawer {
     private Image playerImage;
     private Image obstacleImage;
     private Image accessoryImage;
+    private Image arrowImage;
     private String playerPicPath = "";
     private String obstaclePicPath = "";
     private String accessoryPicPath = "";
+    private String arrowPicPath = "";
 
     public GameDrawer(VisuaLigueBoard canvas) {
         this.canvas = canvas;
@@ -71,7 +74,7 @@ public class GameDrawer {
             }
             if (position.entity instanceof PlayerDTO) {
                 PlayerDTO player = (PlayerDTO) position.entity;
-                drawPlayer(getPixelPosition(position.coords), player, posOpacity);
+                drawPlayer(getPixelPosition(position.coords), player, posOpacity, position.direction);
             } else if (position.entity instanceof ObstacleDTO) {
                 drawEntity(getPixelPosition(position.coords), position.entity, createObstacleImage(position.entity.picturePath), 1); //Always there even if it don't move
             } else if (position.entity instanceof AccessoryDTO) {
@@ -108,6 +111,14 @@ public class GameDrawer {
         }
         return obstacleImage;
     }
+    
+    private Image createArrowImage(String picPath) {
+        if (!arrowPicPath.equals(picPath)) {
+            arrowPicPath = picPath;
+            arrowImage = new Image(picPath);
+        }
+        return arrowImage;
+    }
 
     private Image createAccessoryImage(String picPath) {
         if (!accessoryPicPath.equals(picPath)) {
@@ -117,7 +128,7 @@ public class GameDrawer {
         return accessoryImage;
     }
 
-    private void drawPlayer(Coords coords, PlayerDTO entity, double opacity) {
+    private void drawPlayer(Coords coords, PlayerDTO entity, double opacity, double direction) {
         Dimension dim = getPixelDimension(entity.dimension);
         double coordsX = coords.getX();
         double coordsY = coords.getY();
@@ -138,6 +149,13 @@ public class GameDrawer {
             gc.setFill(Color.WHITE);
             writeText("#" + String.valueOf(entity.number), 16, coordsX + width / 2, coordsY + height / 2);
         }
+        Image arrowImg = createArrowImage("visualigue/gui/javafx/fxlayouts/icons/arrow.png");
+        
+        Rotate r = new Rotate(direction, coordsX+(width/2), coordsY+(height/2));
+        Coords origin = canvas.getOrigin();
+        gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx()+origin.getX(), r.getTy()+origin.getY());
+        gc.drawImage(arrowImg, coordsX+width, coordsY+(height/2)-10, 20, 20);
+
         gc.restore();
 
         if (VisuaLigue.domain.isShowingRoles() && opacity != UNMOVED_TRANSPARENCY) {

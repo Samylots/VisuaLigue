@@ -11,6 +11,7 @@ import visualigue.domain.main.entities.Entity;
 import java.io.Serializable;
 import visualigue.inter.utils.Coords;
 import visualigue.domain.main.entities.Accessory;
+import java.lang.Math.*;
 
 /**
  *
@@ -25,6 +26,7 @@ public class Position implements Serializable {
     private Player owner;
     private Accessory owns;
     private boolean isMoved = true;
+    private double direction = 0;
 
     public Position(Coords location, Entity entity) {
         this.coords = location;
@@ -45,11 +47,36 @@ public class Position implements Serializable {
         this.owner = pos.owner; //same ref
         this.owns = pos.owns; //same ref
         this.isMoved = false; //default
+        this.direction = pos.direction;
     }
 
     public void setLocation(Coords coords) {
         this.coords = coords;
         centerIt();
+    }
+    
+    public void setDirection(Coords coordsPointer) {
+        double diffX = coordsPointer.getX() - coords.getX();
+        double diffY = -(coordsPointer.getY() - coords.getY());
+
+        double diffAngle = Math.toDegrees(Math.atan(Math.abs(diffY) / Math.abs(diffX)));
+
+        if (diffX < 0 && diffY > 0) {
+            diffAngle = 90-diffAngle;
+            diffAngle += 90;
+        }
+        if (diffX < 0 && diffY < 0) {
+            diffAngle += 180;
+        }
+        if (diffX > 0 && diffY < 0) {
+            diffAngle = 90-diffAngle;
+            diffAngle += 270;
+        }
+        this.direction = -diffAngle;
+    }
+    
+    public double getDirection() {
+        return direction;
     }
 
     public boolean isInBounds(Coords coords) {

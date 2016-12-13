@@ -22,7 +22,6 @@ import javafx.scene.control.ToolBar;
 public class MainToolbarController implements Initializable {
 
     public enum EditMode {
-
         CURSOR,
         ADD_PLAYER,
         ADD_ACCESSORY,

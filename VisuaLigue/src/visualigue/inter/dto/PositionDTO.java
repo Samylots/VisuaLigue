@@ -18,10 +18,12 @@ public class PositionDTO {
     public EntityDTO entity;
     public boolean isMoved;
     public boolean isSelected;
+    public double direction;
 
     public PositionDTO(Position position) {
         this.coords = position.getCoords();
         this.entity = EntityDTOFactory.create(position.getEntity());
         this.isMoved = position.IsMoved();
+        this.direction = position.getDirection();
     }
 }
