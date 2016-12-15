@@ -11,7 +11,7 @@
    <top>
       <MenuBar maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
+          <Menu fx:id="fileMenu" mnemonicParsing="false" text="File">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#newGame" text="New Game" />
                   <MenuItem mnemonicParsing="false" onAction="#openGame" text="Open Game" />
@@ -24,7 +24,7 @@
                   <MenuItem fx:id="redoOption" mnemonicParsing="false" onAction="#Redo" text="Redo" />
                </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Ressources">
+          <Menu fx:id="ressourcesMenu" mnemonicParsing="false" text="Ressources">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#openSportList" text="Sports" />
                   <MenuItem mnemonicParsing="false" onAction="#openObstacleList" text="Obstacles" />
