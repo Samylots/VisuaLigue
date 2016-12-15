@@ -231,6 +231,24 @@ public class Game implements Serializable {
         currentEntity = null;
         triggerSelection();
     }
+    
+    public void unOwnAccessory() {
+        if (currentEntity instanceof Accessory) {
+            Player owner = currentFrame.getOwner(currentEntity.getId());
+            if (owner != null) {
+                currentFrame.setOwns(owner.getId(), null);
+                currentFrame.setOwner(currentEntity.getId(), null);
+            }
+        }
+        if (currentEntity instanceof Player) {
+            Accessory owns = currentFrame.getOwns(currentEntity.getId());
+            if (owns != null) {
+                currentFrame.setOwner(owns.getId(), null);
+                currentFrame.setOwns(currentEntity.getId(), null);
+            }
+        }
+        triggerReDraw();
+    }
 
     public void addObstacleAt(Obstacle obstacle, Coords coords) {
         Obstacle copy = new Obstacle(obstacle);

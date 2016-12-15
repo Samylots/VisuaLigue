@@ -174,6 +174,10 @@ public class VisuaLigueController implements Serializable {
         currentGame = ressources.getGame(gameId);
         currentGame.setSerializer(serializer);
     }
+    
+    public void unOwnAccessory() {
+        currentGame.unOwnAccessory();
+    }
 
     public void exportGame(String path) {
         //get path extention;
