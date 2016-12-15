@@ -54,6 +54,7 @@ public class VisuaLigueController implements Serializable {
     private GameExporter exporter;
     private boolean showingRoles;
     private int idGenetation;
+    private int loggedAs = 0;
 
     public VisuaLigueController() {
         this.showingRoles = true;
@@ -414,6 +415,19 @@ public class VisuaLigueController implements Serializable {
     public void moveCurrentEntityTo(Coords coords) {
         if (currentGame.getCurrentMode() != Mode.VISUALISATION) { //can't edit on visualization
             currentGame.moveCurrentEntityTo(coords);
+        }
+    }
+    
+    public int login(String username, String password) {
+        if (username.equals("joueur") && password.equals("joueur")) {
+            loggedAs = 2;
+            return 2;
+        } else if (username.equals("entraineur") && password.equals("entraineur")) {
+            loggedAs = 1;
+            return 1;
+        } else {
+            loggedAs = 0;
+            return 0;
         }
     }
     

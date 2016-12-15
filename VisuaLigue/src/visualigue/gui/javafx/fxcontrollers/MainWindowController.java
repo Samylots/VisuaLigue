@@ -43,6 +43,7 @@ import visualigue.gui.javafx.fxlayouts.CustomWindow;
 import visualigue.gui.javafx.fxlayouts.Dialog;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 import visualigue.gui.javafx.fxlayouts.InputDialog;
+import java.util.List;
 
 /**
  * FXML Controller class
@@ -145,7 +146,6 @@ public class MainWindowController implements Initializable, Serializable, Select
                 }
             } while (!controller.isValidLogin() && wantToLogin);
         });
-
     }
 
     private void resetLayout() {
@@ -346,6 +346,10 @@ public class MainWindowController implements Initializable, Serializable, Select
         editMenu.setVisible(VisuaLigue.domain.hasOpenedGame() && !VisuaLigue.domain.isVisualizing());
         optionsMenu.setVisible(VisuaLigue.domain.hasOpenedGame() && !VisuaLigue.domain.isVisualizing());
         viewMenu.setVisible(VisuaLigue.domain.hasOpenedGame());
+        List<MenuItem> items = editMenu.getItems();
+        for (MenuItem item : items) {
+            item.setDisable(true);
+        }
     }
 
     public boolean isAddingPlayer() {
