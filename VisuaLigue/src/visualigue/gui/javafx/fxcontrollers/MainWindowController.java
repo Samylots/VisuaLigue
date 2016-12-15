@@ -44,6 +44,7 @@ import visualigue.gui.javafx.fxlayouts.Dialog;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 import visualigue.gui.javafx.fxlayouts.InputDialog;
 import java.util.List;
+import visualigue.inter.utils.Mode;
 
 /**
  * FXML Controller class
@@ -329,8 +330,14 @@ public class MainWindowController implements Initializable, Serializable, Select
     private void toggleRoles(ActionEvent event) {
         VisuaLigue.domain.toggleRoles();
     }
+    
 
     public void changeViewTo(UIMode state) {
+        if (VisuaLigue.domain.getLoginUser() == 2 && state != UIMode.VISUALISATION) {
+            visualisationButton.setSelected(true);
+            state = UIMode.VISUALISATION;
+            hideToolbars();
+        }
         VisuaLigue.domain.changeMode(state.getMode()); //Telling domain that we changed mode
         TitledPane nodeView = (TitledPane) state.getNode();
         FramesListener listenerController = state.getController();
@@ -347,9 +354,14 @@ public class MainWindowController implements Initializable, Serializable, Select
         editMenu.setVisible(VisuaLigue.domain.hasOpenedGame() && !VisuaLigue.domain.isVisualizing());
         optionsMenu.setVisible(VisuaLigue.domain.hasOpenedGame() && !VisuaLigue.domain.isVisualizing());
         viewMenu.setVisible(VisuaLigue.domain.hasOpenedGame());
-        List<MenuItem> items = editMenu.getItems();
-        for (MenuItem item : items) {
-            item.setDisable(true);
+ 
+        if (VisuaLigue.domain.getLoginUser() == 2) {
+            List<MenuItem> items = viewMenu.getItems();
+            for (MenuItem item : items) {
+                if (item.getId().equals("frameByFrameButton") || item.getId().equals("realTimeButton")) {
+                    item.setVisible(false);
+                }
+            }
         }
     }
 

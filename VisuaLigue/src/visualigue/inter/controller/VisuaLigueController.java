@@ -431,6 +431,10 @@ public class VisuaLigueController implements Serializable {
         }
     }
     
+    public int getLoginUser() {
+        return loggedAs;
+    }
+    
     public void rotateCurrentEntityTo(Coords coords) {
         if (currentGame.getCurrentMode() != Mode.VISUALISATION) { //can't edit on visualization
             currentGame.rotateCurrentEntityTo(coords);
