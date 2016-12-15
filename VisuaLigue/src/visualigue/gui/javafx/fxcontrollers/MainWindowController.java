@@ -98,6 +98,10 @@ public class MainWindowController implements Initializable, Serializable, Select
     private Menu optionsMenu;
     @FXML
     private Menu viewMenu;
+    @FXML
+    private Menu fileMenu;
+    @FXML
+    private Menu ressourcesMenu;
 
     /**
      * Initializes the controller class.
@@ -330,7 +334,6 @@ public class MainWindowController implements Initializable, Serializable, Select
     private void toggleRoles(ActionEvent event) {
         VisuaLigue.domain.toggleRoles();
     }
-    
 
     public void changeViewTo(UIMode state) {
         if (VisuaLigue.domain.getLoginUser() == 2 && state != UIMode.VISUALISATION) {
@@ -354,7 +357,9 @@ public class MainWindowController implements Initializable, Serializable, Select
         editMenu.setVisible(VisuaLigue.domain.hasOpenedGame() && !VisuaLigue.domain.isVisualizing());
         optionsMenu.setVisible(VisuaLigue.domain.hasOpenedGame() && !VisuaLigue.domain.isVisualizing());
         viewMenu.setVisible(VisuaLigue.domain.hasOpenedGame());
- 
+
+        fileMenu.setVisible(VisuaLigue.domain.getLoginUser() != 2);
+        ressourcesMenu.setVisible(VisuaLigue.domain.getLoginUser() != 2);
         if (VisuaLigue.domain.getLoginUser() == 2) {
             List<MenuItem> items = viewMenu.getItems();
             for (MenuItem item : items) {
