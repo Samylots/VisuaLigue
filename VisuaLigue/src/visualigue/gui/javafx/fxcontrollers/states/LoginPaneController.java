@@ -11,7 +11,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import visualigue.VisuaLigue;
 
 /**
@@ -24,7 +26,7 @@ public class LoginPaneController implements Initializable {
     @FXML
     private TextField usernameField;
     @FXML
-    private TextField passwordField;
+    private PasswordField passwordField;
     @FXML
     private Button loginButton;
 
@@ -35,7 +37,12 @@ public class LoginPaneController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+    }
+
+    public void clear() {
+        usernameField.clear();
+        passwordField.clear();
+        usernameField.requestFocus();
     }
 
     @FXML
@@ -46,6 +53,8 @@ public class LoginPaneController implements Initializable {
         } else if (loginResult == 2) {
             isValidLogin = true;
         }
+        Stage stage = (Stage) loginButton.getScene().getWindow();
+        stage.close();
     }
 
     public boolean isValidLogin() {

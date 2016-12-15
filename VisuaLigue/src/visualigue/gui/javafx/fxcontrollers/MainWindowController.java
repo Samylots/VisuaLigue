@@ -133,6 +133,7 @@ public class MainWindowController implements Initializable, Serializable, Select
             boolean wantToLogin = true;
             do { //loop if want to login
                 window.showAndWait();
+                controller.clear();
                 if (!controller.isValidLogin()) {
                     Dialog popup = new Dialog("Login error", "Please login correctly to create a new game.", root);
                     if (!popup.isConfirmed()) { //close all if not logged

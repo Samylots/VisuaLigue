@@ -21,7 +21,7 @@
                   <VBox alignment="CENTER" spacing="5.0">
                      <children>
                         <TextField fx:id="usernameField" />
-                        <TextField fx:id="passwordField" />
+                        <PasswordField fx:id="passwordField" />
                      </children>
                      <HBox.margin>
                         <Insets />
