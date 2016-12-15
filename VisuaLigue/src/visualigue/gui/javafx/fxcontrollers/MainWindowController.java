@@ -358,11 +358,19 @@ public class MainWindowController implements Initializable, Serializable, Select
         optionsMenu.setVisible(VisuaLigue.domain.hasOpenedGame() && !VisuaLigue.domain.isVisualizing());
         viewMenu.setVisible(VisuaLigue.domain.hasOpenedGame());
 
-        fileMenu.setVisible(VisuaLigue.domain.getLoginUser() != 2);
-        ressourcesMenu.setVisible(VisuaLigue.domain.getLoginUser() != 2);
         if (VisuaLigue.domain.getLoginUser() == 2) {
-            List<MenuItem> items = viewMenu.getItems();
-            for (MenuItem item : items) {
+            ressourcesMenu.setVisible(false);
+            
+            List<MenuItem> itemsFile = fileMenu.getItems();
+            for (MenuItem item : itemsFile) {
+                System.out.println(item.getId());
+                if (!item.getId().equals("loadGameButton")) {
+                    item.setVisible(false);
+                }
+            }
+            
+            List<MenuItem> itemsView = viewMenu.getItems();
+            for (MenuItem item : itemsView) {
                 if (item.getId().equals("frameByFrameButton") || item.getId().equals("realTimeButton")) {
                     item.setVisible(false);
                 }
