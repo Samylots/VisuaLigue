@@ -177,6 +177,7 @@ public class VisuaLigueController implements Serializable {
     
     public void unOwnAccessory() {
         currentGame.unOwnAccessory();
+        serializer.saveToHistory();
     }
 
     public void exportGame(String path) {
