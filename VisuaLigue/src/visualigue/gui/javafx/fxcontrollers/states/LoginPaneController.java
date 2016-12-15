@@ -48,9 +48,7 @@ public class LoginPaneController implements Initializable {
     @FXML
     private void login(ActionEvent event) {
         int loginResult = VisuaLigue.domain.login(usernameField.getText(), passwordField.getText());
-        if (loginResult == 1) {
-            isValidLogin = true;
-        } else if (loginResult == 2) {
+        if (loginResult == 1 || loginResult == 2) {
             isValidLogin = true;
         }
         Stage stage = (Stage) loginButton.getScene().getWindow();

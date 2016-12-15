@@ -99,7 +99,7 @@ public class VisuaLigueController implements Serializable {
     public void pauseGame() {
         currentGame.pauseGame();
     }
-    
+
     public boolean getMaxPlayer() {
         return currentGame.getMaxPlayer();
     }
@@ -146,7 +146,7 @@ public class VisuaLigueController implements Serializable {
 
     public int createNewGame(String name, int sportId) {
         boolean maxPlayer;
-        
+
         if (currentGame != null) {
             maxPlayer = currentGame.getMaxPlayer();
         } else {
@@ -219,11 +219,11 @@ public class VisuaLigueController implements Serializable {
     public void selectEntityAt(Coords coord) {
         currentGame.selectEntityAt(coord);
     }
-    
+
     public void selectEntityForRotationAt(Coords coord) {
         currentGame.selectEntityForRotationAt(coord);
     }
-    
+
     public boolean getRotationAllowed() {
         return currentGame.getRotationAllowed();
     }
@@ -417,24 +417,20 @@ public class VisuaLigueController implements Serializable {
             currentGame.moveCurrentEntityTo(coords);
         }
     }
-    
+
     public int login(String username, String password) {
         if (username.equals("joueur") && password.equals("joueur")) {
             loggedAs = 2;
-            return 2;
         } else if (username.equals("entraineur") && password.equals("entraineur")) {
             loggedAs = 1;
-            return 1;
-        } else {
-            loggedAs = 0;
-            return 0;
         }
+        return getLoginUser();
     }
-    
+
     public int getLoginUser() {
         return loggedAs;
     }
-    
+
     public void rotateCurrentEntityTo(Coords coords) {
         if (currentGame.getCurrentMode() != Mode.VISUALISATION) { //can't edit on visualization
             currentGame.rotateCurrentEntityTo(coords);

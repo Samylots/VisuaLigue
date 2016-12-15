@@ -44,7 +44,6 @@ import visualigue.gui.javafx.fxlayouts.Dialog;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 import visualigue.gui.javafx.fxlayouts.InputDialog;
 import java.util.List;
-import visualigue.inter.utils.Mode;
 
 /**
  * FXML Controller class
@@ -102,6 +101,14 @@ public class MainWindowController implements Initializable, Serializable, Select
     private Menu fileMenu;
     @FXML
     private Menu ressourcesMenu;
+    @FXML
+    private MenuItem newGameButton;
+    @FXML
+    private MenuItem openGameButton;
+    @FXML
+    private MenuItem exportGameButton;
+    @FXML
+    private MenuItem loginButton;
 
     /**
      * Initializes the controller class.
@@ -130,6 +137,11 @@ public class MainWindowController implements Initializable, Serializable, Select
         resetLayout();
 
         //force login before anything!
+        login();
+    }
+
+    @FXML
+    private void login() {
         Platform.runLater(() -> { //Login form auto open
             Node node = FXLoader.getInstance().load("loginPane.fxml");
             LoginPaneController controller = FXLoader.getInstance().getLastController();
@@ -139,7 +151,7 @@ public class MainWindowController implements Initializable, Serializable, Select
             do { //loop if want to login
                 window.showAndWait();
                 controller.clear();
-                if (!controller.isValidLogin()) {
+                if (!controller.isValidLogin() && VisuaLigue.domain.getLoginUser() == 0) {//close if not already logged in another user
                     Dialog popup = new Dialog("Login error", "Please login correctly to create a new game.", root);
                     if (!popup.isConfirmed()) { //close all if not logged
                         wantToLogin = false;
@@ -151,6 +163,7 @@ public class MainWindowController implements Initializable, Serializable, Select
                     }
                 }
             } while (!controller.isValidLogin() && wantToLogin);
+            updateMenus();
         });
     }
 
@@ -354,20 +367,41 @@ public class MainWindowController implements Initializable, Serializable, Select
     }
 
     private void updateMenus() {
-        editMenu.setVisible(VisuaLigue.domain.hasOpenedGame() && !VisuaLigue.domain.isVisualizing());
-        optionsMenu.setVisible(VisuaLigue.domain.hasOpenedGame() && !VisuaLigue.domain.isVisualizing());
-        viewMenu.setVisible(VisuaLigue.domain.hasOpenedGame());
-
-        fileMenu.setVisible(VisuaLigue.domain.getLoginUser() != 2);
+        List<MenuItem> items;
+        resetMenus();
         ressourcesMenu.setVisible(VisuaLigue.domain.getLoginUser() != 2);
         if (VisuaLigue.domain.getLoginUser() == 2) {
-            List<MenuItem> items = viewMenu.getItems();
+            items = viewMenu.getItems();
             for (MenuItem item : items) {
                 if (item.getId().equals("frameByFrameButton") || item.getId().equals("realTimeButton")) {
                     item.setVisible(false);
                 }
             }
+            items = fileMenu.getItems();
+            for (MenuItem item : items) {
+                if (item.getId() != null && (!item.getId().equals("openGameButton") && !item.getId().equals("loginButton"))) {
+                    item.setVisible(false);
+                }
+            }
         }
+    }
+
+    private void resetMenus() {
+        editMenu.setVisible(VisuaLigue.domain.hasOpenedGame() && !VisuaLigue.domain.isVisualizing());
+        optionsMenu.setVisible(VisuaLigue.domain.hasOpenedGame() && !VisuaLigue.domain.isVisualizing());
+        viewMenu.setVisible(VisuaLigue.domain.hasOpenedGame());
+        resetMenuItems(fileMenu);
+        resetMenuItems(editMenu);
+        resetMenuItems(viewMenu);
+        resetMenuItems(ressourcesMenu);
+        resetMenuItems(optionsMenu);
+    }
+
+    private void resetMenuItems(Menu menu) {
+        List<MenuItem> items = menu.getItems();
+        items.stream().forEach((item) -> {
+            item.setVisible(true);
+        });
     }
 
     public boolean isAddingPlayer() {
