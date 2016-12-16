@@ -178,7 +178,7 @@ public class VisuaLigueController implements Serializable {
         currentGame = ressources.getGame(gameId);
         currentGame.setSerializer(serializer);
     }
-    
+
     public void unOwnAccessory() {
         currentGame.unOwnAccessory();
         serializer.saveToHistory();
@@ -379,7 +379,10 @@ public class VisuaLigueController implements Serializable {
     }
 
     public String getFieldPicPath() {
-        return currentGame.getSport().getFieldPicturePath();
+        if (currentGame != null) {
+            return currentGame.getSport().getFieldPicturePath();
+        }
+        return "";
     }
 
     public void close() {

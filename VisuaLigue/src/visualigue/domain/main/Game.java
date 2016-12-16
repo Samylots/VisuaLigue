@@ -175,7 +175,7 @@ public class Game implements Serializable {
         }
         return returnData;
     }
-    
+
     public List<Integer> getOwnersOnBoard() {
         List<Integer> returnData = new ArrayList<>();
 
@@ -228,7 +228,7 @@ public class Game implements Serializable {
         }
         triggerReDraw();
     }
-    
+
     public boolean getMaxPlayer() {
         return maxPlayer;
     }
@@ -244,7 +244,7 @@ public class Game implements Serializable {
         currentEntity = null;
         triggerSelection();
     }
-    
+
     public void unOwnAccessory() {
         if (currentEntity instanceof Accessory) {
             Player owner = currentFrame.getOwner(currentEntity.getId());
@@ -253,7 +253,7 @@ public class Game implements Serializable {
                 currentFrame.setOwner(currentEntity.getId(), null);
                 Coords currentPlayerPos = currentFrame.getPosition(owner.getId());
                 //Move owns out of Owner
-                currentFrame.movePosition(currentEntity.getId(), new Coords(currentPlayerPos.getX() -currentEntity.getDimension().getWidth(), currentPlayerPos.getY() - currentEntity.getDimension().getHeight()));
+                currentFrame.movePosition(currentEntity.getId(), new Coords(currentPlayerPos.getX() - currentEntity.getDimension().getWidth(), currentPlayerPos.getY() - currentEntity.getDimension().getHeight()));
             }
         }
         if (currentEntity instanceof Player) {
@@ -263,7 +263,7 @@ public class Game implements Serializable {
                 currentFrame.setOwns(currentEntity.getId(), null);
                 Coords currentPlayerPos = currentFrame.getPosition(currentEntity.getId());
                 //Move owns out of Owner
-                currentFrame.movePosition(owns.getId(), new Coords(currentPlayerPos.getX() -owns.getDimension().getWidth(), currentPlayerPos.getY() - owns.getDimension().getHeight()));
+                currentFrame.movePosition(owns.getId(), new Coords(currentPlayerPos.getX() - owns.getDimension().getWidth(), currentPlayerPos.getY() - owns.getDimension().getHeight()));
             }
         }
         triggerReDraw();
@@ -289,7 +289,7 @@ public class Game implements Serializable {
         if (currentEntity != null) {
             previousEntity = currentEntity.getId();
         }
-        
+
         currentEntity = entity; //can be null and it's ok
         if ((entity == null && previousEntity != 0) || (entity != null && previousEntity != entity.getId())) {
             // entity has changed
@@ -297,8 +297,8 @@ public class Game implements Serializable {
             if (entity != null) {
                 lastSelectionPosition = currentFrame.getPositions().get(entity.getId()).getCoords();
             }
-            if(currentMode == Mode.REAL_TIME){
-                currentFrame = firstFrame; //resetFrame for new 
+            if (currentMode == Mode.REAL_TIME) {
+                currentFrame = firstFrame; //resetFrame for new
             }
         } else if (entity != null) {// if coords have changed, movement was made, so save to history
             Coords currCoords = currentFrame.getPositions().get(entity.getId()).getCoords();
@@ -309,10 +309,10 @@ public class Game implements Serializable {
         }
         triggerSelection();
     }
-    
+
     public void selectEntityForRotationAt(Coords coords) {
         Entity entity = currentFrame.findEntityAt(coords);
-        
+
         if (entity != null && entity.getId() == currentEntity.getId()) {
             rotationAllowed = true;
         } else {
@@ -347,14 +347,14 @@ public class Game implements Serializable {
         }
         triggerReDraw();
     }
-    
+
     public void rotateCurrentEntityTo(Coords coords) {
         if (rotationAllowed && currentEntity instanceof Player) {
-            currentFrame.rotateCurrentEntityTo(currentEntity.getId(), coords);
+            currentFrame.rotateEntityTo(currentEntity.getId(), coords);
             triggerReDraw();
         }
     }
-    
+
     public boolean getRotationAllowed() {
         return rotationAllowed;
     }
@@ -362,10 +362,10 @@ public class Game implements Serializable {
     public void moveCurrentEntityTo(Coords coords) {
         if (this.currentMode == Mode.REAL_TIME) {
             movementMade = true;
-            
+
             if (recordingTimer == null) {
                 recordingTimer = new Timer();
-                
+
                 recordingTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
@@ -397,34 +397,37 @@ public class Game implements Serializable {
                 }
             }
             if (this.currentMode == Mode.REAL_TIME && createNextFrame) {
+                if (currentFrame.getBack() != null) {
+                    currentFrame.getBack().rotateEntityTo(currentEntity.getId(), coords);
+                }
                 nextFrame();
                 createNextFrame = false;
             }
         } else {
             Entity collidedWithEntity = collidesWithPosition.getEntity();
- 
-            if (currentEntity instanceof Accessory 
-                && collidedWithEntity instanceof Player 
-                && currentFrame.getOwns(collidedWithEntity.getId()) == null
-                && currentFrame.getOwner(currentEntity.getId()) == null) {
-                
+
+            if (currentEntity instanceof Accessory
+                    && collidedWithEntity instanceof Player
+                    && currentFrame.getOwns(collidedWithEntity.getId()) == null
+                    && currentFrame.getOwner(currentEntity.getId()) == null) {
+
                 currentFrame.movePosition(collidesWithPosition.getEntity().getId(), coords);
-                currentFrame.setOwner(currentEntity.getId(), (Player)collidedWithEntity);
-                
+                currentFrame.setOwner(currentEntity.getId(), (Player) collidedWithEntity);
+
                 if (this.currentMode == Mode.REAL_TIME && createNextFrame) {
                     nextFrame();
                     createNextFrame = false;
                 }
             }
-            if (currentEntity instanceof Player 
-                && collidedWithEntity instanceof Accessory 
-                && currentFrame.getOwns(currentEntity.getId()) == null
-                && currentFrame.getOwner(collidedWithEntity.getId()) == null) {
-                
+            if (currentEntity instanceof Player
+                    && collidedWithEntity instanceof Accessory
+                    && currentFrame.getOwns(currentEntity.getId()) == null
+                    && currentFrame.getOwner(collidedWithEntity.getId()) == null) {
+
                 currentFrame.movePosition(currentEntity.getId(), coords);
                 currentFrame.movePosition(collidedWithEntity.getId(), coords);
-                currentFrame.setOwner(collidedWithEntity.getId(), (Player)currentEntity);
-                
+                currentFrame.setOwner(collidedWithEntity.getId(), (Player) currentEntity);
+
                 if (this.currentMode == Mode.REAL_TIME && createNextFrame) {
                     nextFrame();
                     createNextFrame = false;
@@ -433,7 +436,7 @@ public class Game implements Serializable {
             currentEntity = null; //Deselect it if collision?
             triggerSelection();
         }
-        
+
         triggerReDraw();
     }
 

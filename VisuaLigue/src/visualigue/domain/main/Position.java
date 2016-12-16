@@ -54,27 +54,27 @@ public class Position implements Serializable {
         this.coords = coords;
         centerIt();
     }
-    
+
     public void setDirection(Coords coordsPointer) {
-        double diffX = coordsPointer.getX() - coords.getX();
-        double diffY = -(coordsPointer.getY() - coords.getY());
+        double diffX = coordsPointer.getX() - coords.getX() - entity.getDimension().getWidth() / 2;
+        double diffY = -(coordsPointer.getY() - coords.getY() - entity.getDimension().getHeight() / 2);
 
         double diffAngle = Math.toDegrees(Math.atan(Math.abs(diffY) / Math.abs(diffX)));
 
         if (diffX < 0 && diffY > 0) {
-            diffAngle = 90-diffAngle;
+            diffAngle = 90 - diffAngle;
             diffAngle += 90;
         }
         if (diffX < 0 && diffY < 0) {
             diffAngle += 180;
         }
         if (diffX > 0 && diffY < 0) {
-            diffAngle = 90-diffAngle;
+            diffAngle = 90 - diffAngle;
             diffAngle += 270;
         }
         this.direction = -diffAngle;
     }
-    
+
     public double getDirection() {
         return direction;
     }
@@ -121,7 +121,7 @@ public class Position implements Serializable {
     public Player getOwner() {
         return owner;
     }
-    
+
     public Accessory getOwns() {
         return owns;
     }
@@ -129,7 +129,7 @@ public class Position implements Serializable {
     public void setOwner(Player owner) {
         this.owner = owner;
     }
-    
+
     public void setOwns(Accessory owns) {
         this.owns = owns;
     }

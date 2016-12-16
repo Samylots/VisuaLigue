@@ -118,7 +118,7 @@ public class Frame implements Serializable {
         return position.getCoords();
     }
 
-    public void rotateCurrentEntityTo(int entityId, Coords coords) {
+    public void rotateEntityTo(int entityId, Coords coords) {
         Position entityPos = positions.get(entityId);
         entityPos.setDirection(coords);
     }

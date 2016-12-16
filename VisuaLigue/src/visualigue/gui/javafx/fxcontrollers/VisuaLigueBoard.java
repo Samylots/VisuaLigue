@@ -50,6 +50,8 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
     private final DoubleProperty mouseX = new SimpleDoubleProperty(); //Actual mouse X position
     private final DoubleProperty mouseY = new SimpleDoubleProperty(); //Actual mouse Y position
 
+    private boolean canAutoZoom = true;
+
     VisuaLigueBoard() {
         super(500, 300);
         zoomFactor = 1;
@@ -69,7 +71,7 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
         setOnMouseDragged((MouseEvent event) -> { //view drag feature
             if (event.isSecondaryButtonDown() && isOnBoard) {
                 updateMouse(event);
-                
+
                 if (VisuaLigue.domain.getRotationAllowed() == false) {
                     Coords newMousePos = getMousePosition();
                     translate(newMousePos.getX() - oldMousePos.getX(), newMousePos.getY() - oldMousePos.getY());
@@ -88,6 +90,9 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
                 drawAll();
             }
         });
+        this.widthProperty().addListener((obv, oldVal, newVal) -> centerGlobalView());
+        this.heightProperty().addListener((obv, oldVal, newVal) -> centerGlobalView());
+
     }
 
     private boolean isMouseOnField() {
@@ -101,6 +106,7 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
      * @param delta
      */
     private void zoom(double delta) {
+        canAutoZoom = false;
         Coords oldCoords = getMousePosition();
         Coords newCoords = getMousePosition();
         if (zoomFactor * delta < 27000) {
@@ -110,6 +116,28 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
             translate(oldCoords.getX() - newCoords.getX(), oldCoords.getY() - newCoords.getY());
             setMousePos((oldCoords.getX() * delta), (oldCoords.getY() * delta));
         }
+    }
+
+    private void centerGlobalView() {
+        if (fieldPicture != null) {
+            if (canAutoZoom) {
+                double diffWidth = this.getWidth() / fieldPicture.getWidth();
+                double diffHeight = this.getHeight() / fieldPicture.getHeight();
+                zoomFactor = Math.min(diffWidth, diffHeight);
+
+                double diffX = (this.getWidth() - this.getActualFieldWidth()) / 2;
+                double diffY = (this.getHeight() - this.getActualFieldHeight()) / 2;
+                resetTranslate();
+                translate(diffX, diffY);
+            }
+            redraw();
+        }
+    }
+
+    private void resetTranslate() {
+        gc.translate(-origin.getX(), -origin.getY());
+        origin.setX(0);
+        origin.setY(0);
     }
 
     private void updateMousePos(MouseEvent event) {
@@ -158,7 +186,7 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
     public Coords getMetersMousePosition() {
         return converter.pixelToMeter(getMousePosition(), getActualFieldPixelDimension());
     }
-    
+
     public Coords getOrigin() {
         return origin;
     }
