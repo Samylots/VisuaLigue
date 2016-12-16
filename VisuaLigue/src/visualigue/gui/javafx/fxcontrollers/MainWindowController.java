@@ -354,6 +354,7 @@ public class MainWindowController implements Initializable, Serializable, Select
             state = UIMode.VISUALISATION;
             hideToolbars();
         }
+        VisuaLigue.domain.addEventListener("frame", mainToolbarController);
         VisuaLigue.domain.changeMode(state.getMode()); //Telling domain that we changed mode
         TitledPane nodeView = (TitledPane) state.getNode();
         FramesListener listenerController = state.getController();
@@ -463,7 +464,7 @@ public class MainWindowController implements Initializable, Serializable, Select
                 int playerId = playerChooserController.getSelectedPlayer();
                 try {
                     VisuaLigue.domain.addPlayerAt(board.getMetersMousePosition(), playerId);
-                    boolean maxPlayer = VisuaLigue.domain.getMaxPlayer();
+                    boolean maxPlayer = VisuaLigue.domain.isMaxPlayer();
 
                     if (maxPlayer) {
                         playerChooserController.disableSelectedPlayer();
@@ -531,10 +532,20 @@ public class MainWindowController implements Initializable, Serializable, Select
 
     @FXML
     private void toggleMaxPlayer(ActionEvent event) {
+        try{
         VisuaLigue.domain.toggleMaxPlayer();
+        updateMainToolbar();
         if (isAddingPlayer()) {
-            showTeamList(); //refresh to show dummy player
+            showTeamList(); //refresh to activate or desactivate players buttons
         }
+        }catch(Exception e){
+            Dialog popup = new Dialog("Error", e.getMessage(), root);
+        }
+        maxPlayerOption.setSelected(VisuaLigue.domain.isMaxPlayer());
+    }
+    
+    public void updateMainToolbar(){
+        mainToolbarController.update();
     }
 
 }

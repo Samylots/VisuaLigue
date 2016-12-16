@@ -42,7 +42,6 @@ public class PlayerChooserController implements Initializable {
 
     private Button dummyPlayer;
 
-    //private Map<Integer, PlayerDTO> players;
     private final Map<Integer, Button> buttons = new HashMap<>();
 
     private int seletedPlayer = 0;
@@ -95,7 +94,9 @@ public class PlayerChooserController implements Initializable {
         playerButton.setOnAction((ActionEvent e) -> {
             seletedPlayer = player.id;
         });
-        playerButton.setDisable(player.isOnBoard);
+        if(VisuaLigue.domain.isMaxPlayer()){
+            playerButton.setDisable(player.isOnBoard);
+        }
 
         buttons.put(player.id, playerButton);
         return playerButton;

@@ -19,6 +19,7 @@ public class PlayerDTO extends EntityDTO {
     public boolean isOnBoard;
     public String color;
     public boolean isOwner;
+    public int correspondingId;
 
     public PlayerDTO(Player player) {
         super(player.getDimension(), player.getId(), player.getPicturePath());
@@ -27,5 +28,6 @@ public class PlayerDTO extends EntityDTO {
         this.isOnBoard = false;
         this.color = player.getColor();
         this.number = player.getNumber();
+        this.correspondingId = player.getCorrespondingId();
     }
 }

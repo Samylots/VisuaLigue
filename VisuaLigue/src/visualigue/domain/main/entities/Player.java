@@ -26,6 +26,7 @@ public class Player extends Entity implements Serializable {
         this.name = name;
         this.color = color;
         this.number = teamNumber;
+        this.correspondingId = this.getId();
     }
 
     public Player(Player player) {

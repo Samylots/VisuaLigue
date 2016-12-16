@@ -44,11 +44,7 @@ public class PlayerToolbarController implements Initializable {
 
     public void update(PlayerDTO player) {
         this.player = player;
-        if (VisuaLigue.domain.getTotalFrame() == 1) {
-            deleteButton.setVisible(true);
-        } else {
-            deleteButton.setVisible(false);
-        }
+        deleteButton.setDisable(VisuaLigue.domain.getTotalFrame() != 1);
         unownButton.setDisable(!player.isOwner);
     }
 

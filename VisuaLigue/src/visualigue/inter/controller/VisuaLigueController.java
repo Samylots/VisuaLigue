@@ -39,6 +39,7 @@ import visualigue.inter.utils.exceptions.CantDeleteFrameException;
 import visualigue.inter.utils.exceptions.CollisionDetectedException;
 import visualigue.inter.utils.exceptions.MustPlaceAllPlayersOnFieldException;
 import visualigue.inter.utils.IdGenerator;
+import visualigue.inter.utils.exceptions.CantActivateMaxPlayerException;
 
 /**
  *
@@ -86,7 +87,7 @@ public class VisuaLigueController implements Serializable {
                 Game.setSelectionListener((SelectionListener) listener);
                 break;
             case "frame":
-                Game.setFrameListener((FramesListener) listener);
+                Game.addFrameListener((FramesListener) listener);
                 ((FramesListener) listener).updateFrames(); //init
                 break;
         }
@@ -98,10 +99,6 @@ public class VisuaLigueController implements Serializable {
 
     public void pauseGame() {
         currentGame.pauseGame();
-    }
-
-    public boolean getMaxPlayer() {
-        return currentGame.getMaxPlayer();
     }
 
     public void goToFrame(int number) {
@@ -136,7 +133,7 @@ public class VisuaLigueController implements Serializable {
 
             // Setting isOnBoard values
             for (PlayerDTO playerDTO : teamDTO.players) {
-                if (playersOnBoard.contains(playerDTO.id)) {
+                if (playersOnBoard.contains(playerDTO.correspondingId)) {
                     playerDTO.isOnBoard = true;
                 }
                 if (ownersOnBoard.contains(playerDTO.id)) {
@@ -152,7 +149,7 @@ public class VisuaLigueController implements Serializable {
         boolean maxPlayer;
 
         if (currentGame != null) {
-            maxPlayer = currentGame.getMaxPlayer();
+            maxPlayer = currentGame.isMaxPlayer();
         } else {
             maxPlayer = true;
         }
@@ -308,7 +305,7 @@ public class VisuaLigueController implements Serializable {
         serializer.saveToHistory();
     }
 
-    public void toggleMaxPlayer() {
+    public void toggleMaxPlayer()throws CantActivateMaxPlayerException {
         currentGame.toggleMaxPlayer();
     }
 

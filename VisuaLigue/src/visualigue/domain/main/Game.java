@@ -21,17 +21,19 @@ import java.util.List;
 import visualigue.inter.utils.Coords;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 import javafx.application.Platform;
-import visualigue.inter.controller.VisuaLigueController;
 import visualigue.inter.dto.AccessoryDTO;
 import visualigue.inter.dto.ObstacleDTO;
 import visualigue.inter.dto.PlayerDTO;
 import visualigue.inter.utils.IdGenerator;
 import visualigue.inter.utils.Mode;
 import visualigue.domain.services.Serializer;
+import visualigue.inter.utils.exceptions.CantActivateMaxPlayerException;
 
 /**
  *
@@ -42,7 +44,6 @@ public class Game implements Serializable {
     // Keeping a local list of obstacles in case they are deleted in the future
     private final List<Obstacle> obstacles = new ArrayList<>();
     private final List<Accessory> accessories = new ArrayList<>();
-    private final List<Player> players = new ArrayList<>();
     private final Sport sport;
     private Frame firstFrame;
     private Frame lastFrame;
@@ -51,7 +52,7 @@ public class Game implements Serializable {
     private Frame currentFrame;
     private static SelectionListener selectionListener;
     private static final List<DrawListener> drawListeners = new ArrayList<>();
-    private static FramesListener frameListener;
+    private static List<FramesListener> frameListeners = new ArrayList<>();
     private transient Timer playbackTimer = new Timer();
     private transient Timer recordingTimer;
     private int id;
@@ -114,8 +115,10 @@ public class Game implements Serializable {
         drawListeners.add(listener);
     }
 
-    public static void setFrameListener(FramesListener listener) {
-        frameListener = listener;
+    public static void addFrameListener(FramesListener listener) {
+        if(!frameListeners.contains(listener)){
+            frameListeners.add(listener);
+        }
     }
 
     public static void setSelectionListener(SelectionListener listener) {
@@ -170,7 +173,7 @@ public class Game implements Serializable {
             Position pos = entry.getValue();
             Entity entity = pos.getEntity();
             if (entity instanceof Player) {
-                returnData.add(entity.getId());
+                returnData.add(((Player) entity).getCorrespondingId());
             }
         }
         return returnData;
@@ -227,10 +230,6 @@ public class Game implements Serializable {
             }
         }
         triggerReDraw();
-    }
-
-    public boolean getMaxPlayer() {
-        return maxPlayer;
     }
 
     public void deleteCurrentEntity() {
@@ -525,7 +524,11 @@ public class Game implements Serializable {
     }
 
     private void triggerFrameUpdate() {
-        frameListener.updateFrames();
+        frameListeners.stream().forEach((listener) -> {
+            if(listener!=null){
+                listener.updateFrames();
+            }
+        });
     }
 
     public List<Accessory> getAccessories() {
@@ -563,8 +566,18 @@ public class Game implements Serializable {
     public boolean isMaxPlayer() {
         return maxPlayer;
     }
+    
+    public boolean isMaxPlayerBusted(){
+        List playersOnBoard = getPlayersOnBoard();
+        Set<Integer> set = new HashSet<>(playersOnBoard);
+        return set.size() < playersOnBoard.size(); //there are duplicates
+    }
 
-    public void toggleMaxPlayer() {
-        this.maxPlayer = !this.maxPlayer;
+    public void toggleMaxPlayer() throws CantActivateMaxPlayerException {
+        if(!isMaxPlayerBusted()){
+            this.maxPlayer = !this.maxPlayer;
+        }else{
+            throw new CantActivateMaxPlayerException("Please, delete player duplicatas before!");
+        }
     }
 }

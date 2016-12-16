@@ -11,18 +11,33 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToolBar;
+import visualigue.VisuaLigue;
+import visualigue.domain.events.FramesListener;
 
 /**
  * FXML Controller class
  *
  * @author Samuel
  */
-public class MainToolbarController implements Initializable {
+public class MainToolbarController implements Initializable, FramesListener {
 
     @FXML
     private ToggleButton cursorButton;
+    @FXML
+    private ToggleButton addPlayerButton;
+
+    @Override
+    public void init(Parent parent) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void updateFrames() {
+        update();
+    }
 
     public enum EditMode {
         CURSOR,
@@ -52,6 +67,10 @@ public class MainToolbarController implements Initializable {
 
     public void init(MainWindowController paretnController) {
         this.parentController = paretnController;
+    }
+    
+    public void update(){
+        addPlayerButton.setDisable(VisuaLigue.domain.getTotalFrame() != 1);
     }
 
     public void selectCursorMode() {

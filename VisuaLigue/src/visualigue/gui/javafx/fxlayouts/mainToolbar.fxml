@@ -20,7 +20,7 @@
             <Insets top="1.0" />
          </padding>
       </ToggleButton>
-      <ToggleButton contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#addPlayerMode" text="addP">
+      <ToggleButton fx:id="addPlayerButton" contentDisplay="GRAPHIC_ONLY" graphicTextGap="0.0" mnemonicParsing="false" onAction="#addPlayerMode" text="addP">
          <graphic>
             <StackPane prefHeight="43.0" prefWidth="49.0">
                <children>
