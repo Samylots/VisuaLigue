@@ -18,6 +18,7 @@ public class Player extends Entity implements Serializable {
     private String name;
     private String color;
     private int number;
+    private Integer correspondingId;
 
     public Player(Dimension dimension, String picturePath, String role, String name, String color, int teamNumber) {
         super(dimension, picturePath);
@@ -33,10 +34,15 @@ public class Player extends Entity implements Serializable {
         this.name = player.name;
         this.color = player.color;
         this.number = player.number;
+        this.correspondingId = player.getId();
     }
 
     public String getRole() {
         return role;
+    }
+    
+    public Integer getCorrespondingId() {
+        return correspondingId;
     }
 
     public String getName() {
