@@ -129,6 +129,7 @@ public class VisuaLigueController implements Serializable {
         List<TeamDTO> returnData = new ArrayList<>();
         List<Team> teams = currentGame.getSport().getTeams();
         List<Integer> playersOnBoard = currentGame.getPlayersOnBoard();
+        List<Integer> ownersOnBoard = currentGame.getOwnersOnBoard();
 
         for (Team team : teams) {
             TeamDTO teamDTO = new TeamDTO(team);
@@ -137,6 +138,9 @@ public class VisuaLigueController implements Serializable {
             for (PlayerDTO playerDTO : teamDTO.players) {
                 if (playersOnBoard.contains(playerDTO.id)) {
                     playerDTO.isOnBoard = true;
+                }
+                if (ownersOnBoard.contains(playerDTO.id)) {
+                    playerDTO.isOwner = true;
                 }
             }
             returnData.add(teamDTO);

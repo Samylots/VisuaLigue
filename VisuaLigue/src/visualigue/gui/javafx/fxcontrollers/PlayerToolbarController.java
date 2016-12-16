@@ -28,6 +28,8 @@ public class PlayerToolbarController implements Initializable {
     private ToolBar toolbar;
     @FXML
     private Button deleteButton;
+    @FXML
+    private Button unownButton;
 
     /**
      * Initializes the controller class.
@@ -47,6 +49,7 @@ public class PlayerToolbarController implements Initializable {
         } else {
             deleteButton.setVisible(false);
         }
+        unownButton.setDisable(!player.isOwner);
     }
 
     @FXML
@@ -65,6 +68,11 @@ public class PlayerToolbarController implements Initializable {
     @FXML
     private void delete(ActionEvent event) {
         VisuaLigue.domain.deleteCurrentEntity();
+    }
+
+    @FXML
+    private void unownAccessory(ActionEvent event) {
+        VisuaLigue.domain.unOwnAccessory();
     }
 
 }
