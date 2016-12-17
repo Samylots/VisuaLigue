@@ -48,8 +48,6 @@ import visualigue.gui.javafx.fxlayouts.FXLoader;
 import visualigue.gui.javafx.fxlayouts.InputDialog;
 import java.util.List;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.chart.BarChart;
 import javafx.scene.image.WritableImage;
 import javax.imageio.ImageIO;
 
@@ -74,7 +72,9 @@ public class MainWindowController implements Initializable, Serializable, Select
     private PlayerToolbarController playerToolbarController;
 
     private ToolBar obstacleToolbar;
+    private ObstacleToolbarController obstacleToolbarController;
     private ToolBar accessoryToolbar;
+    private AccessoryToolbarController accessoryToolbarController;
 
     private final AddObstacleList addObstacleList = new AddObstacleList();
 
@@ -202,7 +202,9 @@ public class MainWindowController implements Initializable, Serializable, Select
         playerToolbarController = FXLoader.getInstance().getLastController();
 
         obstacleToolbar = (ToolBar) FXLoader.getInstance().load("obstacleToolbar.fxml");
+        obstacleToolbarController = FXLoader.getInstance().getLastController();
         accessoryToolbar = (ToolBar) FXLoader.getInstance().load("accessoryToolbar.fxml");
+        accessoryToolbarController = FXLoader.getInstance().getLastController();
 
         addPlayerToolbar = new HBox();
         addPlayerToolbar.getChildren().add(teamsPlayerToolbar);
@@ -301,13 +303,13 @@ public class MainWindowController implements Initializable, Serializable, Select
         FileChooser.ExtensionFilter jpgFilter = new FileChooser.ExtensionFilter("jpeg files", "*.jpg");
         fileChooser.getExtensionFilters().add(pngFilter);
         fileChooser.getExtensionFilters().add(jpgFilter);
-        
+
         File file = fileChooser.showSaveDialog(root.getScene().getWindow());
-        
-        if(file != null){
+
+        if (file != null) {
             try {
                 VisuaLigueBoard canvas = board.getDrawer().getCanvas();
-                WritableImage image = new WritableImage((int)canvas.getWidth(), (int)canvas.getHeight());
+                WritableImage image = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
                 canvas.snapshot(null, image);
                 RenderedImage renderedImage = SwingFXUtils.fromFXImage(image, null);
                 ImageIO.write(renderedImage, "png", file);
@@ -381,6 +383,8 @@ public class MainWindowController implements Initializable, Serializable, Select
             hideToolbars();
         }
         VisuaLigue.domain.addEventListener("frame", mainToolbarController);
+        VisuaLigue.domain.addEventListener("frame", obstacleToolbarController);
+        VisuaLigue.domain.addEventListener("frame", accessoryToolbarController);
         VisuaLigue.domain.changeMode(state.getMode()); //Telling domain that we changed mode
         TitledPane nodeView = (TitledPane) state.getNode();
         FramesListener listenerController = state.getController();
@@ -558,19 +562,19 @@ public class MainWindowController implements Initializable, Serializable, Select
 
     @FXML
     private void toggleMaxPlayer(ActionEvent event) {
-        try{
-        VisuaLigue.domain.toggleMaxPlayer();
-        updateMainToolbar();
-        if (isAddingPlayer()) {
-            showTeamList(); //refresh to activate or desactivate players buttons
-        }
-        }catch(Exception e){
+        try {
+            VisuaLigue.domain.toggleMaxPlayer();
+            updateMainToolbar();
+            if (isAddingPlayer()) {
+                showTeamList(); //refresh to activate or desactivate players buttons
+            }
+        } catch (Exception e) {
             Dialog popup = new Dialog("Error", e.getMessage(), root);
         }
         maxPlayerOption.setSelected(VisuaLigue.domain.isMaxPlayer());
     }
-    
-    public void updateMainToolbar(){
+
+    public void updateMainToolbar() {
         mainToolbarController.update();
     }
 }

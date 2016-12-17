@@ -41,7 +41,7 @@
             <Insets top="1.0" />
          </padding>
       </ToggleButton>
-      <ToggleButton contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#AddAccessoryMode" text="addAc">
+      <ToggleButton fx:id="addAccessoryButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#AddAccessoryMode" text="addAc">
          <graphic>
             <StackPane prefHeight="43.0" prefWidth="49.0">
                <children>
@@ -62,7 +62,7 @@
             <Insets top="1.0" />
          </padding>
       </ToggleButton>
-      <ToggleButton contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#addObstacleMode" text="ToggleButton">
+      <ToggleButton fx:id="addObstacleButton" contentDisplay="GRAPHIC_ONLY" mnemonicParsing="false" onAction="#addObstacleMode" text="ToggleButton">
          <graphic>
             <StackPane prefHeight="43.0" prefWidth="49.0">
                <children>

@@ -24,7 +24,7 @@
             <Insets top="1.0" />
          </padding>
       </Button>
-      <Button mnemonicParsing="false" onAction="#delete" prefHeight="45.0" prefWidth="50.0" text="Add obstacle">
+      <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#delete" prefHeight="45.0" prefWidth="50.0" text="Add obstacle">
          <graphic>
             <StackPane prefHeight="43.0" prefWidth="49.0">
                <children>

@@ -28,6 +28,10 @@ public class MainToolbarController implements Initializable, FramesListener {
     private ToggleButton cursorButton;
     @FXML
     private ToggleButton addPlayerButton;
+    @FXML
+    private ToggleButton addAccessoryButton;
+    @FXML
+    private ToggleButton addObstacleButton;
 
     @Override
     public void init(Parent parent) {
@@ -40,6 +44,7 @@ public class MainToolbarController implements Initializable, FramesListener {
     }
 
     public enum EditMode {
+
         CURSOR,
         ADD_PLAYER,
         ADD_ACCESSORY,
@@ -68,9 +73,11 @@ public class MainToolbarController implements Initializable, FramesListener {
     public void init(MainWindowController paretnController) {
         this.parentController = paretnController;
     }
-    
-    public void update(){
+
+    public void update() {
         addPlayerButton.setDisable(VisuaLigue.domain.getTotalFrame() != 1);
+        addObstacleButton.setDisable(VisuaLigue.domain.getTotalFrame() != 1);
+        addAccessoryButton.setDisable(VisuaLigue.domain.getTotalFrame() != 1);
     }
 
     public void selectCursorMode() {
