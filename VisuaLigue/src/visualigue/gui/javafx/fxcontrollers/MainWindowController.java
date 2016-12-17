@@ -309,7 +309,8 @@ public class MainWindowController implements Initializable, Serializable, Select
         if (file != null) {
             try {
                 VisuaLigueBoard canvas = board.getDrawer().getCanvas();
-                WritableImage image = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+                //ajouter la flèche ici
+                WritableImage image = new WritableImage((int)canvas.getWidth(), (int)canvas.getHeight());
                 canvas.snapshot(null, image);
                 RenderedImage renderedImage = SwingFXUtils.fromFXImage(image, null);
                 ImageIO.write(renderedImage, "png", file);
