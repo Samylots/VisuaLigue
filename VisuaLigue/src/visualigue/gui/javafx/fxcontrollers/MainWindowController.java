@@ -311,12 +311,11 @@ public class MainWindowController implements Initializable, Serializable, Select
                 canvas.snapshot(null, image);
                 RenderedImage renderedImage = SwingFXUtils.fromFXImage(image, null);
                 ImageIO.write(renderedImage, "png", file);
+                Dialog popup = new Dialog("Game Exportation", "This game has been successfully exported!", root);
             } catch (IOException ex) {
                 //Log the error or something...
             }
         }
-        //fileChooser.showSaveDialog(root.getScene().getWindow());
-        Dialog popup = new Dialog("Game Exportation", "This game has been successfully exported!", root);
     }
 
     @FXML
