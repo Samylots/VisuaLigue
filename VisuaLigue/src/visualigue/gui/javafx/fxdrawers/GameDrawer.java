@@ -78,13 +78,13 @@ public class GameDrawer {
             }
             if (VisuaLigue.domain.isCurrentEntity(position.entity.id)) {
                 previousColor = gc.getFill();
-                drawSelection(getPixelPosition(position.coords), position.entity, posOpacity);
+                drawSelection(getPixelPosition(position.coords), position.entity);
             }
             if (position.entity instanceof PlayerDTO) {
                 PlayerDTO player = (PlayerDTO) position.entity;
                 drawPlayer(getPixelPosition(position.coords), player, posOpacity, position.direction);
             } else if (position.entity instanceof ObstacleDTO) {
-                drawEntity(getPixelPosition(position.coords), position.entity, createObstacleImage(position.entity.picturePath), 1); //Always there even if it don't move
+                drawEntity(getPixelPosition(position.coords), position.entity, createObstacleImage(position.entity.picturePath), posOpacity);
             } else if (position.entity instanceof AccessoryDTO) {
                 drawEntity(getPixelPosition(position.coords), position.entity, createAccessoryImage(position.entity.picturePath), posOpacity);
             } else {
@@ -93,13 +93,8 @@ public class GameDrawer {
         }
     }
 
-    private void drawSelection(Coords coords, EntityDTO entity, double opacity) {
+    private void drawSelection(Coords coords, EntityDTO entity) {
         Dimension dim = getPixelDimension(entity.dimension);
-        double coordsX = coords.getX();
-        double coordsY = coords.getY();
-        double width = dim.getWidth();
-        double height = dim.getHeight();
-
         gc.setFill(SELECTION_COLOR);
         gc.fillOval(coords.getX() - SELECTION_OFFSET, coords.getY() - SELECTION_OFFSET, dim.getWidth() + SELECTION_OFFSET * 2, dim.getHeight() + SELECTION_OFFSET * 2);
     }
@@ -119,7 +114,7 @@ public class GameDrawer {
         }
         return obstacleImage;
     }
-    
+
     private Image createArrowImage(String picPath) {
         if (!arrowPicPath.equals(picPath)) {
             arrowPicPath = picPath;
@@ -158,11 +153,11 @@ public class GameDrawer {
             writeText("#" + String.valueOf(entity.number), 16, coordsX + width / 2, coordsY + height / 2);
         }
         Image arrowImg = createArrowImage("visualigue/gui/javafx/fxlayouts/icons/arrow.png");
-        
-        Rotate r = new Rotate(direction, coordsX+(width/2), coordsY+(height/2));
+
+        Rotate r = new Rotate(direction, coordsX + (width / 2), coordsY + (height / 2));
         Coords origin = canvas.getOrigin();
-        gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx()+origin.getX(), r.getTy()+origin.getY());
-        gc.drawImage(arrowImg, coordsX+width, coordsY+(height/2)-10, 20, 20);
+        gc.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx() + origin.getX(), r.getTy() + origin.getY());
+        gc.drawImage(arrowImg, coordsX + width, coordsY + (height / 2) - 10, 20, 20);
 
         gc.restore();
 
@@ -174,14 +169,9 @@ public class GameDrawer {
 
     private void drawEntity(Coords coords, EntityDTO entity, Image img, double opacity) {
         Dimension dim = getPixelDimension(entity.dimension);
-        double coordsX = coords.getX();
-        double coordsY = coords.getY();
-        double width = dim.getWidth();
-        double height = dim.getHeight();
-
         gc.save();
         gc.setGlobalAlpha(opacity);
-        gc.drawImage(img, coordsX, coordsY, width, height);
+        gc.drawImage(img, coords.getX(), coords.getY(), dim.getWidth(), dim.getHeight());
         gc.restore();
     }
 
