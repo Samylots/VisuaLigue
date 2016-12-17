@@ -30,6 +30,10 @@ public class PlayerToolbarController implements Initializable {
     private Button deleteButton;
     @FXML
     private Button unownButton;
+    @FXML
+    private Button roleButton;
+    @FXML
+    private Button nameButton;
 
     /**
      * Initializes the controller class.
@@ -40,6 +44,8 @@ public class PlayerToolbarController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        toolbar.getItems().remove(nameButton);
+        toolbar.getItems().remove(roleButton);
     }
 
     public void update(PlayerDTO player) {

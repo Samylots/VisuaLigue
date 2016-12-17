@@ -24,7 +24,7 @@
             <Insets top="1.0" />
          </padding>
       </Button>
-      <Button mnemonicParsing="false" onAction="#editRole" prefHeight="45.0" prefWidth="50.0" text="Set role">
+      <Button fx:id="roleButton" mnemonicParsing="false" onAction="#editRole" prefHeight="45.0" prefWidth="50.0" text="Set role">
          <graphic>
             <StackPane prefHeight="43.0" prefWidth="49.0">
                <children>
@@ -45,7 +45,7 @@
             <Insets top="1.0" />
          </padding>
       </Button>
-      <Button mnemonicParsing="false" onAction="#editName" prefHeight="45.0" prefWidth="50.0" text="Set name">
+      <Button fx:id="nameButton" mnemonicParsing="false" onAction="#editName" prefHeight="45.0" prefWidth="50.0" text="Set name">
          <graphic>
             <StackPane prefHeight="43.0" prefWidth="49.0">
                <children>
