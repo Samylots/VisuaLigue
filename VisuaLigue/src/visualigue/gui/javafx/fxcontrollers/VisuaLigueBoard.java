@@ -43,6 +43,10 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
     private final Converter converter;
     private final GameDrawer drawer;
 
+    public GameDrawer getDrawer() {
+        return drawer;
+    }
+
     private Image fieldPicture;
     private String actualFieldPictureURL = "";
 

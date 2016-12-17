@@ -35,6 +35,10 @@ public class GameDrawer {
     private final static Color SELECTION_COLOR = Color.DEEPSKYBLUE;
 
     private final VisuaLigueBoard canvas;
+
+    public VisuaLigueBoard getCanvas() {
+        return canvas;
+    }
     private final GraphicsContext gc;
 
     private Image playerImage;

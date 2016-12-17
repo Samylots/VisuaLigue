@@ -5,6 +5,9 @@
  */
 package visualigue.gui.javafx.fxcontrollers;
 
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -44,6 +47,11 @@ import visualigue.gui.javafx.fxlayouts.Dialog;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 import visualigue.gui.javafx.fxlayouts.InputDialog;
 import java.util.List;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.chart.BarChart;
+import javafx.scene.image.WritableImage;
+import javax.imageio.ImageIO;
 
 /**
  * FXML Controller class
@@ -288,7 +296,26 @@ public class MainWindowController implements Initializable, Serializable, Select
     @FXML
     private void ExportGame(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.showSaveDialog(root.getScene().getWindow());
+        //set extension filter
+        FileChooser.ExtensionFilter pngFilter = new FileChooser.ExtensionFilter("png files", "*.png");
+        FileChooser.ExtensionFilter jpgFilter = new FileChooser.ExtensionFilter("jpeg files", "*.jpg");
+        fileChooser.getExtensionFilters().add(pngFilter);
+        fileChooser.getExtensionFilters().add(jpgFilter);
+        
+        File file = fileChooser.showSaveDialog(root.getScene().getWindow());
+        
+        if(file != null){
+            try {
+                VisuaLigueBoard canvas = board.getDrawer().getCanvas();
+                WritableImage image = new WritableImage((int)canvas.getWidth(), (int)canvas.getHeight());
+                canvas.snapshot(null, image);
+                RenderedImage renderedImage = SwingFXUtils.fromFXImage(image, null);
+                ImageIO.write(renderedImage, "png", file);
+            } catch (IOException ex) {
+                //Log the error or something...
+            }
+        }
+        //fileChooser.showSaveDialog(root.getScene().getWindow());
         Dialog popup = new Dialog("Game Exportation", "This game has been successfully exported!", root);
     }
 
@@ -547,5 +574,4 @@ public class MainWindowController implements Initializable, Serializable, Select
     public void updateMainToolbar(){
         mainToolbarController.update();
     }
-
 }
