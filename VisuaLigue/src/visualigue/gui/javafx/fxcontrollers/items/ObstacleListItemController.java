@@ -54,7 +54,7 @@ public class ObstacleListItemController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
+        editButton.setVisible(false);
     }
 
     /**
