@@ -5,6 +5,7 @@
  */
 package visualigue.inter.dto;
 
+import javafx.scene.image.WritableImage;
 import visualigue.domain.main.Game;
 
 /**
@@ -16,12 +17,12 @@ public class GameDTO {
     public int id;
     public int sportId;
     public String name;
-    public String picPath;
+    public String picPreview;
 
     public GameDTO(Game game) {
         this.id = game.getId();
         this.name = game.getName();
         this.sportId = game.getSport().getId();
-        this.picPath = game.getSport().getFieldPicturePath(); //TODO change it to Game pic preview generated!
+        this.picPreview = game.getPreviewImage();
     }
 }

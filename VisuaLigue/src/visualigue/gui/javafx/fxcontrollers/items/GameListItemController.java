@@ -18,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import visualigue.VisuaLigue;
 import visualigue.gui.javafx.fxcontrollers.GameListController;
 import visualigue.gui.javafx.fxlayouts.Dialog;
+import visualigue.inter.dto.GameDTO;
 
 /**
  * FXML Controller class
@@ -53,17 +54,15 @@ public class GameListItemController implements Initializable {
      * Initializes the item
      *
      * @param controller
-     * @param pic
-     * @param gameName
-     * @param gameId
+     * @param game
      */
-    public void init(GameListController controller, Image pic, String gameName, int gameId) {
+    public void init(GameListController controller, GameDTO game) {
         parentController = controller;
-        gameTitle.setText(gameName);
-        id = gameId;
+        gameTitle.setText(game.name);
+        id = game.id;
 
         //need to be last, because it stop the method if there is no picture...
-        gamePicture.setImage(pic);
+        gamePicture.setImage(new Image(game.picPreview));
     }
 
     @FXML
@@ -79,5 +78,5 @@ public class GameListItemController implements Initializable {
             parentController.refreshGames();
         }
     }
-
+       
 }

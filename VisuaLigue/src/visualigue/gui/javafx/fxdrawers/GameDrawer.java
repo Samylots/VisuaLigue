@@ -5,15 +5,18 @@
  */
 package visualigue.gui.javafx.fxdrawers;
 
+import java.awt.image.RenderedImage;
 import visualigue.inter.dto.ObstacleDTO;
 import visualigue.inter.dto.PlayerDTO;
 import visualigue.inter.dto.PositionDTO;
 import visualigue.inter.dto.AccessoryDTO;
 import visualigue.inter.dto.EntityDTO;
 import java.util.List;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import visualigue.VisuaLigue;
 import visualigue.inter.utils.Coords;
 import visualigue.gui.javafx.fxcontrollers.VisuaLigueBoard;
@@ -23,6 +26,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Rotate;
+import visualigue.inter.utils.exceptions.CantGenerateEmptyGameException;
 
 /**
  *
@@ -36,9 +40,6 @@ public class GameDrawer {
 
     private final VisuaLigueBoard canvas;
 
-    public VisuaLigueBoard getCanvas() {
-        return canvas;
-    }
     private final GraphicsContext gc;
 
     private Image playerImage;
@@ -187,6 +188,15 @@ public class GameDrawer {
 
     private Dimension getPixelDimension(Dimension domainDim) {
         return canvas.getPixelDimension(domainDim);
+    }
+    
+    public RenderedImage generatePreview(){
+        if(VisuaLigue.domain.hasOpenedGame()){
+            WritableImage image = new WritableImage((int)canvas.getWidth(), (int)canvas.getHeight());
+            canvas.snapshot(null, image);
+            return SwingFXUtils.fromFXImage(image, null);
+        }
+        throw new CantGenerateEmptyGameException("There is no game opened yet");
     }
 
 }

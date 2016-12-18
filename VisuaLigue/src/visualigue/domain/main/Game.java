@@ -64,12 +64,13 @@ public class Game implements Serializable {
     private transient Serializer serializer;
     private Coords lastSelectionPosition;
     private boolean rotationAllowed = false;
+    private String previewImage;
 
     private transient boolean isTimerRunning = false;
 
     private final int frameTimeEquiv = 2 * 100;
 
-    public Game(String name, Sport sport, boolean maxPlayer) {
+    public Game(String name, Sport sport, boolean maxPlayer, String previewImage) {
         this.id = IdGenerator.getInstance().generateId();
         firstFrame = new Frame();
         lastFrame = firstFrame;
@@ -79,6 +80,7 @@ public class Game implements Serializable {
         this.sport = sport;
         this.currentMode = Mode.FRAME_BY_FRAME;
         this.maxPlayer = maxPlayer;
+        this.previewImage = previewImage;
     }
 
     public int getId() {
@@ -580,4 +582,16 @@ public class Game implements Serializable {
             throw new CantActivateMaxPlayerException("Please, delete player duplicatas before!");
         }
     }
+    
+    public String getPreviewImage() {
+        return previewImage;
+    }
+
+    public void setPreviewImage(String previewImage) {
+        this.previewImage = previewImage;
+    }
+    /*public WritableImage getPreviewImage() {
+        WritableImage image = new WritableImage((int)canvas.getWidth(), (int)canvas.getHeight());
+        canvas.snapshot(null, image);
+    }*/
 }

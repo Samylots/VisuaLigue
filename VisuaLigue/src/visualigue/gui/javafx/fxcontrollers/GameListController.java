@@ -108,12 +108,12 @@ public class GameListController implements Initializable {
     private void addGameItem(GameDTO game) {
         Node node = FXLoader.getInstance().load("gameListItem.fxml");
         GameListItemController itemController = FXLoader.getInstance().getLastController();
+        sports.get(game.sportId).getChildren().add(node);
         try {
-            itemController.init(this, new Image(game.picPath), game.name, game.id);
+            itemController.init(this, game);
         } catch (Exception e) {
             //no pic then...
         }
-        sports.get(game.sportId).getChildren().add(node);
     }
 
     public void select(int id) {

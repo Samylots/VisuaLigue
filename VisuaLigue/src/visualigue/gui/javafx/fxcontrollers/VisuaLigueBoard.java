@@ -5,24 +5,33 @@
  */
 package visualigue.gui.javafx.fxcontrollers;
 
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Paths;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javax.imageio.ImageIO;
 import visualigue.VisuaLigue;
 import visualigue.domain.events.DrawListener;
 import visualigue.inter.utils.Converter;
 import visualigue.inter.utils.Coords;
 import visualigue.gui.javafx.fxdrawers.GameDrawer;
 import visualigue.inter.utils.Dimension;
+import visualigue.inter.utils.IdGenerator;
+import visualigue.inter.utils.exceptions.CantGenerateEmptyGameException;
 
 /**
  * FXML Controller class
@@ -42,9 +51,17 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
     private double zoomFactor;
     private final Converter converter;
     private final GameDrawer drawer;
-
-    public GameDrawer getDrawer() {
-        return drawer;
+    
+    public void generatePreviewTo(File file) throws IOException, CantGenerateEmptyGameException{
+        if(file == null){
+            file = new File(Paths.get("").toAbsolutePath().toString() + "/gamePreview"+ IdGenerator.getInstance().generateId() +".png");
+        }
+        try{
+            ImageIO.write(drawer.generatePreview(), "png", file);
+            VisuaLigue.domain.setCurrentGamePreview(file.toURI().toString());
+        }catch(CantGenerateEmptyGameException ex){
+            //no tell
+        }
     }
 
     private Image fieldPicture;

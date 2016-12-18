@@ -18,6 +18,7 @@ import visualigue.inter.dto.AccessoryDTO;
 import visualigue.inter.dto.GameDTO;
 import java.io.File;
 import java.io.Serializable;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import visualigue.inter.utils.Dimension;
@@ -153,7 +154,7 @@ public class VisuaLigueController implements Serializable {
         } else {
             maxPlayer = true;
         }
-        Game newGame = new Game(name, ressources.getSport(sportId), maxPlayer);
+        Game newGame = new Game(name, ressources.getSport(sportId), maxPlayer, ressources.getSport(sportId).getFieldPicturePath());
         ressources.addGame(newGame);
         return newGame.getId();
     }
@@ -181,12 +182,20 @@ public class VisuaLigueController implements Serializable {
         serializer.saveToHistory();
     }
 
+    //old thoughts
     public void exportGame(String path) {
         //get path extention;
         String type = path;
         exporter = GameExporterFactory.getExporter(type);
         exporter.export(new File(path));
     }
+    
+    public void setCurrentGamePreview(String path){
+        if(hasOpenedGame()){
+            currentGame.setPreviewImage(path);
+        }
+    }
+    
 
     public void changeMode(Mode mode) {
         if (hasOpenedGame()) {

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -47,9 +48,13 @@ import visualigue.gui.javafx.fxlayouts.Dialog;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 import visualigue.gui.javafx.fxlayouts.InputDialog;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.WritableImage;
 import javax.imageio.ImageIO;
+import visualigue.inter.utils.IdGenerator;
+import visualigue.inter.utils.exceptions.CantGenerateEmptyGameException;
 
 /**
  * FXML Controller class
@@ -274,6 +279,11 @@ public class MainWindowController implements Initializable, Serializable, Select
 
     @FXML
     private void openGame(ActionEvent event) {
+        try {
+            board.generatePreviewTo(null);
+        } catch (Exception ex) {
+            String error = ex.getMessage();
+        }
         Node node = FXLoader.getInstance().load("gameList.fxml");
         GameListController controller = FXLoader.getInstance().getLastController();
         CustomWindow window = new CustomWindow(root, (Parent) node);
@@ -285,7 +295,7 @@ public class MainWindowController implements Initializable, Serializable, Select
         int gameId = controller.getSelectedId();
         if (gameId > 0) {
             if (VisuaLigue.domain.hasOpenedGame()) {
-                Dialog popup = new Dialog("Game Switching", "Are you sure you wan to change current game?", root);
+                Dialog popup = new Dialog("Game Switching", "Are you sure you want to change current game?", root);
                 if (popup.isConfirmed()) {
                     loadGame(gameId);
                 }
@@ -308,15 +318,12 @@ public class MainWindowController implements Initializable, Serializable, Select
 
         if (file != null) {
             try {
-                VisuaLigueBoard canvas = board.getDrawer().getCanvas();
-                //ajouter la flèche ici
-                WritableImage image = new WritableImage((int)canvas.getWidth(), (int)canvas.getHeight());
-                canvas.snapshot(null, image);
-                RenderedImage renderedImage = SwingFXUtils.fromFXImage(image, null);
-                ImageIO.write(renderedImage, "png", file);
+                board.generatePreviewTo(file);
                 Dialog popup = new Dialog("Game Exportation", "This game has been successfully exported!", root);
             } catch (IOException ex) {
-                //Log the error or something...
+                Dialog popup = new Dialog("Error while exporting", "An error occured during game exportation : " + ex.getMessage(), root);
+            } catch(CantGenerateEmptyGameException ex2){
+                Dialog popup = new Dialog("Error while exporting", ex2.getMessage(), root);
             }
         }
     }
@@ -394,6 +401,7 @@ public class MainWindowController implements Initializable, Serializable, Select
         root.setBottom(nodeView);
         Platform.runLater(() -> nodeView.requestLayout()); //Node height bug fixing
         board.heightProperty().bind(root.heightProperty().subtract(nodeView.heightProperty()).subtract(30));
+        board.redraw();
         updateUndoRedoButtons();
         updateMenus();
     }
