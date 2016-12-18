@@ -5,7 +5,6 @@
  */
 package visualigue.inter.dto;
 
-import visualigue.domain.main.entities.Player;
 import visualigue.inter.utils.Dimension;
 import visualigue.domain.main.entities.Entity;
 
@@ -14,16 +13,17 @@ import visualigue.domain.main.entities.Entity;
  * @author Bruno L.L.
  */
 public class EntityDTO {
+
     public int id;
     public String picturePath;
     public Dimension dimension;
-    
+
     public EntityDTO(Dimension dimension, int id, String picturePath) {
         this.id = id;
         this.picturePath = picturePath;
         this.dimension = dimension;
     }
-    
+
     public EntityDTO(Entity entity) {
         this.id = entity.getId();
         this.picturePath = entity.getPicturePath();

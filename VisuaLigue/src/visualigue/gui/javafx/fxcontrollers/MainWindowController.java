@@ -5,12 +5,10 @@
  */
 package visualigue.gui.javafx.fxcontrollers;
 
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -48,12 +46,6 @@ import visualigue.gui.javafx.fxlayouts.Dialog;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 import visualigue.gui.javafx.fxlayouts.InputDialog;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.embed.swing.SwingFXUtils;
-import javafx.scene.image.WritableImage;
-import javax.imageio.ImageIO;
-import visualigue.inter.utils.IdGenerator;
 import visualigue.inter.utils.exceptions.CantGenerateEmptyGameException;
 
 /**
@@ -161,21 +153,22 @@ public class MainWindowController implements Initializable, Serializable, Select
             CustomWindow window = new CustomWindow(root, (Parent) node);
             window.setTitle("Login");
             boolean wantToLogin = true;
-            do { //loop if want to login
-                window.showAndWait();
-                controller.clear();
-                if (!controller.isValidLogin() && VisuaLigue.domain.getLoginUser() == 0) {//close if not already logged in another user
-                    Dialog popup = new Dialog("Login error", "Please login correctly to create a new game.", root);
-                    if (!popup.isConfirmed()) { //close all if not logged
-                        wantToLogin = false;
-                        Platform.runLater(() -> {
-                            VisuaLigue.domain.close();
-                            Stage stage = (Stage) root.getScene().getWindow();
-                            stage.close();
-                        });
-                    }
-                }
-            } while (!controller.isValidLogin() && wantToLogin);
+            VisuaLigue.domain.login("entraineur", "entraineur");
+            /*do { //loop if want to login
+             window.showAndWait();
+             controller.clear();
+             if (!controller.isValidLogin() && VisuaLigue.domain.getLoginUser() == 0) {//close if not already logged in another user
+             Dialog popup = new Dialog("Login error", "Please login correctly to create a new game.", root);
+             if (!popup.isConfirmed()) { //close all if not logged
+             wantToLogin = false;
+             Platform.runLater(() -> {
+             VisuaLigue.domain.close();
+             Stage stage = (Stage) root.getScene().getWindow();
+             stage.close();
+             });
+             }
+             }
+             } while (!controller.isValidLogin() && wantToLogin);*/
             updateMenus();
         });
     }
@@ -322,7 +315,7 @@ public class MainWindowController implements Initializable, Serializable, Select
                 Dialog popup = new Dialog("Game Exportation", "This game has been successfully exported!", root);
             } catch (IOException ex) {
                 Dialog popup = new Dialog("Error while exporting", "An error occured during game exportation : " + ex.getMessage(), root);
-            } catch(CantGenerateEmptyGameException ex2){
+            } catch (CantGenerateEmptyGameException ex2) {
                 Dialog popup = new Dialog("Error while exporting", ex2.getMessage(), root);
             }
         }

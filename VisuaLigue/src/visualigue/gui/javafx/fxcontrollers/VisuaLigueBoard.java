@@ -5,19 +5,16 @@
  */
 package visualigue.gui.javafx.fxcontrollers;
 
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Paths;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
@@ -51,15 +48,19 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
     private double zoomFactor;
     private final Converter converter;
     private final GameDrawer drawer;
-    
-    public void generatePreviewTo(File file) throws IOException, CantGenerateEmptyGameException{
-        if(file == null){
-            file = new File(Paths.get("").toAbsolutePath().toString() + "/gamePreview"+ IdGenerator.getInstance().generateId() +".png");
+
+    //view snapshot
+    private Coords originBackup = new Coords(); //Field board's origin on board's space
+    private double zoomFactorBackup;
+
+    public void generatePreviewTo(File file) throws IOException, CantGenerateEmptyGameException {
+        if (file == null) {
+            file = new File(Paths.get("").toAbsolutePath().toString() + "/gamePreview" + IdGenerator.getInstance().generateId() + ".png");
+            VisuaLigue.domain.setCurrentGamePreview(file.toURI().toString()); //only auto gen
         }
-        try{
+        try {
             ImageIO.write(drawer.generatePreview(), "png", file);
-            VisuaLigue.domain.setCurrentGamePreview(file.toURI().toString());
-        }catch(CantGenerateEmptyGameException ex){
+        } catch (CantGenerateEmptyGameException ex) {
             //no tell
         }
     }
@@ -72,6 +73,7 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
     private final DoubleProperty mouseY = new SimpleDoubleProperty(); //Actual mouse Y position
 
     private boolean canAutoZoom = true;
+    private boolean canAutoZoomBackup;
 
     VisuaLigueBoard() {
         super(500, 300);
@@ -356,6 +358,34 @@ public class VisuaLigueBoard extends Canvas implements Serializable, DrawListene
     @Override
     public synchronized void redraw() {
         drawAll();
+    }
+
+    public void saveViewState() {
+        //gcBackup = gc;
+        originBackup = new Coords(origin);
+        zoomFactorBackup = zoomFactor;
+        canAutoZoomBackup = canAutoZoom;
+        resetTranslate();
+        canAutoZoom = true;
+        centerGlobalView();
+    }
+
+    public void drawExportBase() {
+        clear();
+        String fieldPic = VisuaLigue.domain.getFieldPicPath();
+        if (!actualFieldPictureURL.equals(fieldPic)) { //it's laggy if it create a new Image each times we draw
+            actualFieldPictureURL = fieldPic;
+            fieldPicture = new Image(fieldPic);
+        }
+        drawField();
+    }
+
+    public void restoreViewState() {
+        resetTranslate();
+        translate(originBackup.getX(), originBackup.getY());
+        zoomFactor = zoomFactorBackup;
+        canAutoZoom = canAutoZoomBackup;
+        redraw();
     }
 
 }

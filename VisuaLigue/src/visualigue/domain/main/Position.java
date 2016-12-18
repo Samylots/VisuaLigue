@@ -107,7 +107,7 @@ public class Position implements Serializable {
     }
 
     public Coords getCoords() {
-        return coords;
+        return new Coords(coords);
     }
 
     public Entity getEntity() {

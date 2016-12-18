@@ -6,6 +6,7 @@
 package visualigue.gui.javafx.fxdrawers;
 
 import java.awt.image.RenderedImage;
+import java.util.ArrayList;
 import visualigue.inter.dto.ObstacleDTO;
 import visualigue.inter.dto.PlayerDTO;
 import visualigue.inter.dto.PositionDTO;
@@ -14,6 +15,7 @@ import visualigue.inter.dto.EntityDTO;
 import java.util.List;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.VPos;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -62,22 +64,23 @@ public class GameDrawer {
         gc.setStroke(Color.BLACK);
         gc.setFill(Color.WHITE);
         gc.save();
+        boolean canDoOpacity = !VisuaLigue.domain.isVisualizing();
         if (!VisuaLigue.domain.isVisualizing()) {
-            drawPositions(VisuaLigue.domain.getLastPositions(), UNMOVED_TRANSPARENCY);
+            drawPositions(VisuaLigue.domain.getLastPositions(), UNMOVED_TRANSPARENCY, canDoOpacity);
         }
-        drawPositions(VisuaLigue.domain.getActualPositions(), 1);
+        drawPositions(VisuaLigue.domain.getActualPositions(), 1, canDoOpacity);
     }
 
-    private void drawPositions(List<PositionDTO> positions, double opacity) {
+    private void drawPositions(List<PositionDTO> positions, double opacity, boolean canDoOpacity) {
         Paint previousColor = Color.WHITE;
         for (PositionDTO position : positions) {
             gc.setFill(previousColor);
             double posOpacity = opacity;
 
-            if (!position.isMoved && !VisuaLigue.domain.isVisualizing()) {
+            if (!position.isMoved && canDoOpacity) {
                 posOpacity = UNMOVED_TRANSPARENCY;
             }
-            if (VisuaLigue.domain.isCurrentEntity(position.entity.id)) {
+            if (VisuaLigue.domain.isCurrentEntity(position.entity.id) && canDoOpacity) {
                 previousColor = gc.getFill();
                 drawSelection(getPixelPosition(position.coords), position.entity);
             }
@@ -189,12 +192,72 @@ public class GameDrawer {
     private Dimension getPixelDimension(Dimension domainDim) {
         return canvas.getPixelDimension(domainDim);
     }
-    
-    public RenderedImage generatePreview(){
-        if(VisuaLigue.domain.hasOpenedGame()){
-            WritableImage image = new WritableImage((int)canvas.getWidth(), (int)canvas.getHeight());
-            canvas.snapshot(null, image);
-            return SwingFXUtils.fromFXImage(image, null);
+
+    private void drawCompleteGame() {
+        List<List<PositionDTO>> framesPositions = VisuaLigue.domain.getAllFramePositions();
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.TOP);
+        gc.setStroke(Color.BLACK);
+        gc.setFill(Color.WHITE);
+        gc.save();
+        drawTrajectories(framesPositions);
+        drawPositions(framesPositions.get(0), 1, false);
+        drawPositions(framesPositions.get(framesPositions.size() - 1), 1, false);
+    }
+
+    private void drawTrajectories(List<List<PositionDTO>> framesPositions) {
+        List<Integer> entities = getEntitiesId(framesPositions.get(0));
+        Coords actualPixelPos;
+        Dimension actualPixelDim;
+        PositionDTO actualPos;
+        for (int actualId : entities) {
+            gc.beginPath();
+            actualPos = getEntityPosition(actualId, framesPositions.get(0));
+            actualPixelPos = getPixelPosition(actualPos.coords);
+            actualPixelDim = getPixelDimension(actualPos.entity.dimension);
+            gc.moveTo(actualPixelPos.getX() + actualPixelDim.getWidth() / 2, actualPixelPos.getY() + actualPixelDim.getHeight() / 2);
+            for (List<PositionDTO> positions : framesPositions) { //for each frames
+                actualPos = getEntityPosition(actualId, positions);
+                actualPixelPos = getPixelPosition(actualPos.coords);
+                actualPixelDim = getPixelDimension(actualPos.entity.dimension);
+                gc.lineTo(actualPixelPos.getX() + actualPixelDim.getWidth() / 2, actualPixelPos.getY() + actualPixelDim.getHeight() / 2);
+            }
+            gc.stroke();
+        }
+    }
+
+    private PositionDTO getEntityPosition(int entity, List<PositionDTO> positions) {
+        for (PositionDTO pos : positions) {
+            if (pos.entity.id == entity) {
+                return pos;
+            }
+        }
+        return null;
+    }
+
+    private List<Integer> getEntitiesId(List<PositionDTO> framePositions) {
+        List<Integer> ids = new ArrayList<>();
+        for (PositionDTO pos : framePositions) {
+            if (!ids.contains(pos.entity.id)) {
+                ids.add(pos.entity.id);
+            }
+        }
+        return ids;
+    }
+
+    public RenderedImage generatePreview() {
+        if (VisuaLigue.domain.hasOpenedGame()) {
+            canvas.saveViewState();
+            gc.save();
+            //draw things
+            canvas.drawExportBase();
+            drawCompleteGame();
+            WritableImage image = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
+            //canvas.snapshot(null, image);
+            WritableImage snapshot = canvas.snapshot(new SnapshotParameters(), image);
+            gc.restore();
+            canvas.restoreViewState();
+            return SwingFXUtils.fromFXImage(snapshot, null);
         }
         throw new CantGenerateEmptyGameException("There is no game opened yet");
     }

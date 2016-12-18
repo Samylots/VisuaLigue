@@ -189,13 +189,12 @@ public class VisuaLigueController implements Serializable {
         exporter = GameExporterFactory.getExporter(type);
         exporter.export(new File(path));
     }
-    
-    public void setCurrentGamePreview(String path){
-        if(hasOpenedGame()){
+
+    public void setCurrentGamePreview(String path) {
+        if (hasOpenedGame()) {
             currentGame.setPreviewImage(path);
         }
     }
-    
 
     public void changeMode(Mode mode) {
         if (hasOpenedGame()) {
@@ -314,7 +313,7 @@ public class VisuaLigueController implements Serializable {
         serializer.saveToHistory();
     }
 
-    public void toggleMaxPlayer()throws CantActivateMaxPlayerException {
+    public void toggleMaxPlayer() throws CantActivateMaxPlayerException {
         currentGame.toggleMaxPlayer();
     }
 
@@ -334,6 +333,23 @@ public class VisuaLigueController implements Serializable {
 
     public AccessoryDTO getGameAccessrory() {
         return new AccessoryDTO(currentGame.getSport().getAccessory());
+    }
+
+    public List<List<PositionDTO>> getAllFramePositions() {
+        if (!hasOpenedGame()) {
+            throw new NoCurrentGameException("There is no current game defined!");
+        }
+        List<List<PositionDTO>> frames = new ArrayList<>();
+        List<List<Position>> framesPositions = currentGame.getAllFramesPositions();
+        List<PositionDTO> framePositionsDTO;
+        for (List<Position> positions : framesPositions) {
+            framePositionsDTO = new ArrayList<>();
+            for (Position pos : positions) {
+                framePositionsDTO.add(new PositionDTO(pos));
+            }
+            frames.add(framePositionsDTO);
+        }
+        return frames;
     }
 
     public List<PositionDTO> getActualPositions() {

@@ -33,6 +33,7 @@ import visualigue.inter.dto.PlayerDTO;
 import visualigue.inter.utils.IdGenerator;
 import visualigue.inter.utils.Mode;
 import visualigue.domain.services.Serializer;
+import visualigue.inter.dto.PositionDTO;
 import visualigue.inter.utils.exceptions.CantActivateMaxPlayerException;
 
 /**
@@ -118,7 +119,7 @@ public class Game implements Serializable {
     }
 
     public static void addFrameListener(FramesListener listener) {
-        if(!frameListeners.contains(listener)){
+        if (!frameListeners.contains(listener)) {
             frameListeners.add(listener);
         }
     }
@@ -449,6 +450,21 @@ public class Game implements Serializable {
         return currentFrame.getPositions();
     }
 
+    public List<List<Position>> getAllFramesPositions() {
+        List<List<Position>> frames = new ArrayList<>();
+        List<Position> framePositions;
+        Frame actualFrame = firstFrame;
+        while (actualFrame != null) {
+            framePositions = new ArrayList<>();
+            for (Map.Entry<Integer, Position> entry : actualFrame.getPositions().entrySet()) {
+                framePositions.add(entry.getValue());
+            }
+            frames.add(framePositions);
+            actualFrame = actualFrame.getNext();
+        }
+        return frames;
+    }
+
     public Map<Integer, Position> getLastPositions() {
         if (currentFrame.getBack() != null) {
             return currentFrame.getBack().getPositions();
@@ -527,7 +543,7 @@ public class Game implements Serializable {
 
     private void triggerFrameUpdate() {
         frameListeners.stream().forEach((listener) -> {
-            if(listener!=null){
+            if (listener != null) {
                 listener.updateFrames();
             }
         });
@@ -568,21 +584,21 @@ public class Game implements Serializable {
     public boolean isMaxPlayer() {
         return maxPlayer;
     }
-    
-    public boolean isMaxPlayerBusted(){
+
+    public boolean isMaxPlayerBusted() {
         List playersOnBoard = getPlayersOnBoard();
         Set<Integer> set = new HashSet<>(playersOnBoard);
         return set.size() < playersOnBoard.size(); //there are duplicates
     }
 
     public void toggleMaxPlayer() throws CantActivateMaxPlayerException {
-        if(!isMaxPlayerBusted()){
+        if (!isMaxPlayerBusted()) {
             this.maxPlayer = !this.maxPlayer;
-        }else{
+        } else {
             throw new CantActivateMaxPlayerException("Please, delete player duplicatas before!");
         }
     }
-    
+
     public String getPreviewImage() {
         return previewImage;
     }
@@ -591,7 +607,7 @@ public class Game implements Serializable {
         this.previewImage = previewImage;
     }
     /*public WritableImage getPreviewImage() {
-        WritableImage image = new WritableImage((int)canvas.getWidth(), (int)canvas.getHeight());
-        canvas.snapshot(null, image);
-    }*/
+     WritableImage image = new WritableImage((int)canvas.getWidth(), (int)canvas.getHeight());
+     canvas.snapshot(null, image);
+     }*/
 }
