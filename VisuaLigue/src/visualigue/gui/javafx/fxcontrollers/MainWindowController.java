@@ -45,9 +45,6 @@ import visualigue.gui.javafx.fxlayouts.Dialog;
 import visualigue.gui.javafx.fxlayouts.FXLoader;
 import visualigue.gui.javafx.fxlayouts.InputDialog;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.event.EventType;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import visualigue.inter.utils.exceptions.CantGenerateEmptyGameException;
@@ -61,8 +58,6 @@ public class MainWindowController implements Initializable, Serializable, Select
 
     @FXML
     private BorderPane root;
-
-    private StackPane fieldLayer;
 
     private ToolBar mainToolbar;
 
