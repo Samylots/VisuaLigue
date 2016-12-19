@@ -16,7 +16,6 @@ import visualigue.inter.dto.SportDTO;
 import visualigue.inter.dto.TeamDTO;
 import visualigue.inter.dto.AccessoryDTO;
 import visualigue.inter.dto.GameDTO;
-import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
