@@ -18,7 +18,6 @@ import visualigue.inter.dto.AccessoryDTO;
 import visualigue.inter.dto.GameDTO;
 import java.io.File;
 import java.io.Serializable;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import visualigue.inter.utils.Dimension;
@@ -31,8 +30,6 @@ import visualigue.domain.main.Position;
 import visualigue.domain.main.Team;
 import visualigue.inter.utils.Mode;
 import visualigue.inter.utils.exceptions.NoCurrentGameException;
-import visualigue.domain.services.exporters.GameExporter;
-import visualigue.domain.services.exporters.GameExporterFactory;
 import visualigue.domain.services.Serializer;
 import java.util.Map;
 import visualigue.domain.Ressources;
@@ -53,7 +50,6 @@ public class VisuaLigueController implements Serializable {
     private final transient Serializer serializer;
     private Ressources ressources = new Ressources();
     private double frameTimeEquiv;
-    private GameExporter exporter;
     private boolean showingRoles;
     private int idGenetation;
     private int loggedAs = 0;
@@ -74,7 +70,6 @@ public class VisuaLigueController implements Serializable {
         }
         this.ressources = controller.ressources;
         this.frameTimeEquiv = controller.frameTimeEquiv;
-        this.exporter = controller.exporter;
         this.showingRoles = controller.showingRoles;
         this.idGenetation = controller.idGenetation;
     }
@@ -172,7 +167,6 @@ public class VisuaLigueController implements Serializable {
     }
 
     public void loadGame(int gameId) {
-        //TODO check for saving?
         currentGame = ressources.getGame(gameId);
         currentGame.setSerializer(serializer);
     }
@@ -180,14 +174,6 @@ public class VisuaLigueController implements Serializable {
     public void unOwnAccessory() {
         currentGame.unOwnAccessory();
         serializer.saveToHistory();
-    }
-
-    //old thoughts
-    public void exportGame(String path) {
-        //get path extention;
-        String type = path;
-        exporter = GameExporterFactory.getExporter(type);
-        exporter.export(new File(path));
     }
 
     public void setCurrentGamePreview(String path) {
