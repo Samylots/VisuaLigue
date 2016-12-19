@@ -27,12 +27,6 @@ public class VisuaLigue extends Application {
     public void start(Stage primaryStage) {
         Node node = FXLoader.getInstance().load("mainWindow.fxml");
         Scene scene = new Scene((Parent) node, 800, 600);
-
-        primaryStage.setOnCloseRequest((WindowEvent e) -> {
-            VisuaLigue.domain.close();
-            Platform.exit();
-        });
-
         primaryStage.setTitle("VisuaLigue - BSSM");
         primaryStage.setScene(scene);
         primaryStage.show();
