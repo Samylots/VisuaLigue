@@ -6,15 +6,18 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
 <BorderPane fx:id="gameItem" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="visualigue.gui.javafx.fxcontrollers.items.GameListItemController">
    <center>
-      <HBox>
+      <VBox spacing="3.0">
          <children>
-            <ImageView fx:id="gamePicture" fitHeight="61.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="gameTitle" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
+            <Label fx:id="gameTitle" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+            <ImageView fx:id="gamePicture" fitHeight="120" fitWidth="180" pickOnBounds="true" preserveRatio="true">
+               <VBox.margin>
+                  <Insets left="5.0" />
+               </VBox.margin>
+            </ImageView>
          </children>
-      </HBox>
+      </VBox>
    </center>
    <padding>
       <Insets bottom="5.0" left="8.0" right="8.0" top="5.0" />
